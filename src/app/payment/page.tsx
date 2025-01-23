@@ -44,22 +44,26 @@ export default function PaymentPage() {
           <Card className="border shadow-sm">
             <CardContent className="p-8">
               <div className="space-y-6">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="text-2xl text-muted-foreground line-through">60€</div>
-                    <div className="text-4xl font-bold">50€</div>
-                    <div className="text-sm text-muted-foreground self-end mb-2">/año</div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="flex items-baseline gap-2 justify-center">
+                      <div className="text-2xl line-through text-muted-foreground">60€</div>
+                      <div className="flex items-baseline gap-1.5">
+                        <div className="text-4xl font-bold text-primary">50€</div>
+                        <div className="text-sm text-muted-foreground">/año</div>
+                      </div>
+                    </div>
+                    <Button 
+                      size="lg"
+                      className="text-sm px-8 w-full"
+                      onClick={() => {
+                        // TODO: Implement Stripe payment
+                        console.log("Implement payment");
+                      }}
+                    >
+                      Comenzar ahora
+                    </Button>
                   </div>
-                  <Button 
-                    size="lg"
-                    className="text-sm px-8 w-full"
-                    onClick={() => {
-                      // TODO: Implement Stripe payment
-                      console.log("Implement payment");
-                    }}
-                  >
-                    Comenzar ahora
-                  </Button>
                 </div>
 
                 <Separator className="my-6" />

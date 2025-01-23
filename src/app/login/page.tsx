@@ -11,10 +11,10 @@ export default function LoginPage() {
           <Image
             src="/icons/VinoVeo Logo.png"
             alt="VinoVeo Logo"
-            width={200}
-            height={80}
+            width={120}
+            height={48}
             priority
-            className="h-16 w-auto"
+            className="h-8 w-auto"
           />
         </div>
         <div className="flex flex-1 items-center justify-center">

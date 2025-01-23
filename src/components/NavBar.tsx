@@ -89,12 +89,19 @@ const Navbar = () => {
   const handleSignOut = async () => {
     try {
       setIsLoading(true);
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw new Error('No active session found');
+      const response = await fetch('/api/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'logout' }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to sign out');
       }
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+
+      router.refresh();
       router.push('/login');
     } catch (error) {
       console.error('Error signing out:', error);
@@ -167,10 +174,7 @@ const Navbar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => {
-                    setIsOpen(false);
-                    handleSignOut();
-                  }}
+                  onClick={handleSignOut}
                   disabled={isLoading}
                   className="text-red-600 focus:text-red-600"
                 >
@@ -242,10 +246,7 @@ const Navbar = () => {
                   Ajustes de cuenta
                 </Link>
                 <Button
-                  onClick={() => {
-                    setIsOpen(false);
-                    handleSignOut();
-                  }}
+                  onClick={handleSignOut}
                   disabled={isLoading}
                   variant="ghost"
                   className="justify-start px-2 text-red-600 hover:text-red-600 hover:bg-red-50"
