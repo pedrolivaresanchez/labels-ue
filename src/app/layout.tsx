@@ -10,6 +10,14 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Vinoveo",
   description: "Gestión de etiquetado de vinos",
+  icons: {
+    icon: [
+      {
+        url: "/icons/vinoveo.png",
+        href: "/icons/vinoveo.png",
+      }
+    ],
+  }
 };
 
 export default function RootLayout({

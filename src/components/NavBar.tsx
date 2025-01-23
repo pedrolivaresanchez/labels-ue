@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
@@ -45,24 +46,45 @@ const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState(false);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    // Obtener la sesión inicial
+    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        checkSubscription(session.user.id);
+      }
     });
 
-    // Escuchar cambios en la autenticación
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       if (!session) {
         router.push('/login');
+      } else {
+        await checkSubscription(session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, [router, supabase]);
+
+  const checkSubscription = async (userId: string) => {
+    try {
+      const { data: subscription } = await supabase
+        .from('subscriptions')
+        .select('status')
+        .eq('user_id', userId)
+        .single();
+
+      setHasSubscription(subscription?.status === 'active');
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+      setHasSubscription(false);
+    }
+  };
 
   const handleSignOut = async () => {
     try {
@@ -82,7 +104,7 @@ const Navbar = () => {
     }
   };
 
-  const navLinks = user ? [
+  const navLinks = user && hasSubscription ? [
     { href: "/wines", label: "Etiquetas" },
     { href: "/wines/new", label: "Crear Etiqueta" }
   ] : [];
@@ -95,6 +117,71 @@ const Navbar = () => {
 
   return (
     <header className="flex h-16 w-full items-center px-4 md:px-6 bg-white border-b">
+      <div className="flex-1 flex items-center">
+        <Link 
+          href="/" 
+          className="pl-2"
+        >
+          <Image
+            src="/icons/VinoVeo Logo.png"
+            alt="VinoVeo Logo"
+            width={120}
+            height={48}
+            priority
+            className="h-8 w-auto"
+          />
+        </Link>
+      </div>
+
+      <nav className="hidden lg:flex items-center gap-4">
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100"
+          >
+            {link.label}
+          </Link>
+        ))}
+        {user && !hasSubscription && (
+          <Link
+            href="/payment"
+            className="inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-gray-100"
+          >
+            Activar suscripción
+          </Link>
+        )}
+        {user && (
+          <div className="pl-4 border-l border-gray-200">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  {getDisplayName(user)}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[200px]">
+                <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+                <DropdownMenuItem disabled>
+                  Ajustes de cuenta
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    setIsOpen(false);
+                    handleSignOut();
+                  }}
+                  disabled={isLoading}
+                  className="text-red-600 focus:text-red-600"
+                >
+                  {isLoading ? 'Procesando...' : 'Cerrar Sesión'}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
+      </nav>
+
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="lg:hidden">
@@ -107,9 +194,14 @@ const Navbar = () => {
             <DialogTitle>Menú de navegación</DialogTitle>
           </VisuallyHidden>
           <div className="p-6">
-            <Link href="/" className="text-xl font-bold block" onClick={() => setIsOpen(false)}>
-              Vinoveo
-            </Link>
+            <Image
+              src="/icons/VinoVeo Logo.png"
+              alt="VinoVeo Logo"
+              width={120}
+              height={48}
+              priority
+              className="h-8 w-auto"
+            />
           </div>
           
           <nav className="border-t flex-1">
@@ -124,6 +216,15 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
+              {user && !hasSubscription && (
+                <Link
+                  href="/payment"
+                  onClick={() => setIsOpen(false)}
+                  className="flex w-full items-center py-2 text-lg text-primary hover:bg-accent hover:text-accent-foreground rounded-md px-2"
+                >
+                  Activar suscripción
+                </Link>
+              )}
             </div>
           </nav>
 
@@ -156,54 +257,6 @@ const Navbar = () => {
           )}
         </SheetContent>
       </Sheet>
-
-      <Link 
-        href="/" 
-        className="text-xl font-bold tracking-wider ml-4 lg:ml-0"
-      >
-        Vinoveo
-      </Link>
-
-      <nav className="ml-auto hidden lg:flex items-center gap-4">
-        {navLinks.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className="inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100"
-          >
-            {link.label}
-          </Link>
-        ))}
-        {user && (
-          <div className="pl-4 border-l border-gray-200">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
-                  {getDisplayName(user)}
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[200px]">
-                <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
-                <DropdownMenuItem disabled>
-                  Ajustes de cuenta
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    setIsOpen(false);
-                    handleSignOut();
-                  }}
-                  disabled={isLoading}
-                  className="text-red-600 focus:text-red-600"
-                >
-                  {isLoading ? 'Procesando...' : 'Cerrar Sesión'}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        )}
-      </nav>
     </header>
   );
 };
