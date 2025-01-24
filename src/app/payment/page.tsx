@@ -1,17 +1,51 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Sparkles } from "lucide-react";
-import { PublicFooter } from "@/components/public-footer";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function PaymentPage() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    try {
+      setIsLoading(true);
+      const stripe = await stripePromise;
+      
+      if (!stripe) throw new Error('Stripe failed to initialize');
+
+      const response = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const { sessionId, error } = await response.json();
+
+      if (error) throw new Error(error);
+
+      const result = await stripe.redirectToCheckout({ sessionId });
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+    } catch (error) {
+      console.error('Error initiating checkout:', error);
+      alert('Error al procesar el pago. Por favor, intenta de nuevo.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -56,12 +90,10 @@ export default function PaymentPage() {
                     <Button 
                       size="lg"
                       className="text-sm px-8 w-full"
-                      onClick={() => {
-                        // TODO: Implement Stripe payment
-                        console.log("Implement payment");
-                      }}
+                      onClick={handleCheckout}
+                      disabled={isLoading}
                     >
-                      Comenzar ahora
+                      {isLoading ? 'Procesando...' : 'Comenzar ahora'}
                     </Button>
                   </div>
                 </div>
@@ -104,9 +136,6 @@ export default function PaymentPage() {
             </p>
           </div>
         </div>
-      </div>
-      <div className="w-full">
-        <PublicFooter />
       </div>
     </div>
   );

@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import LayoutContent from "./layout-content";
-import { PublicFooter } from "./public-footer";
 
 export default function ClientLayout({
   children,
@@ -11,12 +10,12 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const isPublicRoute = pathname?.startsWith('/public') || pathname?.startsWith('/legal');
+  const isLoginPage = pathname === '/login';
 
-  if (isPublicRoute) {
+  if (isPublicRoute || isLoginPage) {
     return (
       <div className="min-h-screen bg-gray-50">
         {children}
-        <PublicFooter />
       </div>
     );
   }

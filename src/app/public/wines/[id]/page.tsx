@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import { WinePublicView } from "@/components/wine-public-view";
 import { PublicNavbar } from "@/components/public-navbar";
+import { translateWine } from "@/lib/translate";
 
 // Create a single supabase client for interacting with your database
 const supabase = createClient(
@@ -124,8 +125,10 @@ export const revalidate = 3600; // Revalidate every hour
 
 export default async function PublicWineViewPage({
   params,
+  searchParams,
 }: {
   params: { id: string };
+  searchParams: { lang?: string };
 }) {
   const wine = await getWine(params.id);
 
@@ -133,11 +136,14 @@ export default async function PublicWineViewPage({
     notFound();
   }
 
+  // Translate the wine data if a language is specified
+  const translatedWine = await translateWine(wine, searchParams.lang || 'es');
+
   return (
     <div className="min-h-screen flex flex-col">
       <PublicNavbar />
       <main className="flex-1">
-        <WinePublicView wine={wine} />
+        <WinePublicView wine={translatedWine} />
       </main>
     </div>
   );

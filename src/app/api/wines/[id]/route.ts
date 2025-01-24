@@ -24,16 +24,17 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = await Promise.resolve(params.id);
-    if (!id) {
-      return new NextResponse("Wine id is required", { status: 400 });
-    }
-
-    const supabase = createRouteHandlerClient({ cookies });
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session?.user?.id) {
       return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const { id } = params;
+    if (!id) {
+      return new NextResponse("Wine id is required", { status: 400 });
     }
 
     const { data: wine, error } = await supabase
@@ -133,7 +134,8 @@ export async function PUT(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!params.id) {
+    const { id } = params;
+    if (!id) {
       return new NextResponse("Wine id is required", { status: 400 });
     }
 
@@ -172,7 +174,7 @@ export async function PUT(
     const { data: wine, error } = await supabase
       .from('wines')
       .update(transformedData)
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', session.user.id)
       .select()
       .single();
@@ -187,13 +189,13 @@ export async function PUT(
       await supabase
         .from('ingredients')
         .delete()
-        .eq('wine_id', params.id);
+        .eq('wine_id', id);
 
       // Then insert new ones
       const ingredients = body.ingredients
         .filter((i: any) => i.ingredientName.trim())
         .map((i: any) => ({
-          wine_id: params.id,
+          wine_id: id,
           ingredient_name: i.ingredientName,
           is_allergen: i.isAllergen
         }));
@@ -209,13 +211,13 @@ export async function PUT(
       await supabase
         .from('production_variants')
         .delete()
-        .eq('wine_id', params.id);
+        .eq('wine_id', id);
 
       // Then insert new ones
       const variants = body.productionVariants
         .filter((v: any) => v.variantName.trim())
         .map((v: any) => ({
-          wine_id: params.id,
+          wine_id: id,
           variant_name: v.variantName
         }));
 
@@ -230,13 +232,13 @@ export async function PUT(
       await supabase
         .from('certifications')
         .delete()
-        .eq('wine_id', params.id);
+        .eq('wine_id', id);
 
       // Then insert new ones
       const certifications = body.certifications
         .filter((c: any) => c.certificationName.trim())
         .map((c: any) => ({
-          wine_id: params.id,
+          wine_id: id,
           certification_name: c.certificationName
         }));
 
@@ -251,13 +253,13 @@ export async function PUT(
       await supabase
         .from('disclaimer_icons')
         .delete()
-        .eq('wine_id', params.id);
+        .eq('wine_id', id);
 
       // Then insert new ones
       const icons = body.disclaimerIcons
         .filter((d: any) => d.iconName.trim())
         .map((d: any) => ({
-          wine_id: params.id,
+          wine_id: id,
           icon_name: d.iconName
         }));
 
@@ -284,7 +286,7 @@ export async function PUT(
           id, wine_id, icon_name
         )
       `)
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (fetchError) {
@@ -305,15 +307,19 @@ export async function DELETE(
 ) {
   try {
     const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-    
-    // Check authentication
+    const supabase = createRouteHandlerClient({ 
+      cookies: () => cookieStore 
+    });
+
     const { data: { session } } = await supabase.auth.getSession();
+
     if (!session?.user?.id) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { id } = params;
+    const resolvedParams = await Promise.resolve(params);
+    const { id } = resolvedParams;
+
     if (!id) {
       return new NextResponse("Wine ID is required", { status: 400 });
     }

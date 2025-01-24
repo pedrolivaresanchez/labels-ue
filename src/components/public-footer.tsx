@@ -8,7 +8,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { X } from "lucide-react"
 
 export function PublicFooter() {
   return (
@@ -30,9 +33,13 @@ export function PublicFooter() {
             <DialogTrigger className="text-sm text-muted-foreground hover:underline">
               Aviso Legal
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader className="pr-8">
                 <DialogTitle className="mb-4">Aviso Legal</DialogTitle>
+                <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <X className="h-4 w-4" />
+                  <span className="sr-only">Close</span>
+                </DialogClose>
                 <DialogDescription className="text-sm leading-relaxed">
                   Con el acceso y/o uso de la Solución y/o a la información puesta a su disposición, Usted reconoce y acepta que Vinoveo no será responsable (i) de cualesquiera alteraciones en su dispositivo, sistema informático, documentos o ficheros de su titularidad o de terceros; (ii) de retrasos o bloqueos en los sistemas asociados a la Solución causados por deficiencias o sobrecargas en el sistema cualquiera que sea su causa; (iii) de interrupciones, eventuales indisponibilidades de acceso y/o de uso a la Solución, virus informáticos, malwares, averías u otros elementos que puedan estar presentes en la Solución a la que accede independientemente de la causa; (iv) de intromisiones ilegitimas causadas por terceros, que sean ajenos a Vinoveo; (v) ni por los daños y perjuicios causados frente a Usted y/o cualesquiera terceros que por tal acceso y/o uso pudieran ocasionarse.
                   <br /><br />

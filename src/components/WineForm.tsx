@@ -57,7 +57,7 @@ type FormData = {
   optionalLabelling?: string | null;
   countryOfOrigin?: string;
   placeOfOrigin?: string;
-  winery_information?: string;
+  wineryInformation?: string;
   instructionsForUse?: string | null;
   conservationConditions?: string | null;
   drainedWeightGrams?: number | null;
@@ -82,6 +82,31 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   const [certifications, setCertifications] = useState<Certification[]>([])
   const [newCertification, setNewCertification] = useState("")
   const [formData, setFormData] = useState<FormData>({
+    name: '',
+    eanCode: '',
+    foodName: '',
+    energyKj: 0,
+    energyKcal: 0,
+    fat: 0,
+    saturatedFat: 0,
+    carbohydrate: 0,
+    sugars: 0,
+    protein: 0,
+    salt: 0,
+    netQuantityCl: 0,
+    hasEstimationSign: false,
+    alcoholPercentage: 0,
+    optionalLabelling: '',
+    countryOfOrigin: '',
+    placeOfOrigin: '',
+    wineryInformation: '',
+    instructionsForUse: '',
+    conservationConditions: '',
+    drainedWeightGrams: 0,
+    operatorName: '',
+    operatorAddress: '',
+    registrationNumber: '',
+    imageUrl: null,
     ingredients: [],
     productionVariants: [],
     certifications: []
@@ -104,8 +129,33 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       setCertifications(initialData.certifications?.map((c: any) => ({
         certification_name: c.certificationName
       })) || [])
+      // Transform snake_case to camelCase when setting form data
       setFormData({
-        ...initialData,
+        name: initialData.name,
+        eanCode: initialData.ean_code,
+        foodName: initialData.food_name,
+        energyKj: initialData.energy_kj,
+        energyKcal: initialData.energy_kcal,
+        fat: initialData.fat,
+        saturatedFat: initialData.saturated_fat,
+        carbohydrate: initialData.carbohydrate,
+        sugars: initialData.sugars,
+        protein: initialData.protein,
+        salt: initialData.salt,
+        netQuantityCl: initialData.net_quantity_cl,
+        hasEstimationSign: initialData.has_estimation_sign,
+        alcoholPercentage: initialData.alcohol_percentage,
+        optionalLabelling: initialData.optional_labelling,
+        countryOfOrigin: initialData.country_of_origin,
+        placeOfOrigin: initialData.place_of_origin,
+        wineryInformation: initialData.winery_information,
+        instructionsForUse: initialData.instructions_for_use,
+        conservationConditions: initialData.conservation_conditions,
+        drainedWeightGrams: initialData.drained_weight_grams,
+        operatorName: initialData.operator_name,
+        operatorAddress: initialData.operator_address,
+        registrationNumber: initialData.registration_number,
+        imageUrl: initialData.image_url,
         ingredients: initialData.ingredients || [],
         productionVariants: initialData.productionVariants || [],
         certifications: initialData.certifications || []
@@ -240,11 +290,11 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     }
   };
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setLoading(true)
-
     try {
+      setLoading(true)
+
       let imageUrl = initialData?.imageUrl;
 
       // Handle image upload if there's a new image
@@ -261,9 +311,9 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
           imageUrl = await uploadWineImage(imageFile, tempId);
         } catch (error: any) {
           toast({
+            variant: "destructive",
             title: "Error",
             description: error.message || "Error al subir la imagen",
-            variant: "destructive",
           });
           setLoading(false);
           return;
@@ -291,7 +341,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         optionalLabelling: formData.optionalLabelling,
         countryOfOrigin: formData.countryOfOrigin,
         placeOfOrigin: formData.placeOfOrigin,
-        winery_information: formData.winery_information,
+        wineryInformation: formData.wineryInformation,
         operatorName: formData.operatorName,
         operatorAddress: formData.operatorAddress,
         registrationNumber: formData.registrationNumber,
@@ -300,14 +350,14 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         conservationConditions: formData.conservationConditions,
         drainedWeightGrams: formData.drainedWeightGrams,
         ingredients: ingredients.map(i => ({
-          ingredientName: i.ingredient_name,
-          isAllergen: i.is_allergen
+          name: i.ingredient_name,
+          is_allergen: i.is_allergen
         })),
-        productionVariants: productionVariants.map(v => ({
-          variantName: v.variant_name
+        production_variants: productionVariants.map(v => ({
+          name: v.variant_name
         })),
         certifications: certifications.map(c => ({
-          certificationName: c.certification_name
+          name: c.certification_name
         }))
       };
 
@@ -320,29 +370,27 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       });
 
       if (!response.ok) {
-        throw new Error(isEditing ? "Failed to update wine" : "Failed to create wine");
+        throw new Error('Error al guardar la etiqueta')
       }
 
-      const wine = await response.json();
-      
-      toast({
-        title: isEditing ? "Etiqueta actualizada" : "Etiqueta creada",
-        description: isEditing 
-          ? "La etiqueta se ha actualizado correctamente"
-          : "La etiqueta se ha creado correctamente",
-      });
+      const wine = await response.json()
 
-      router.push(`/wines/view/${wine.id}`);
-      router.refresh();
-    } catch (error) {
-      console.error(isEditing ? "[WINE_UPDATE_ERROR]" : "[WINE_CREATE_ERROR]", error);
       toast({
-        title: "Error",
-        description: isEditing ? "Error al actualizar la etiqueta" : "Error al crear la etiqueta",
+        variant: "default",
+        title: "¡Éxito!",
+        description: "La etiqueta se ha guardado correctamente",
+      })
+
+      router.push(`/wines/view/${wine.id}`)
+    } catch (error) {
+      console.error('Error:', error)
+      toast({
         variant: "destructive",
-      });
+        title: "Error",
+        description: "Ha ocurrido un error al guardar la etiqueta",
+      })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
@@ -359,11 +407,11 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               <CardContent className="space-y-4">
                 <div className="grid gap-4">
                   {/* Image Upload */}
-                  <div className="grid gap-2">
+                  <div className="grid gap-4">
                     <Label>Imagen del producto</Label>
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col gap-4">
                       {imagePreview ? (
-                        <div className="relative w-32 h-32">
+                        <div className="relative w-40 h-40 mx-auto">
                           <Image
                             src={imagePreview}
                             alt="Preview"
@@ -374,7 +422,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="absolute -top-2 -right-2"
+                            className="absolute -top-2 -right-2 bg-background"
                             onClick={() => {
                               setImagePreview(null);
                               setImageFile(null);
@@ -384,19 +432,23 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                           </Button>
                         </div>
                       ) : (
-                        <div className="flex items-center justify-center w-32 h-32 border-2 border-dashed rounded-lg">
-                          <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                        <div className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed rounded-lg mx-auto hover:bg-accent/50 transition-colors cursor-pointer"
+                             onClick={() => document.getElementById('image-upload')?.click()}>
+                          <ImageIcon className="w-8 h-8 text-muted-foreground mb-2" />
+                          <p className="text-sm text-muted-foreground">Click para subir</p>
                         </div>
                       )}
-                      <div className="flex-1">
+                      <div className="space-y-2">
                         <Input
+                          id="image-upload"
                           type="file"
                           accept="image/jpeg,image/png,image/webp"
                           onChange={handleImageChange}
                           className="cursor-pointer"
                         />
-                        <p className="mt-2 text-sm text-muted-foreground">
-                          JPG, PNG o WebP. Máximo 2MB. Dimensiones recomendadas: 1200x1200px
+                        <p className="text-sm text-muted-foreground text-center">
+                          JPG, PNG o WebP. Máximo 2MB.<br/>
+                          Dimensiones recomendadas: 1200×1200px
                         </p>
                       </div>
                     </div>
@@ -591,14 +643,28 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="hasEstimationSign">Signo de estimación (e)</Label>
-                    <Input 
-                      id="hasEstimationSign" 
-                      name="hasEstimationSign" 
-                      type="checkbox"
-                      defaultChecked={initialData?.hasEstimationSign}
-                      onChange={handleInputChange}
-                    />
+                    <Label htmlFor="hasEstimationSign" className="flex items-center gap-2">
+                      Signo de estimación
+                      <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-medium bg-primary/10 text-primary rounded">
+                        e
+                      </span>
+                    </Label>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="hasEstimationSign"
+                        name="hasEstimationSign"
+                        defaultChecked={initialData?.hasEstimationSign}
+                        onCheckedChange={(checked) => {
+                          setFormData(prev => ({
+                            ...prev,
+                            hasEstimationSign: checked as boolean
+                          }))
+                        }}
+                      />
+                      <Label htmlFor="hasEstimationSign" className="text-sm text-muted-foreground font-normal">
+                        Incluir el signo de estimación en la etiqueta
+                      </Label>
+                    </div>
                   </div>
 
                   <div className="grid gap-2">
@@ -645,11 +711,11 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="winery_information">Información de la bodega</Label>
+                    <Label htmlFor="wineryInformation">Información de la bodega</Label>
                     <Input 
-                      id="winery_information" 
-                      name="winery_information" 
-                      defaultValue={initialData?.winery_information}
+                      id="wineryInformation" 
+                      name="wineryInformation" 
+                      defaultValue={initialData?.wineryInformation}
                       required 
                       onChange={handleInputChange}
                     />
@@ -754,14 +820,13 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-4">
-                  <div className="flex gap-2">
-                    <div className="flex-1">
-                      <Input
-                        value={newIngredient}
-                        onChange={(e) => setNewIngredient(e.target.value)}
-                        placeholder="Añadir ingrediente"
-                      />
-                    </div>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Input
+                      value={newIngredient}
+                      onChange={(e) => setNewIngredient(e.target.value)}
+                      placeholder="Añadir ingrediente"
+                      className="flex-1"
+                    />
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="isAllergen"
@@ -774,6 +839,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       type="button"
                       onClick={addIngredient}
                       disabled={!newIngredient.trim()}
+                      className="w-full sm:w-auto whitespace-nowrap"
                     >
                       Añadir
                     </Button>
@@ -809,16 +875,18 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-4">
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-4">
                     <Input
                       value={newVariant}
                       onChange={(e) => setNewVariant(e.target.value)}
                       placeholder="Añadir variante"
+                      className="flex-1"
                     />
                     <Button 
                       type="button"
                       onClick={addVariant}
                       disabled={!newVariant.trim()}
+                      className="w-full sm:w-auto whitespace-nowrap"
                     >
                       Añadir
                     </Button>
@@ -849,16 +917,18 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-4">
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-4">
                     <Input
                       value={newCertification}
                       onChange={(e) => setNewCertification(e.target.value)}
                       placeholder="Añadir certificación"
+                      className="flex-1"
                     />
                     <Button 
                       type="button"
                       onClick={addCertification}
                       disabled={!newCertification.trim()}
+                      className="w-full sm:w-auto whitespace-nowrap"
                     >
                       Añadir
                     </Button>

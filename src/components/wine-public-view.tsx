@@ -165,66 +165,65 @@ function NutritionalInfo({ wine }: { wine: Wine }) {
 
 export function WinePublicView({ wine }: { wine: Wine }) {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-      <div className="grid lg:grid-cols-2 gap-8 mb-8">
-        {/* Left side - Basic Information */}
-        <div className="flex flex-col justify-center space-y-6">
-          <h1 className="text-4xl sm:text-5xl font-bold">{wine.name}</h1>
-          <div className="space-y-3">
-            <p className="text-2xl text-muted-foreground">{wine.foodName}</p>
-            <p className="text-2xl font-medium">{wine.operatorName}</p>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-4xl">
+      {/* Image Section - Full width on mobile */}
+      {wine.image_url && (
+        <div className="mb-6 sm:mb-8">
+          <div className="relative w-full max-w-sm mx-auto aspect-square">
+            <Image
+              src={wine.image_url}
+              alt={wine.name}
+              fill
+              className="object-contain"
+              sizes="(max-width: 768px) 100vw, 400px"
+              priority
+            />
           </div>
         </div>
+      )}
 
-        {/* Right side - Image and Icons */}
-        {wine.image_url && (
-          <div className="space-y-6">
-            <div className="relative w-full max-w-md mx-auto aspect-square">
-              <Image
-                src={wine.image_url}
-                alt={wine.name}
-                fill
-                className="object-contain"
-                sizes="(max-width: 768px) 100vw, 400px"
-              />
-            </div>
-            <div className="flex justify-center gap-4">
-              <Image
-                src="/icons/cervezas_mas18.png"
-                alt="Solo mayores de 18"
-                width={60}
-                height={60}
-              />
-              <Image
-                src="/icons/cervezas_e.png"
-                alt="No conducir"
-                width={60}
-                height={60}
-              />
-              <Image
-                src="/icons/cervezas_c.png"
-                alt="No embarazadas"
-                width={60}
-                height={60}
-              />
-            </div>
-          </div>
-        )}
+      {/* Basic Information - Stacked on mobile */}
+      <div className="text-center sm:text-left mb-6 sm:mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-3">{wine.name}</h1>
+        <p className="text-xl sm:text-2xl text-muted-foreground mb-2">{wine.foodName}</p>
+        <p className="text-xl sm:text-2xl font-medium">{wine.operatorName}</p>
       </div>
 
-      <Accordion type="single" collapsible className="w-full space-y-4">
+      {/* Warning Icons - Centered on mobile */}
+      <div className="flex justify-center gap-4 mb-8">
+        <Image
+          src="/icons/cervezas_mas18.png"
+          alt="Solo mayores de 18"
+          width={50}
+          height={50}
+        />
+        <Image
+          src="/icons/cervezas_e.png"
+          alt="No conducir"
+          width={50}
+          height={50}
+        />
+        <Image
+          src="/icons/cervezas_c.png"
+          alt="No embarazadas"
+          width={50}
+          height={50}
+        />
+      </div>
+
+      <Accordion type="single" collapsible defaultValue="referencia" className="w-full space-y-4">
         <AccordionItem value="referencia">
-          <AccordionTrigger className="text-xl font-semibold">Referencia</AccordionTrigger>
+          <AccordionTrigger className="text-lg sm:text-xl font-semibold">Referencia</AccordionTrigger>
           <AccordionContent>
             <Card>
-              <CardContent className="space-y-4 p-6">
+              <CardContent className="space-y-4 p-4 sm:p-6">
                 <div>
                   <h3 className="text-sm font-medium text-muted-foreground">Nombre</h3>
-                  <p className="text-lg">{wine.name}</p>
+                  <p className="text-base sm:text-lg">{wine.name}</p>
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-muted-foreground">Código EAN</h3>
-                  <p className="text-lg">{wine.eanCode}</p>
+                  <p className="text-base sm:text-lg">{wine.eanCode}</p>
                 </div>
               </CardContent>
             </Card>
@@ -232,18 +231,18 @@ export function WinePublicView({ wine }: { wine: Wine }) {
         </AccordionItem>
 
         <AccordionItem value="informacion-nutricional">
-          <AccordionTrigger className="text-xl font-semibold">Información nutricional</AccordionTrigger>
+          <AccordionTrigger className="text-lg sm:text-xl font-semibold">Información nutricional</AccordionTrigger>
           <AccordionContent>
-            <div className="grid gap-6">
+            <div className="grid gap-4 sm:gap-6">
               <Card>
-                <CardContent className="space-y-4 p-6">
+                <CardContent className="space-y-4 p-4 sm:p-6">
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Denominación del alimento</h3>
-                    <p className="text-lg">{wine.foodName}</p>
+                    <p className="text-base sm:text-lg">{wine.foodName}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Lista de ingredientes</h3>
-                    <div className="text-lg space-x-1">
+                    <div className="text-base sm:text-lg space-x-1">
                       {wine.ingredients.map((ingredient, index) => (
                         <span key={index}>
                           {ingredient.name}
@@ -256,21 +255,21 @@ export function WinePublicView({ wine }: { wine: Wine }) {
               </Card>
 
               <Card>
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <h3 className="text-sm font-medium text-muted-foreground mb-4">100 ml</h3>
                   <NutritionalInfo wine={wine} />
                 </CardContent>
               </Card>
 
               <Card>
-                <CardContent className="space-y-4 p-6">
+                <CardContent className="space-y-4 p-4 sm:p-6">
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Cantidad neta</h3>
-                    <p className="text-lg">{wine.netQuantityCl} Centilitros</p>
+                    <p className="text-base sm:text-lg">{wine.netQuantityCl} Centilitros</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Porcentaje de alcohol</h3>
-                    <p className="text-lg">{wine.alcoholPercentage}% vol</p>
+                    <p className="text-base sm:text-lg">{wine.alcoholPercentage}% vol</p>
                   </div>
                 </CardContent>
               </Card>
@@ -279,62 +278,62 @@ export function WinePublicView({ wine }: { wine: Wine }) {
         </AccordionItem>
 
         <AccordionItem value="detalles">
-          <AccordionTrigger className="text-xl font-semibold">Detalles adicionales</AccordionTrigger>
+          <AccordionTrigger className="text-lg sm:text-xl font-semibold">Detalles adicionales</AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <Card>
-                <CardContent className="space-y-4 p-6">
+                <CardContent className="space-y-4 p-4 sm:p-6">
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">País de origen</h3>
-                    <p className="text-lg">{wine.countryOfOrigin}</p>
+                    <p className="text-base sm:text-lg">{wine.countryOfOrigin}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Lugar de procedencia</h3>
-                    <p className="text-lg">{wine.placeOfOrigin}</p>
+                    <p className="text-base sm:text-lg">{wine.placeOfOrigin}</p>
                   </div>
                   {wine.productionVariants.length > 0 && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Variantes de producción</h3>
                       {wine.productionVariants.map((variant, index) => (
-                        <p key={index} className="text-lg">{variant.variantName}</p>
+                        <p key={index} className="text-base sm:text-lg">{variant.variantName}</p>
                       ))}
                     </div>
                   )}
                   {wine.instructionsForUse && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Modo de empleo</h3>
-                      <p className="text-lg">{wine.instructionsForUse}</p>
+                      <p className="text-base sm:text-lg">{wine.instructionsForUse}</p>
                     </div>
                   )}
                   {wine.conservationConditions && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Condiciones de conservación</h3>
-                      <p className="text-lg">{wine.conservationConditions}</p>
+                      <p className="text-base sm:text-lg">{wine.conservationConditions}</p>
                     </div>
                   )}
                   {wine.drainedWeightGrams && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Peso escurrido</h3>
-                      <p className="text-lg">{wine.drainedWeightGrams} Gramos</p>
+                      <p className="text-base sm:text-lg">{wine.drainedWeightGrams} Gramos</p>
                     </div>
                   )}
                 </CardContent>
               </Card>
 
               <Card>
-                <CardContent className="space-y-4 p-6">
+                <CardContent className="space-y-4 p-4 sm:p-6">
                   <h3 className="text-lg font-semibold mb-4">Datos del operador</h3>
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Nombre del operador / importador</h3>
-                    <p className="text-lg">{wine.operatorName}</p>
+                    <p className="text-base sm:text-lg">{wine.operatorName}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Dirección del operador / importador</h3>
-                    <p className="text-lg">{wine.operatorAddress}</p>
+                    <p className="text-base sm:text-lg">{wine.operatorAddress}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Registro</h3>
-                    <p className="text-lg">{wine.registrationNumber}</p>
+                    <p className="text-base sm:text-lg">{wine.registrationNumber}</p>
                   </div>
                 </CardContent>
               </Card>

@@ -57,7 +57,11 @@ type Wine = {
 
 export async function POST(req: Request) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ 
+      cookies: () => cookieStore 
+    });
+
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session?.user?.id) {
@@ -197,17 +201,15 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ 
+      cookies: () => cookieStore 
+    });
 
-    // Get the current user's session
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    
-    if (sessionError) {
-      throw new Error('Error al obtener la sesión del usuario');
-    }
+    const { data: { session } } = await supabase.auth.getSession();
 
-    if (!session) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+    if (!session?.user?.id) {
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     // Get wines filtered by user_id

@@ -18,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 
 function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -41,50 +41,30 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
-const Navbar = () => {
+export default function Navbar() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [hasSubscription, setHasSubscription] = useState(false);
+  const [loadingPortal, setLoadingPortal] = useState(false);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      if (session?.user) {
-        checkSubscription(session.user.id);
-      }
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (!session) {
         router.push('/login');
-      } else {
-        await checkSubscription(session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, [router, supabase]);
-
-  const checkSubscription = async (userId: string) => {
-    try {
-      const { data: subscription } = await supabase
-        .from('subscriptions')
-        .select('status')
-        .eq('user_id', userId)
-        .single();
-
-      setHasSubscription(subscription?.status === 'active');
-    } catch (error) {
-      console.error('Error checking subscription:', error);
-      setHasSubscription(false);
-    }
-  };
 
   const handleSignOut = async () => {
     try {
@@ -111,7 +91,28 @@ const Navbar = () => {
     }
   };
 
-  const navLinks = user && hasSubscription ? [
+  const handleAccountSettings = async () => {
+    try {
+      setLoadingPortal(true);
+      const response = await fetch('/api/create-portal-session', {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create portal session');
+      }
+
+      const { url } = await response.json();
+      window.location.href = url;
+    } catch (error) {
+      console.error('Error accessing account settings:', error);
+      alert('Error al acceder a los ajustes de cuenta. Por favor, intenta de nuevo.');
+    } finally {
+      setLoadingPortal(false);
+    }
+  };
+
+  const navLinks = user ? [
     { href: "/wines", label: "Etiquetas" },
     { href: "/wines/new", label: "Crear Etiqueta" }
   ] : [];
@@ -125,10 +126,7 @@ const Navbar = () => {
   return (
     <header className="flex h-16 w-full items-center px-4 md:px-6 bg-white border-b">
       <div className="flex-1 flex items-center">
-        <Link 
-          href="/" 
-          className="pl-2"
-        >
+        <Link href="/" className="pl-2">
           <Image
             src="/icons/VinoVeo Logo.png"
             alt="VinoVeo Logo"
@@ -150,14 +148,6 @@ const Navbar = () => {
             {link.label}
           </Link>
         ))}
-        {user && !hasSubscription && (
-          <Link
-            href="/payment"
-            className="inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-gray-100"
-          >
-            Activar suscripción
-          </Link>
-        )}
         {user && (
           <div className="pl-4 border-l border-gray-200">
             <DropdownMenu>
@@ -169,8 +159,18 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[200px]">
                 <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
-                <DropdownMenuItem disabled>
-                  Ajustes de cuenta
+                <DropdownMenuItem 
+                  onClick={handleAccountSettings}
+                  disabled={loadingPortal}
+                >
+                  {loadingPortal ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Cargando...
+                    </>
+                  ) : (
+                    'Ajustes de cuenta'
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -220,15 +220,6 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
-              {user && !hasSubscription && (
-                <Link
-                  href="/payment"
-                  onClick={() => setIsOpen(false)}
-                  className="flex w-full items-center py-2 text-lg text-primary hover:bg-accent hover:text-accent-foreground rounded-md px-2"
-                >
-                  Activar suscripción
-                </Link>
-              )}
             </div>
           </nav>
 
@@ -238,18 +229,11 @@ const Navbar = () => {
                 <div className="text-sm font-medium text-muted-foreground">
                   {getDisplayName(user)}
                 </div>
-                <Link 
-                  href="/account" 
-                  onClick={() => setIsOpen(false)}
-                  className="text-sm hover:text-accent-foreground"
-                >
-                  Ajustes de cuenta
-                </Link>
                 <Button
                   onClick={handleSignOut}
                   disabled={isLoading}
-                  variant="ghost"
-                  className="justify-start px-2 text-red-600 hover:text-red-600 hover:bg-red-50"
+                  variant="destructive"
+                  className="w-full"
                 >
                   {isLoading ? 'Procesando...' : 'Cerrar Sesión'}
                 </Button>
@@ -260,6 +244,4 @@ const Navbar = () => {
       </Sheet>
     </header>
   );
-};
-
-export default Navbar; 
+} 
