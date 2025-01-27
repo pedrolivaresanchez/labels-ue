@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Sparkles } from "lucide-react";
+import { Check, Sparkles, Wine, QrCode, Clock, Shield, Star, HeartHandshake } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { loadStripe } from '@stripe/stripe-js';
@@ -54,7 +54,17 @@ export default function PaymentPage() {
           </div>
           <h1 className="text-2xl font-semibold">Plan Premium</h1>
           <p className="text-muted-foreground">
-            Accede a todas las funcionalidades de VinoVeo
+            Gestiona tus etiquetas de vino de forma profesional
+          </p>
+        </div>
+
+        <div className="pt-4">
+          <div className="flex items-center justify-center mb-4">
+            <span className="text-4xl font-bold">50€</span>
+            <Badge variant="secondary" className="ml-2">por año</Badge>
+          </div>
+          <p className="text-center text-sm text-muted-foreground mb-6">
+            Menos de 5€ al mes - Facturación anual
           </p>
         </div>
 
@@ -62,45 +72,89 @@ export default function PaymentPage() {
 
         <div className="space-y-4">
           <div className="flex items-center">
-            <Check className="h-5 w-5 text-primary mr-2" />
-            <span>Etiquetas ilimitadas</span>
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+              <Wine className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <span className="font-medium">Etiquetas ilimitadas</span>
+              <p className="text-sm text-muted-foreground">Crea y gestiona todas las etiquetas que necesites</p>
+            </div>
           </div>
+          
           <div className="flex items-center">
-            <Check className="h-5 w-5 text-primary mr-2" />
-            <span>Códigos QR personalizados</span>
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+              <QrCode className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <span className="font-medium">Códigos QR personalizados</span>
+              <p className="text-sm text-muted-foreground">Genera códigos QR únicos para cada producto</p>
+            </div>
           </div>
+
           <div className="flex items-center">
-            <Check className="h-5 w-5 text-primary mr-2" />
-            <span>Soporte prioritario</span>
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+              <Clock className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <span className="font-medium">Actualizaciones en tiempo real</span>
+              <p className="text-sm text-muted-foreground">Modifica la información cuando lo necesites</p>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+              <Shield className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <span className="font-medium">Cumplimiento normativo</span>
+              <p className="text-sm text-muted-foreground">Etiquetas conformes con la normativa UE</p>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+              <Star className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <span className="font-medium">Soporte prioritario</span>
+              <p className="text-sm text-muted-foreground">Asistencia personalizada cuando la necesites</p>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+              <HeartHandshake className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <span className="font-medium">Sin compromiso</span>
+              <p className="text-sm text-muted-foreground">Cancela en cualquier momento</p>
+            </div>
           </div>
         </div>
 
-        <div className="pt-4">
-          <div className="flex items-center justify-center mb-4">
-            <span className="text-3xl font-bold">9,99€</span>
-            <Badge variant="secondary" className="ml-2">por mes</Badge>
-          </div>
+        <Button
+          onClick={handleCheckout}
+          className="w-full h-12 text-lg mt-6"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <span className="mr-2">Procesando</span>
+              <Image
+                src="/spinner.gif"
+                alt="Loading"
+                width={20}
+                height={20}
+              />
+            </>
+          ) : (
+            'Comenzar ahora'
+          )}
+        </Button>
 
-          <Button
-            onClick={handleCheckout}
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span className="mr-2">Procesando</span>
-                <Image
-                  src="/spinner.gif"
-                  alt="Loading"
-                  width={20}
-                  height={20}
-                />
-              </>
-            ) : (
-              'Suscribirse ahora'
-            )}
-          </Button>
-        </div>
+        <p className="text-center text-sm text-muted-foreground">
+          Pago seguro con Stripe. IVA incluido.
+        </p>
       </Card>
     </div>
   );

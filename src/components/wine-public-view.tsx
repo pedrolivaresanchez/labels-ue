@@ -163,7 +163,7 @@ function NutritionalInfo({ wine }: { wine: Wine }) {
 
 export function WinePublicView({ wine }: { wine: Wine }) {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-4xl">
+    <div className="container mx-auto px-6 sm:px-6 lg:px-8 py-8 max-w-4xl">
       {/* Image Section - Full width on mobile */}
       {wine.image_url && (
         <div className="mb-8">
@@ -214,7 +214,7 @@ export function WinePublicView({ wine }: { wine: Wine }) {
           <AccordionTrigger className="text-lg sm:text-xl font-semibold">Referencia</AccordionTrigger>
           <AccordionContent>
             <Card>
-              <CardContent className="space-y-4 p-4 sm:p-6">
+              <CardContent className="space-y-4 p-6">
                 <div>
                   <h3 className="text-sm font-medium text-muted-foreground">Nombre</h3>
                   <p className="text-base sm:text-lg">{wine.name}</p>
@@ -233,7 +233,7 @@ export function WinePublicView({ wine }: { wine: Wine }) {
           <AccordionContent>
             <div className="grid gap-4 sm:gap-6">
               <Card>
-                <CardContent className="space-y-4 p-4 sm:p-6">
+                <CardContent className="space-y-4 p-6">
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Denominación del alimento</h3>
                     <p className="text-base sm:text-lg">{wine.foodName}</p>
@@ -253,14 +253,14 @@ export function WinePublicView({ wine }: { wine: Wine }) {
               </Card>
 
               <Card>
-                <CardContent className="p-4 sm:p-6">
+                <CardContent className="p-6">
                   <h3 className="text-sm font-medium text-muted-foreground mb-4">100 ml</h3>
                   <NutritionalInfo wine={wine} />
                 </CardContent>
               </Card>
 
               <Card>
-                <CardContent className="space-y-4 p-4 sm:p-6">
+                <CardContent className="space-y-4 p-6">
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Cantidad neta</h3>
                     <p className="text-base sm:text-lg">{wine.netQuantityCl} Centilitros</p>
@@ -280,7 +280,7 @@ export function WinePublicView({ wine }: { wine: Wine }) {
           <AccordionContent>
             <div className="space-y-4 sm:space-y-6">
               <Card>
-                <CardContent className="space-y-4 p-4 sm:p-6">
+                <CardContent className="space-y-4 p-6">
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">País de origen</h3>
                     <p className="text-base sm:text-lg">{wine.countryOfOrigin}</p>
@@ -319,7 +319,7 @@ export function WinePublicView({ wine }: { wine: Wine }) {
               </Card>
 
               <Card>
-                <CardContent className="space-y-4 p-4 sm:p-6">
+                <CardContent className="space-y-4 p-6">
                   <h3 className="text-lg font-semibold mb-4">Datos del operador</h3>
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Nombre del operador / importador</h3>

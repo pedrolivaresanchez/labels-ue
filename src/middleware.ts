@@ -6,6 +6,11 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next()
   const supabase = createMiddlewareClient({ req: request, res: response })
 
+  // Redirect root to /wines
+  if (request.nextUrl.pathname === '/') {
+    return NextResponse.redirect(new URL('/wines', request.url))
+  }
+
   // Refresh session if expired - required for Server Components
   await supabase.auth.getSession()
 

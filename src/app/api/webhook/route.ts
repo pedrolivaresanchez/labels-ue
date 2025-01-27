@@ -27,7 +27,24 @@ const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SE
 // This is your Stripe webhook secret for testing your endpoint locally.
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export async function POST(req: Request) {
+  // Enable CORS
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST',
+        'Access-Control-Allow-Headers': 'Content-Type, stripe-signature',
+      },
+    });
+  }
+
   try {
     // Check if required services are initialized
     if (!stripe || !supabase || !webhookSecret) {
