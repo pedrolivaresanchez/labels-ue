@@ -150,7 +150,7 @@ export default function WinesPage() {
       </div>
 
       <WinesTable
-        data={wines}
+        data={wines as unknown as import("@/components/WinesTable").Wine[]}
         onDelete={handleDeleteClick}
         onQRDownload={handleQRDownload}
         onDuplicate={handleDuplicate}
