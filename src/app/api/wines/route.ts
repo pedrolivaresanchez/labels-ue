@@ -145,7 +145,7 @@ export async function POST(req: Request) {
     // Handle ingredients
     if (body.ingredients?.length > 0) {
       const ingredients = body.ingredients
-        .filter(i => i.ingredientName.trim())
+        .filter(i => i?.ingredientName && typeof i.ingredientName === 'string')
         .map(i => ({
           wine_id: wine.id,
           ingredient_name: i.ingredientName,

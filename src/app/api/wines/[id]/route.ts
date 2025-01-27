@@ -193,8 +193,8 @@ export async function PUT(
 
       // Then insert new ones
       const ingredients = body.ingredients
-        .filter((i: any) => i.ingredientName.trim())
-        .map((i: any) => ({
+        .filter((i: { ingredientName: string; isAllergen: boolean }) => i.ingredientName.trim())
+        .map((i: { ingredientName: string; isAllergen: boolean }) => ({
           wine_id: id,
           ingredient_name: i.ingredientName,
           is_allergen: i.isAllergen

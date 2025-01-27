@@ -22,34 +22,36 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-type Ingredient = {
+interface FormIngredient {
   ingredient_name: string;
   is_allergen: boolean;
-};
+}
 
-type ProductionVariant = {
+interface FormProductionVariant {
   variant_name: string;
-};
+}
 
-type Certification = {
+interface FormCertification {
   certification_name: string;
-};
+}
 
 interface WineFormProps {
   initialData?: Wine;
   isEditing?: boolean;
 }
 
+type FormData = WineFormData;
+
 export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
-  const [ingredients, setIngredients] = useState<Ingredient[]>([])
+  const [ingredients, setIngredients] = useState<FormIngredient[]>([])
+  const [productionVariants, setProductionVariants] = useState<FormProductionVariant[]>([])
+  const [certifications, setCertifications] = useState<FormCertification[]>([])
   const [newIngredient, setNewIngredient] = useState("")
   const [isAllergen, setIsAllergen] = useState(false)
-  const [productionVariants, setProductionVariants] = useState<ProductionVariant[]>([])
   const [newVariant, setNewVariant] = useState("")
-  const [certifications, setCertifications] = useState<Certification[]>([])
   const [newCertification, setNewCertification] = useState("")
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -82,21 +84,21 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     certifications: []
   })
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(initialData?.imageUrl || null);
+  const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image_url || null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [showDimensionsDialog, setShowDimensionsDialog] = useState(false);
 
   // Initialize form data when editing
   useEffect(() => {
     if (initialData && isEditing) {
-      setIngredients(initialData.ingredients?.map((i: any) => ({
-        ingredient_name: i.ingredientName,
+      setIngredients(initialData.ingredients?.map((i) => ({
+        ingredient_name: i.ingredient_name,
         is_allergen: i.isAllergen
       })) || [])
-      setProductionVariants(initialData.productionVariants?.map((v: any) => ({
+      setProductionVariants(initialData.productionVariants?.map((v: { variantName: any }) => ({
         variant_name: v.variantName
       })) || [])
-      setCertifications(initialData.certifications?.map((c: any) => ({
+      setCertifications(initialData.certifications?.map((c) => ({
         certification_name: c.certificationName
       })) || [])
       // Transform snake_case to camelCase when setting form data
@@ -126,7 +128,10 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         operatorAddress: initialData.operator_address,
         registrationNumber: initialData.registration_number,
         imageUrl: initialData.image_url,
-        ingredients: initialData.ingredients || [],
+        ingredients: (initialData.ingredients || []).map(i => ({
+          ingredientName: i.ingredient_name,
+          isAllergen: i.isAllergen
+        })),
         productionVariants: initialData.productionVariants || [],
         certifications: initialData.certifications || []
       })
@@ -265,25 +270,26 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     try {
       setLoading(true)
 
-      let imageUrl = initialData?.imageUrl;
+      let imageUrl = initialData?.image_url;
 
       // Handle image upload if there's a new image
       if (imageFile) {
         setUploadingImage(true);
         try {
           // If editing and there's an existing image, delete it
-          if (isEditing && initialData?.imageUrl) {
-            await deleteWineImage(initialData.imageUrl);
+          if (isEditing && initialData?.image_url) {
+            await deleteWineImage(initialData.image_url);
           }
           
           // Upload new image
-          const tempId = isEditing ? initialData.id : Date.now().toString();
+          const tempId = isEditing && initialData ? initialData.id : Date.now().toString();
           imageUrl = await uploadWineImage(imageFile, tempId);
-        } catch (error: any) {
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Error al subir la imagen';
           toast({
             variant: "destructive",
             title: "Error",
-            description: error.message || "Error al subir la imagen",
+            description: errorMessage,
           });
           setLoading(false);
           return;
@@ -315,13 +321,13 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         operatorName: formData.operatorName,
         operatorAddress: formData.operatorAddress,
         registrationNumber: formData.registrationNumber,
-        imageUrl,
+        imageUrl: imageUrl,
         instructionsForUse: formData.instructionsForUse,
         conservationConditions: formData.conservationConditions,
         drainedWeightGrams: formData.drainedWeightGrams,
         ingredients: ingredients.map(i => ({
-          name: i.ingredient_name,
-          is_allergen: i.is_allergen
+          ingredientName: i.ingredient_name,
+          isAllergen: i.is_allergen
         })),
         production_variants: productionVariants.map(v => ({
           name: v.variant_name
@@ -331,7 +337,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         }))
       };
 
-      const response = await fetch(isEditing ? `/api/wines/${initialData.id}` : "/api/wines", {
+      const response = await fetch(isEditing && initialData ? `/api/wines/${initialData.id}` : "/api/wines", {
         method: isEditing ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
@@ -340,29 +346,30 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Error al guardar la etiqueta')
+        throw new Error('Error al guardar la etiqueta');
       }
 
-      const wine = await response.json()
+      const wine = await response.json();
 
       toast({
         variant: "default",
         title: "¡Éxito!",
         description: "La etiqueta se ha guardado correctamente",
-      })
+      });
 
-      router.push(`/wines/view/${wine.id}`)
+      router.push(`/wines/view/${wine.id}`);
     } catch (error) {
-      console.error('Error:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Ha ocurrido un error al guardar la etiqueta';
+      console.error('Error:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Ha ocurrido un error al guardar la etiqueta",
-      })
+        description: errorMessage,
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <>
@@ -440,7 +447,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="eanCode" 
                       name="eanCode" 
-                      defaultValue={initialData?.eanCode}
+                      defaultValue={initialData?.ean_code}
                       required 
                       onChange={handleInputChange}
                     />
@@ -451,7 +458,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="foodName" 
                       name="foodName" 
-                      defaultValue={initialData?.foodName}
+                      defaultValue={initialData?.food_name}
                       required 
                       onChange={handleInputChange}
                     />
@@ -475,7 +482,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                         name="energyKj" 
                         type="number" 
                         step="0.1"
-                        defaultValue={initialData?.energyKj}
+                        defaultValue={initialData?.energy_kj}
                         required 
                         onChange={handleInputChange}
                       />
@@ -487,7 +494,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                         name="energyKcal" 
                         type="number" 
                         step="0.1"
-                        defaultValue={initialData?.energyKcal}
+                        defaultValue={initialData?.energy_kcal}
                         required 
                         onChange={handleInputChange}
                       />
@@ -514,7 +521,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                         name="saturatedFat" 
                         type="number" 
                         step="0.1"
-                        defaultValue={initialData?.saturatedFat}
+                        defaultValue={initialData?.saturated_fat}
                         required 
                         onChange={handleInputChange}
                       />
@@ -593,7 +600,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                         name="netQuantityCl" 
                         type="number" 
                         step="0.1"
-                        defaultValue={initialData?.netQuantityCl}
+                        defaultValue={initialData?.net_quantity_cl}
                         required 
                         onChange={handleInputChange}
                       />
@@ -605,7 +612,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                         name="alcoholPercentage" 
                         type="number" 
                         step="0.1"
-                        defaultValue={initialData?.alcoholPercentage}
+                        defaultValue={initialData?.alcohol_percentage}
                         required 
                         onChange={handleInputChange}
                       />
@@ -623,7 +630,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       <Checkbox
                         id="hasEstimationSign"
                         name="hasEstimationSign"
-                        defaultChecked={initialData?.hasEstimationSign}
+                        defaultChecked={initialData?.has_estimation_sign}
                         onCheckedChange={(checked) => {
                           setFormData(prev => ({
                             ...prev,
@@ -642,7 +649,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="optionalLabelling" 
                       name="optionalLabelling" 
-                      defaultValue={initialData?.optionalLabelling}
+                      defaultValue={initialData?.optional_labelling || ''}
                       placeholder="Opcional"
                       onChange={handleInputChange}
                     />
@@ -663,7 +670,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="countryOfOrigin" 
                       name="countryOfOrigin" 
-                      defaultValue={initialData?.countryOfOrigin}
+                      defaultValue={initialData?.country_of_origin}
                       required 
                       onChange={handleInputChange}
                     />
@@ -674,7 +681,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="placeOfOrigin" 
                       name="placeOfOrigin" 
-                      defaultValue={initialData?.placeOfOrigin}
+                      defaultValue={initialData?.place_of_origin}
                       required 
                       onChange={handleInputChange}
                     />
@@ -685,7 +692,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="wineryInformation" 
                       name="wineryInformation" 
-                      defaultValue={initialData?.wineryInformation}
+                      defaultValue={initialData?.winery_information}
                       required 
                       onChange={handleInputChange}
                     />
@@ -706,7 +713,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="operatorName" 
                       name="operatorName" 
-                      defaultValue={initialData?.operatorName}
+                      defaultValue={initialData?.operator_name}
                       required 
                       onChange={handleInputChange}
                     />
@@ -717,7 +724,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="operatorAddress" 
                       name="operatorAddress" 
-                      defaultValue={initialData?.operatorAddress}
+                      defaultValue={initialData?.operator_address}
                       required 
                       onChange={handleInputChange}
                     />
@@ -728,7 +735,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="registrationNumber" 
                       name="registrationNumber" 
-                      defaultValue={initialData?.registrationNumber}
+                      defaultValue={initialData?.registration_number}
                       required 
                       onChange={handleInputChange}
                     />
@@ -749,7 +756,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="instructionsForUse" 
                       name="instructionsForUse" 
-                      defaultValue={initialData?.instructionsForUse}
+                      defaultValue={initialData?.instructions_for_use || ''}
                       placeholder="Opcional"
                       onChange={handleInputChange}
                     />
@@ -760,7 +767,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <Input 
                       id="conservationConditions" 
                       name="conservationConditions" 
-                      defaultValue={initialData?.conservationConditions}
+                      defaultValue={initialData?.conservation_conditions || ''}
                       placeholder="Opcional"
                       onChange={handleInputChange}
                     />
@@ -774,7 +781,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       type="number"
                       step="1"
                       min="0"
-                      defaultValue={initialData?.drainedWeightGrams}
+                      defaultValue={initialData?.drained_weight_grams || undefined}
                       placeholder="Opcional"
                       onChange={handleInputChange}
                     />

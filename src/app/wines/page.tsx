@@ -152,8 +152,8 @@ export default function WinesPage() {
       <WinesTable
         data={wines as unknown as import("@/components/WinesTable").Wine[]}
         onDelete={handleDeleteClick}
-        onQRDownload={handleQRDownload}
-        onDuplicate={handleDuplicate}
+        onQRDownload={handleQRDownload as (wine: import("@/components/WinesTable").Wine) => Promise<{ dataUrl: string; fileName: string; }>}
+        onDuplicate={handleDuplicate as unknown as (wine: import("@/components/WinesTable").Wine) => void}
       />
 
       <Dialog 
