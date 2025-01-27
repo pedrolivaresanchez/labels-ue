@@ -92,13 +92,13 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     if (initialData && isEditing) {
       setIngredients(initialData.ingredients?.map((i) => ({
         ingredient_name: i.ingredient_name,
-        is_allergen: i.isAllergen
+        is_allergen: i.is_allergen
       })) || [])
-      setProductionVariants(initialData.productionVariants?.map((v: { variantName: string }) => ({
-        variant_name: v.variantName
+      setProductionVariants(initialData.production_variants?.map((v) => ({
+        variant_name: v.variant_name
       })) || [])
       setCertifications(initialData.certifications?.map((c) => ({
-        certification_name: c.certificationName
+        certification_name: c.certification_name
       })) || [])
       // Transform snake_case to camelCase when setting form data
       setFormData({
@@ -129,10 +129,14 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         imageUrl: initialData.image_url,
         ingredients: (initialData.ingredients || []).map(i => ({
           ingredientName: i.ingredient_name,
-          isAllergen: i.isAllergen
+          isAllergen: i.is_allergen
         })),
-        productionVariants: initialData.productionVariants || [],
-        certifications: initialData.certifications || []
+        productionVariants: (initialData.production_variants || []).map(v => ({
+          variantName: v.variant_name
+        })),
+        certifications: (initialData.certifications || []).map(c => ({
+          certificationName: c.certification_name
+        }))
       })
     }
   }, [initialData, isEditing])
@@ -242,7 +246,11 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       });
 
       if (image.width < 400 || image.height < 400) {
-        setShowDimensionsDialog(true);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "La imagen debe tener al menos 400x400 píxeles",
+        });
         return;
       }
 
@@ -250,16 +258,19 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
+        setFormData(prev => ({
+          ...prev,
+          imageUrl: reader.result as string
+        }));
       };
       reader.readAsDataURL(file);
-      
       setImageFile(file);
     } catch (error) {
       console.error('Error handling image:', error);
       toast({
+        variant: "destructive",
         title: "Error",
         description: "Error al procesar la imagen",
-        variant: "destructive",
       });
     }
   };
@@ -269,106 +280,82 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     try {
       setLoading(true)
 
-      let imageUrl = initialData?.image_url;
+      // First create or update the wine without the image
+      const endpoint = isEditing ? `/api/wines/${initialData?.id}` : '/api/wines'
+      const method = isEditing ? 'PUT' : 'POST'
 
-      // Handle image upload if there's a new image
+      const response = await fetch(endpoint, {
+        method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          imageUrl: null // Initially set to null
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al guardar el vino')
+      }
+
+      const wine = await response.json()
+
+      // Now handle the image upload if there's a new image
       if (imageFile) {
-// Remove setUploadingImage since it's not defined and not needed
         try {
           // If editing and there's an existing image, delete it
           if (isEditing && initialData?.image_url) {
-            await deleteWineImage(initialData.image_url);
+            await deleteWineImage(initialData.image_url)
           }
           
-          // Upload new image
-          const tempId = isEditing && initialData ? initialData.id : Date.now().toString();
-          imageUrl = await uploadWineImage(imageFile, tempId);
+          // Upload new image with the wine's ID
+          const imageUrl = await uploadWineImage(imageFile, wine.id)
+
+          // Update the wine with the new image URL
+          const imageUpdateResponse = await fetch(`/api/wines/${wine.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              ...formData,
+              imageUrl
+            })
+          })
+
+          if (!imageUpdateResponse.ok) {
+            throw new Error('Error al actualizar la imagen del vino')
+          }
         } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Error al subir la imagen';
+          const errorMessage = error instanceof Error ? error.message : 'Error al subir la imagen'
           toast({
             variant: "destructive",
             title: "Error",
             description: errorMessage,
-          });
-          setLoading(false);
-          return;
-        } finally {
-// Remove this line since setUploadingImage is not defined and not needed
+          })
+          // Continue even if image upload fails
         }
       }
 
-      // Get form values
-      const data = {
-        name: formData.name,
-        eanCode: formData.eanCode,
-        foodName: formData.foodName,
-        energyKj: formData.energyKj,
-        energyKcal: formData.energyKcal,
-        fat: formData.fat,
-        saturatedFat: formData.saturatedFat,
-        carbohydrate: formData.carbohydrate,
-        sugars: formData.sugars,
-        protein: formData.protein,
-        salt: formData.salt,
-        netQuantityCl: formData.netQuantityCl,
-        hasEstimationSign: formData.hasEstimationSign,
-        alcoholPercentage: formData.alcoholPercentage,
-        optionalLabelling: formData.optionalLabelling,
-        countryOfOrigin: formData.countryOfOrigin,
-        placeOfOrigin: formData.placeOfOrigin,
-        wineryInformation: formData.wineryInformation,
-        operatorName: formData.operatorName,
-        operatorAddress: formData.operatorAddress,
-        registrationNumber: formData.registrationNumber,
-        imageUrl: imageUrl,
-        instructionsForUse: formData.instructionsForUse,
-        conservationConditions: formData.conservationConditions,
-        drainedWeightGrams: formData.drainedWeightGrams,
-        ingredients: ingredients.map(i => ({
-          ingredientName: i.ingredient_name,
-          isAllergen: i.is_allergen
-        })),
-        production_variants: productionVariants.map(v => ({
-          name: v.variant_name
-        })),
-        certifications: certifications.map(c => ({
-          name: c.certification_name
-        }))
-      };
-
-      const response = await fetch(isEditing && initialData ? `/api/wines/${initialData.id}` : "/api/wines", {
-        method: isEditing ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al guardar la etiqueta');
-      }
-
-      const wine = await response.json();
-
       toast({
-        variant: "default",
-        title: "¡Éxito!",
-        description: "La etiqueta se ha guardado correctamente",
-      });
+        title: "Éxito",
+        description: isEditing ? "Vino actualizado correctamente" : "Vino creado correctamente",
+      })
 
-      router.push(`/wines/view/${wine.id}`);
+      router.push('/wines')
+      router.refresh()
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Ha ocurrido un error al guardar la etiqueta';
-      console.error('Error:', error);
+      console.error('Error:', error)
       toast({
         variant: "destructive",
         title: "Error",
-        description: errorMessage,
-      });
+        description: error instanceof Error ? error.message : "Error al procesar la solicitud",
+      })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <>
