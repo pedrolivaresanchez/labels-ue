@@ -145,7 +145,7 @@ export async function POST(req: Request) {
     // Handle ingredients
     if (body.ingredients?.length > 0) {
       const ingredients = body.ingredients
-        .filter(i => i?.ingredientName && typeof i.ingredientName === 'string')
+        .filter(i => i && i.ingredientName && typeof i.ingredientName === 'string' && typeof i.isAllergen === 'boolean')
         .map(i => ({
           wine_id: wine.id,
           ingredient_name: i.ingredientName,
@@ -166,7 +166,7 @@ export async function POST(req: Request) {
     // Handle production variants
     if (body.productionVariants?.length > 0) {
       const variants = body.productionVariants
-        .filter(v => v.variantName.trim())
+        .filter(v => v?.variantName && typeof v.variantName === 'string')
         .map(v => ({
           wine_id: wine.id,
           variant_name: v.variantName
@@ -186,7 +186,7 @@ export async function POST(req: Request) {
     // Handle certifications
     if (body.certifications?.length > 0) {
       const certifications = body.certifications
-        .filter(c => c.certificationName.trim())
+        .filter(c => c?.certificationName && typeof c.certificationName === 'string')
         .map(c => ({
           wine_id: wine.id,
           certification_name: c.certificationName
@@ -206,7 +206,7 @@ export async function POST(req: Request) {
     // Handle disclaimer icons
     if (body.disclaimerIcons?.length > 0) {
       const icons = body.disclaimerIcons
-        .filter(d => d.iconName.trim())
+        .filter(d => d?.iconName && typeof d.iconName === 'string')
         .map(d => ({
           wine_id: wine.id,
           icon_name: d.iconName

@@ -2,7 +2,7 @@ import QRCode from 'qrcode';
 
 export const generateQRCode = async (wineId: string): Promise<string> => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://app.vinoveo.com';
     const wineUrl = `${baseUrl}/public/wines/${wineId}`;
     
     console.log('Generated URL:', wineUrl); // For debugging
