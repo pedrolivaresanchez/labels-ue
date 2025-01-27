@@ -16,7 +16,6 @@ export default function LoginForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
-  const router = useRouter();
 
   const handleMagicLinkLogin = async (e: React.FormEvent) => {
     e.preventDefault();

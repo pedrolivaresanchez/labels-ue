@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { Wine, Ingredient, ProductionVariant, Certification, DisclaimerIcon } from './supabase';
+import type { Wine, Ingredient, ProductionVariant } from './supabase';
 
 export const db = {
   wines: {
@@ -209,4 +209,4 @@ export const db = {
       }
     },
   },
-}; 
+};

@@ -85,7 +85,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   })
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image_url || null);
-  const [uploadingImage, setUploadingImage] = useState(false);
   const [showDimensionsDialog, setShowDimensionsDialog] = useState(false);
 
   // Initialize form data when editing
@@ -95,7 +94,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         ingredient_name: i.ingredient_name,
         is_allergen: i.isAllergen
       })) || [])
-      setProductionVariants(initialData.productionVariants?.map((v: { variantName: any }) => ({
+      setProductionVariants(initialData.productionVariants?.map((v: { variantName: string }) => ({
         variant_name: v.variantName
       })) || [])
       setCertifications(initialData.certifications?.map((c) => ({
@@ -274,7 +273,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
 
       // Handle image upload if there's a new image
       if (imageFile) {
-        setUploadingImage(true);
+// Remove setUploadingImage since it's not defined and not needed
         try {
           // If editing and there's an existing image, delete it
           if (isEditing && initialData?.image_url) {
@@ -294,7 +293,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
           setLoading(false);
           return;
         } finally {
-          setUploadingImage(false);
+// Remove this line since setUploadingImage is not defined and not needed
         }
       }
 

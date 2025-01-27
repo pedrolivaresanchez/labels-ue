@@ -215,8 +215,8 @@ export async function PUT(
 
       // Then insert new ones
       const variants = body.productionVariants
-        .filter((v: any) => v.variantName.trim())
-        .map((v: any) => ({
+        .filter((v: { variantName: string }) => v.variantName.trim())
+        .map((v: { variantName: string }) => ({
           wine_id: id,
           variant_name: v.variantName
         }));
@@ -236,8 +236,8 @@ export async function PUT(
 
       // Then insert new ones
       const certifications = body.certifications
-        .filter((c: any) => c.certificationName.trim())
-        .map((c: any) => ({
+        .filter((c: { certificationName: string }) => c.certificationName.trim())
+        .map((c: { certificationName: string }) => ({
           wine_id: id,
           certification_name: c.certificationName
         }));
@@ -257,8 +257,8 @@ export async function PUT(
 
       // Then insert new ones
       const icons = body.disclaimerIcons
-        .filter((d: any) => d.iconName.trim())
-        .map((d: any) => ({
+        .filter((d: { iconName: string }) => d.iconName.trim())
+        .map((d: { iconName: string }) => ({
           wine_id: id,
           icon_name: d.iconName
         }));

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import { Wine, Ingredient, ProductionVariant, Certification, DisclaimerIcon } from '@/types/wine';
+import type { Ingredient, ProductionVariant, Certification, DisclaimerIcon } from '@/types/wine';
 
 export async function POST(
   req: Request,

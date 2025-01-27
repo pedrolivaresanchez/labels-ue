@@ -7,7 +7,6 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { QrButton } from "@/components/QrButton";
 import { NutritionalTable } from "@/components/NutritionalTable";
 
 type Wine = {

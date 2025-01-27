@@ -10,7 +10,6 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 
 export function PublicFooter() {
@@ -54,4 +53,4 @@ export function PublicFooter() {
       </div>
     </footer>
   );
-} 
+}

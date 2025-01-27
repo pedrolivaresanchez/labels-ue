@@ -61,15 +61,15 @@ export async function uploadWineImage(file: File, wineId: string) {
 
     console.log('Generated public URL:', publicUrl);
     return publicUrl;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Detailed error information:', {
       error,
-      message: error.message,
-      name: error.name,
-      stack: error.stack,
-      details: error.details,
-      statusCode: error.statusCode,
-      hint: error.hint
+      message: error instanceof Error ? error.message : 'Unknown error',
+      name: error instanceof Error ? error.name : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      details: (error as any)?.details,
+      statusCode: (error as any)?.statusCode,
+      hint: (error as any)?.hint
     });
     throw error instanceof Error ? error : new Error('Error desconocido al subir la imagen');
   }
@@ -92,12 +92,12 @@ export async function deleteWineImage(imageUrl: string) {
       throw new Error(`Error al eliminar la imagen: ${error.message}`);
     }
     console.log('File deleted successfully');
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Detailed delete error information:', {
       error,
-      message: error.message,
-      name: error.name,
-      stack: error.stack
+      message: error instanceof Error ? error.message : 'Unknown error',
+      name: error instanceof Error ? error.name : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
     });
     throw error instanceof Error ? error : new Error('Error desconocido al eliminar la imagen');
   }
@@ -117,4 +117,4 @@ function createImageFromFile(file: File): Promise<HTMLImageElement> {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
-} 
+}

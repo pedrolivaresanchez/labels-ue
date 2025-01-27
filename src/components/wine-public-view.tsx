@@ -1,12 +1,10 @@
 'use client';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Wine } from "@/app/public/wines/[id]/page";
-import { Suspense } from "react";
 import Image from "next/image";
 
 function NutritionalInfoSkeleton() {
@@ -343,4 +341,4 @@ export function WinePublicView({ wine }: { wine: Wine }) {
       </Accordion>
     </div>
   );
-} 
+}
