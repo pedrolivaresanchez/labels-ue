@@ -1,23 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
+import LoginForm from "@/components/login-form";
 import Image from "next/image";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const supabase = createClientComponentClient();
-
-  const handleSignIn = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${location.origin}/auth/callback`,
-      },
-    });
-  };
-
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -33,16 +19,7 @@ export default function LoginPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-1 text-center">
-                <h1 className="text-3xl font-bold tracking-tight text-foreground">Bienvenido</h1>
-                <p className="text-sm text-muted-foreground">Inicia sesión para gestionar tus etiquetas</p>
-              </div>
-              
-              <Button onClick={handleSignIn} className="w-full">
-                Continuar con Google
-              </Button>
-            </div>
+            <LoginForm />
           </div>
         </div>
       </div>
