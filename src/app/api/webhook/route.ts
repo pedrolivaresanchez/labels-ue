@@ -3,28 +3,40 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-});
+// Initialize Stripe conditionally
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2024-12-18.acacia',
+    })
+  : null;
 
-// Initialize Supabase with service role for admin access
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  }
-);
+// Initialize Supabase conditionally
+const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    )
+  : null;
 
 // This is your Stripe webhook secret for testing your endpoint locally.
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 export async function POST(req: Request) {
   try {
+    // Check if required services are initialized
+    if (!stripe || !supabase || !webhookSecret) {
+      console.error('Webhook: Required configuration is missing');
+      return NextResponse.json(
+        { error: 'Service not configured' },
+        { status: 501 }
+      );
+    }
     console.log('Webhook: Received request');
     const body = await req.text();
     const headersList = await headers();
@@ -149,4 +161,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-} 
+}
