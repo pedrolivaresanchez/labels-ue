@@ -139,13 +139,13 @@ export default function WinesPage() {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">Mis Etiquetas</h1>
           <p className="text-sm text-muted-foreground mt-1">Gestiona tus etiquetas de vino</p>
         </div>
-        <Link href="/wines/new">
-          <Button>
+        <Link href="/wines/new" className="sm:flex-shrink-0">
+          <Button className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Nueva Etiqueta
           </Button>
@@ -159,22 +159,19 @@ export default function WinesPage() {
         onDuplicate={handleDuplicate as unknown as (wine: import("@/components/WinesTable").Wine) => void}
       />
 
-      <Dialog 
-        open={deleteDialog.isOpen} 
-        onOpenChange={(open) => !open && setDeleteDialog({ isOpen: false, wineId: null })}
-      >
-        <DialogContent>
+      <Dialog open={deleteDialog.isOpen} onOpenChange={(open) => setDeleteDialog({ isOpen: open, wineId: null })}>
+        <DialogContent className="sm:max-w-[425px] p-6 gap-6">
           <DialogHeader>
             <DialogTitle>¿Estás seguro?</DialogTitle>
             <DialogDescription>
-              Esta acción no se puede deshacer.
+              Esta acción no se puede deshacer. La etiqueta será eliminada permanentemente.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-row gap-3">
             <Button
               variant="outline"
               onClick={() => setDeleteDialog({ isOpen: false, wineId: null })}
-              disabled={!!deletingId}
+              className="w-full sm:w-auto"
             >
               Cancelar
             </Button>
@@ -182,8 +179,9 @@ export default function WinesPage() {
               variant="destructive"
               onClick={handleDeleteConfirm}
               disabled={!!deletingId}
+              className="w-full sm:w-auto"
             >
-              {deletingId === deleteDialog.wineId ? (
+              {deletingId ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Eliminando...

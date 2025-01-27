@@ -113,7 +113,7 @@ export default function Navbar() {
   };
 
   const navLinks = user ? [
-    { href: "/wines", label: "Etiquetas" },
+    { href: "/wines", label: "Mis Etiquetas" },
     { href: "/wines/new", label: "Crear Etiqueta" }
   ] : [];
 
@@ -209,13 +209,13 @@ export default function Navbar() {
           </div>
           
           <nav className="border-t flex-1">
-            <div className="grid gap-1 p-6">
+            <div className="grid gap-2 p-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="flex w-full items-center py-2 text-lg hover:bg-accent hover:text-accent-foreground rounded-md px-2"
+                  className="flex w-full items-center py-3 px-4 text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md bg-background border"
                 >
                   {link.label}
                 </Link>
