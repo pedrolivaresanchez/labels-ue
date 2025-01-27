@@ -190,16 +190,17 @@ export async function PUT(
         .from('ingredients')
         .delete()
         .eq('wine_id', id);
-
+    
       // Then insert new ones
       const ingredients = body.ingredients
-        .filter((i: { ingredientName: string; isAllergen: boolean }) => i.ingredientName.trim())
+        .filter((i: { ingredientName: string; isAllergen: boolean }) => 
+          i && typeof i.ingredientName === 'string' && i.ingredientName.trim())
         .map((i: { ingredientName: string; isAllergen: boolean }) => ({
           wine_id: id,
           ingredient_name: i.ingredientName,
           is_allergen: i.isAllergen
         }));
-
+    
       if (ingredients.length > 0) {
         await supabase.from('ingredients').insert(ingredients);
       }

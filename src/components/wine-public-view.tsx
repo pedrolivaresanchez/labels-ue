@@ -24,7 +24,7 @@ function NutritionalInfoSkeleton() {
 
 function WineViewSkeleton() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-6 py-8 sm:px-8">
       <div className="max-w-3xl mx-auto space-y-6">
         <Skeleton className="h-8 w-64" />
 
@@ -163,10 +163,10 @@ function NutritionalInfo({ wine }: { wine: Wine }) {
 
 export function WinePublicView({ wine }: { wine: Wine }) {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 max-w-4xl">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-4xl">
       {/* Image Section - Full width on mobile */}
       {wine.image_url && (
-        <div className="mb-6 sm:mb-8">
+        <div className="mb-8">
           <div className="relative w-full max-w-sm mx-auto aspect-square">
             <Image
               src={wine.image_url}
@@ -181,7 +181,7 @@ export function WinePublicView({ wine }: { wine: Wine }) {
       )}
 
       {/* Basic Information - Stacked on mobile */}
-      <div className="text-center sm:text-left mb-6 sm:mb-8">
+      <div className="text-center sm:text-left mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold mb-3">{wine.name}</h1>
         <p className="text-xl sm:text-2xl text-muted-foreground mb-2">{wine.foodName}</p>
         <p className="text-xl sm:text-2xl font-medium">{wine.operatorName}</p>
