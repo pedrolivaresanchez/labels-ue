@@ -3,12 +3,20 @@ import { cookies } from "next/headers";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
-});
+let stripe: Stripe | null = null;
+
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: "2024-12-18.acacia",
+  });
+}
 
 export async function POST() {
   try {
+    if (!stripe) {
+      console.error("[STRIPE_INIT_ERROR] Stripe client not initialized");
+      return new NextResponse("Stripe configuration missing", { status: 500 });
+    }
     const cookieStore = cookies();
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     
@@ -41,4 +49,4 @@ export async function POST() {
     console.error("[STRIPE_PORTAL_SESSION_ERROR]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-} 
+}
