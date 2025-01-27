@@ -230,6 +230,21 @@ export default function Navbar() {
                   {getDisplayName(user)}
                 </div>
                 <Button
+                  onClick={handleAccountSettings}
+                  disabled={loadingPortal}
+                  variant="outline"
+                  className="w-full"
+                >
+                  {loadingPortal ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Cargando...
+                    </>
+                  ) : (
+                    'Ajustes de cuenta'
+                  )}
+                </Button>
+                <Button
                   onClick={handleSignOut}
                   disabled={isLoading}
                   variant="destructive"

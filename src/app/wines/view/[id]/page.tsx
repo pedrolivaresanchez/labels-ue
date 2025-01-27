@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { NutritionalTable } from "@/components/NutritionalTable";
-
+import { ChevronLeft, Eye } from "lucide-react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumb";
 type Wine = {
   id: string;
   name: string;
@@ -152,164 +153,179 @@ export default async function WineViewPage({ params }: { params: { id: string } 
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">{wine.name}</h1>
-        <div className="flex gap-2">
-          <Link href={`/wines/edit/${wine.id}`}>
-            <Button variant="outline">Editar</Button>
-          </Link>
-          <Link href="/wines">
-            <Button variant="outline">← Volver a la lista</Button>
-          </Link>
+      <div className="flex flex-col gap-6">
+        {/* Breadcrumb and Actions */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/wines">
+                <ChevronLeft className="h-4 w-4" />
+                Volver a la lista
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Link href={`/wines/edit/${wine.id}`} className="flex-1 sm:flex-initial">
+              <Button variant="outline" className="w-full sm:w-auto">Editar</Button>
+            </Link>
+            <Link href={`/public/wines/${wine.id}`} className="flex-1 sm:flex-initial">
+              <Button variant="outline" className="w-full sm:w-auto">
+                <Eye className="h-4 w-4 mr-2" />
+                Vista pública
+              </Button>
+            </Link>
+          </div>
         </div>
-      </div>
+
+        <h1 className="text-2xl sm:text-3xl font-bold">{wine.name}</h1>
       
-      <div className="space-y-6">
-        {/* Wine Image */}
-        {wine.image_url && (
-          <Card>
-            <CardContent className="p-6">
-              <div className="relative w-full max-w-md mx-auto aspect-square">
-                <Image
-                  src={wine.image_url}
-                  alt={wine.name}
-                  fill
-                  className="object-contain rounded-lg"
-                  sizes="(max-width: 768px) 100vw, 400px"
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <div className="space-y-6">
+          {/* Wine Image */}
+          {wine.image_url && (
+            <Card>
+              <CardContent className="p-6">
+                <div className="relative w-full max-w-md mx-auto aspect-square">
+                  <Image
+                    src={wine.image_url}
+                    alt={wine.name}
+                    fill
+                    className="object-contain rounded-lg"
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-        <Accordion type="single" collapsible className="w-full space-y-4">
-          <AccordionItem value="referencia">
-            <AccordionTrigger className="text-xl font-semibold">Referencia</AccordionTrigger>
-            <AccordionContent>
-              <Card>
-                <CardContent className="space-y-4 p-6">
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Nombre</h3>
-                    <p className="text-lg">{wine.name}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Código EAN</h3>
-                    <p className="text-lg">{wine.eanCode}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="informacion-nutricional">
-            <AccordionTrigger className="text-xl font-semibold">Información nutricional</AccordionTrigger>
-            <AccordionContent>
-              <Card>
-                <CardContent className="space-y-6 p-6">
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Denominación del alimento</h3>
-                    <p className="text-lg">{wine.foodName}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Lista de ingredientes</h3>
-                    <p className="text-lg">
-                      {wine.ingredients.map((ingredient, index) => (
-                        <span key={index}>
-                          {ingredient.ingredientName}
-                          {index < wine.ingredients.length - 1 ? ', ' : ''}
-                        </span>
-                      ))}
-                    </p>
-                  </div>
-
-                  <NutritionalTable wine={wine} />
-
-                  <div className="grid grid-cols-2 gap-6">
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            <AccordionItem value="referencia">
+              <AccordionTrigger className="text-xl font-semibold">Referencia</AccordionTrigger>
+              <AccordionContent>
+                <Card>
+                  <CardContent className="space-y-4 p-6">
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Cantidad neta</h3>
-                      <p className="text-lg">{wine.netQuantityCl} Centilitros</p>
+                      <h3 className="text-sm font-medium text-muted-foreground">Nombre</h3>
+                      <p className="text-lg">{wine.name}</p>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Signo de estimación (e)</h3>
-                      <p className="text-lg">{wine.hasEstimationSign ? 'Sí' : 'No'}</p>
+                      <h3 className="text-sm font-medium text-muted-foreground">Código EAN</h3>
+                      <p className="text-lg">{wine.eanCode}</p>
                     </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Porcentaje de alcohol</h3>
-                      <p className="text-lg">{wine.alcoholPercentage} % vol</p>
-                    </div>
-                    {wine.optionalLabelling && (
-                      <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">Otras menciones obligatorias o facultativas en la etiqueta</h3>
-                        <p className="text-lg">{wine.optionalLabelling}</p>
-                      </div>
-                    )}
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">País de origen</h3>
-                      <p className="text-lg">{wine.countryOfOrigin}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Lugar de procedencia</h3>
-                      <p className="text-lg">{wine.placeOfOrigin}</p>
-                    </div>
-                    {wine.productionVariants.length > 0 && (
-                      <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">Variantes de producción</h3>
-                        <p className="text-lg">
-                          {wine.productionVariants.map((variant, index) => (
-                            <span key={index}>
-                              {variant.variantName}
-                              {index < wine.productionVariants.length - 1 ? ', ' : ''}
-                            </span>
-                          ))}
-                        </p>
-                      </div>
-                    )}
-                    {wine.instructionsForUse && (
-                      <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">Modo de empleo</h3>
-                        <p className="text-lg">{wine.instructionsForUse}</p>
-                      </div>
-                    )}
-                    {wine.conservationConditions && (
-                      <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">Condiciones de conservación</h3>
-                        <p className="text-lg">{wine.conservationConditions}</p>
-                      </div>
-                    )}
-                    {wine.drainedWeight && (
-                      <div>
-                        <h3 className="text-sm font-medium text-muted-foreground">Peso escurrido</h3>
-                        <p className="text-lg">{wine.drainedWeight} Gramos</p>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </AccordionContent>
-          </AccordionItem>
+                  </CardContent>
+                </Card>
+              </AccordionContent>
+            </AccordionItem>
 
-          <AccordionItem value="datos-operador">
-            <AccordionTrigger className="text-xl font-semibold">Datos del operador</AccordionTrigger>
-            <AccordionContent>
-              <Card>
-                <CardContent className="space-y-4 p-6">
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Nombre del operador / importador</h3>
-                    <p className="text-lg">{wine.operatorName}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Dirección del operador / importador</h3>
-                    <p className="text-lg">{wine.operatorAddress}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Registro</h3>
-                    <p className="text-lg">{wine.registrationNumber}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+            <AccordionItem value="informacion-nutricional">
+              <AccordionTrigger className="text-xl font-semibold">Información nutricional</AccordionTrigger>
+              <AccordionContent>
+                <Card>
+                  <CardContent className="space-y-6 p-6">
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">Denominación del alimento</h3>
+                      <p className="text-lg">{wine.foodName}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">Lista de ingredientes</h3>
+                      <p className="text-lg">
+                        {wine.ingredients.map((ingredient, index) => (
+                          <span key={index}>
+                            {ingredient.ingredientName}
+                            {index < wine.ingredients.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+
+                    <NutritionalTable wine={wine} />
+
+                    <div className="grid grid-cols-2 gap-6">
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">Cantidad neta</h3>
+                        <p className="text-lg">{wine.netQuantityCl} Centilitros</p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">Signo de estimación (e)</h3>
+                        <p className="text-lg">{wine.hasEstimationSign ? 'Sí' : 'No'}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">Porcentaje de alcohol</h3>
+                        <p className="text-lg">{wine.alcoholPercentage} % vol</p>
+                      </div>
+                      {wine.optionalLabelling && (
+                        <div>
+                          <h3 className="text-sm font-medium text-muted-foreground">Otras menciones obligatorias o facultativas en la etiqueta</h3>
+                          <p className="text-lg">{wine.optionalLabelling}</p>
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">País de origen</h3>
+                        <p className="text-lg">{wine.countryOfOrigin}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground">Lugar de procedencia</h3>
+                        <p className="text-lg">{wine.placeOfOrigin}</p>
+                      </div>
+                      {wine.productionVariants.length > 0 && (
+                        <div>
+                          <h3 className="text-sm font-medium text-muted-foreground">Variantes de producción</h3>
+                          <p className="text-lg">
+                            {wine.productionVariants.map((variant, index) => (
+                              <span key={index}>
+                                {variant.variantName}
+                                {index < wine.productionVariants.length - 1 ? ', ' : ''}
+                              </span>
+                            ))}
+                          </p>
+                        </div>
+                      )}
+                      {wine.instructionsForUse && (
+                        <div>
+                          <h3 className="text-sm font-medium text-muted-foreground">Modo de empleo</h3>
+                          <p className="text-lg">{wine.instructionsForUse}</p>
+                        </div>
+                      )}
+                      {wine.conservationConditions && (
+                        <div>
+                          <h3 className="text-sm font-medium text-muted-foreground">Condiciones de conservación</h3>
+                          <p className="text-lg">{wine.conservationConditions}</p>
+                        </div>
+                      )}
+                      {wine.drainedWeight && (
+                        <div>
+                          <h3 className="text-sm font-medium text-muted-foreground">Peso escurrido</h3>
+                          <p className="text-lg">{wine.drainedWeight} Gramos</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="datos-operador">
+              <AccordionTrigger className="text-xl font-semibold">Datos del operador</AccordionTrigger>
+              <AccordionContent>
+                <Card>
+                  <CardContent className="space-y-4 p-6">
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">Nombre del operador / importador</h3>
+                      <p className="text-lg">{wine.operatorName}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">Dirección del operador / importador</h3>
+                      <p className="text-lg">{wine.operatorAddress}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">Registro</h3>
+                      <p className="text-lg">{wine.registrationNumber}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
       </div>
     </div>
   );
