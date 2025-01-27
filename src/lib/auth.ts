@@ -13,10 +13,11 @@ export const createClient = () => {
 // Sign in with OTP (Email magic link)
 export async function signInWithOtp(email: string) {
   const supabase = createClient()
+  const redirectTo = new URL('/auth/callback', window.location.href).toString()
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: redirectTo,
     },
   })
   return { error }
@@ -25,10 +26,11 @@ export async function signInWithOtp(email: string) {
 // Sign in with OAuth provider (Google)
 export async function signInWithOAuth(provider: Provider) {
   const supabase = createClient()
+  const redirectTo = new URL('/auth/callback', window.location.href).toString()
   const { error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo,
     },
   })
   return { error }
@@ -53,4 +55,4 @@ export async function getUser() {
   const supabase = createClient()
   const { data: { user }, error } = await supabase.auth.getUser()
   return { user, error }
-} 
+}
