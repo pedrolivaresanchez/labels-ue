@@ -152,17 +152,13 @@ export default async function WineViewPage({ params }: { params: { id: string } 
   const wine = await getWine(id);
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-6 sm:py-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-6">
         {/* Header Section */}
-        <Card className="mb-2">
-          <CardContent className="pt-6">
-            <div className="flex flex-col gap-1">
-              <h1 className="text-3xl font-bold tracking-tight text-foreground">Vista Privada</h1>
-              <p className="text-sm text-muted-foreground">Visualiza y gestiona los detalles de tu etiqueta.</p>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Vista Privada</h1>
+          <p className="text-sm text-muted-foreground">Visualiza y gestiona los detalles de tu etiqueta.</p>
+        </div>
 
         {/* Breadcrumb and Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
