@@ -422,18 +422,18 @@ export function WinesTable({ data, onDelete, onQRDownload, onDuplicate, duplicat
 
   return (
     <div className="w-full">
-      <div className="flex flex-col sm:flex-row gap-4 py-4 w-full">
+      <div className="flex items-center gap-4 py-4">
         <Input
           placeholder="Filtrar por nombre..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="flex-1"
+          className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full sm:w-auto">
+            <Button variant="outline">
               Columnas <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

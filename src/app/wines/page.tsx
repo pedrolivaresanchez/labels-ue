@@ -19,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function WinesPage() {
   const [wines, setWines] = useState<Wine[]>([]);
@@ -139,18 +140,24 @@ export default function WinesPage() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Mis Etiquetas</h1>
-          <p className="text-sm text-muted-foreground mt-1">Gestiona tus etiquetas de vino</p>
-        </div>
-        <Link href="/wines/new" className="sm:flex-shrink-0">
-          <Button className="w-full sm:w-auto">
-            <Plus className="h-4 w-4 mr-2" />
-            Nueva Etiqueta
-          </Button>
-        </Link>
-      </div>
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="flex flex-col gap-4">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">Mis Etiquetas</h1>
+              <p className="text-sm text-muted-foreground mt-1">Gestiona tus etiquetas de vino</p>
+            </div>
+            <div className="flex justify-end">
+              <Link href="/wines/new">
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nueva Etiqueta
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <WinesTable
         data={wines as unknown as import("@/components/WinesTable").Wine[]}
