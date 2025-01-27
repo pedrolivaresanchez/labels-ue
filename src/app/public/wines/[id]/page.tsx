@@ -1,14 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import { WinePublicView } from "@/components/wine-public-view";
 import { PublicNavbar } from "@/components/public-navbar";
 import { translateWine } from "@/lib/translate";
-
-// Create a single supabase client for interacting with your database
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export type Ingredient = {
   id: string;
@@ -147,4 +141,4 @@ export default async function PublicWineViewPage({
       </main>
     </div>
   );
-} 
+}
