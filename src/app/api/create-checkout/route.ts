@@ -4,12 +4,18 @@ import Stripe from 'stripe';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2024-12-18.acacia',
-});
+}) : null;
 
 export async function POST() {
   try {
+    if (!stripe) {
+      return NextResponse.json(
+        { error: 'Stripe configuration is missing' },
+        { status: 500 }
+      );
+    }
     const headersList = await headers();
     const origin = headersList.get('origin') || process.env.NEXT_PUBLIC_BASE_URL;
     
@@ -76,4 +82,4 @@ export async function POST() {
       { status: 500 }
     );
   }
-} 
+}
