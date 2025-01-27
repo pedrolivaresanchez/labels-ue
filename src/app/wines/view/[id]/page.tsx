@@ -154,6 +154,12 @@ export default async function WineViewPage({ params }: { params: { id: string } 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
       <div className="flex flex-col gap-6">
+        {/* Header Section */}
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Vista Privada</h1>
+          <p className="text-sm text-muted-foreground">Visualiza y gestiona los detalles de tu etiqueta.</p>
+        </div>
+
         {/* Breadcrumb and Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <Breadcrumb>
@@ -166,7 +172,7 @@ export default async function WineViewPage({ params }: { params: { id: string } 
           </Breadcrumb>
           <div className="flex gap-2 w-full sm:w-auto">
             <Link href={`/wines/edit/${wine.id}`} className="flex-1 sm:flex-initial">
-              <Button variant="outline" className="w-full sm:w-auto">Editar</Button>
+              <Button className="w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90">Editar</Button>
             </Link>
             <Link href={`/public/wines/${wine.id}`} className="flex-1 sm:flex-initial">
               <Button variant="outline" className="w-full sm:w-auto">
@@ -177,7 +183,7 @@ export default async function WineViewPage({ params }: { params: { id: string } 
           </div>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold">{wine.name}</h1>
+        <h2 className="text-2xl sm:text-3xl font-bold">{wine.name}</h2>
       
         <div className="space-y-6">
           {/* Wine Image */}
