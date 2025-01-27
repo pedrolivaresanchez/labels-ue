@@ -4,39 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { WineForm } from '@/components/WineForm';
 import { Loader2 } from "lucide-react";
-
-type Wine = {
-  id: string;
-  name: string;
-  eanCode: string;
-  foodName: string;
-  energyKj: number;
-  energyKcal: number;
-  fat: number;
-  saturatedFat: number;
-  carbohydrate: number;
-  sugars: number;
-  protein: number;
-  salt: number;
-  netQuantityCl: number;
-  hasEstimationSign: boolean;
-  alcoholPercentage: number;
-  optionalLabelling: string | null;
-  countryOfOrigin: string;
-  placeOfOrigin: string;
-  wineryInformation: string;
-  instructionsForUse: string | null;
-  conservationConditions: string | null;
-  drainedWeightGrams: number | null;
-  operatorName: string;
-  operatorAddress: string;
-  registrationNumber: string;
-  ingredients: { ingredientName: string; isAllergen: boolean }[];
-  productionVariants: { variantName: string }[];
-  certifications: { certificationName: string }[];
-  disclaimerIcons: { iconName: string }[];
-  image_url?: string;
-};
+import type { Wine } from '@/types/wine';
 
 interface EditWineClientProps {
   id: string;

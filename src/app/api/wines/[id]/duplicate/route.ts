@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
+import { Wine, Ingredient, ProductionVariant, Certification, DisclaimerIcon } from '@/types/wine';
 
 export async function POST(
   req: Request,
@@ -86,7 +87,7 @@ export async function POST(
 
     // Duplicate ingredients
     if (originalWine.ingredients?.length > 0) {
-      const ingredients = originalWine.ingredients.map((i: any) => ({
+      const ingredients = originalWine.ingredients.map((i: Ingredient) => ({
         wine_id: newWine.id,
         ingredient_name: i.ingredient_name,
         is_allergen: i.is_allergen
@@ -98,7 +99,7 @@ export async function POST(
 
     // Duplicate production variants
     if (originalWine.production_variants?.length > 0) {
-      const variants = originalWine.production_variants.map((v: any) => ({
+      const variants = originalWine.production_variants.map((v: ProductionVariant) => ({
         wine_id: newWine.id,
         variant_name: v.variant_name
       }));
@@ -109,7 +110,7 @@ export async function POST(
 
     // Duplicate certifications
     if (originalWine.certifications?.length > 0) {
-      const certifications = originalWine.certifications.map((c: any) => ({
+      const certifications = originalWine.certifications.map((c: Certification) => ({
         wine_id: newWine.id,
         certification_name: c.certification_name
       }));
@@ -120,7 +121,7 @@ export async function POST(
 
     // Duplicate disclaimer icons
     if (originalWine.disclaimer_icons?.length > 0) {
-      const icons = originalWine.disclaimer_icons.map((d: any) => ({
+      const icons = originalWine.disclaimer_icons.map((d: DisclaimerIcon) => ({
         wine_id: newWine.id,
         icon_name: d.icon_name
       }));

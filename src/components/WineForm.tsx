@@ -7,11 +7,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
-import { X, Upload, Image as ImageIcon } from "lucide-react"
+import { X, ImageIcon } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { WinePreview } from "@/components/wine-preview"
 import { uploadWineImage, deleteWineImage } from "@/lib/storage"
 import Image from "next/image"
+import { Wine, WineFormData } from "@/types/wine"
 import {
   Dialog,
   DialogContent,
@@ -35,39 +36,8 @@ type Certification = {
 };
 
 interface WineFormProps {
-  initialData?: any;
+  initialData?: Wine;
   isEditing?: boolean;
-}
-
-type FormData = {
-  name?: string;
-  eanCode?: string;
-  foodName?: string;
-  energyKj?: number;
-  energyKcal?: number;
-  fat?: number;
-  saturatedFat?: number;
-  carbohydrate?: number;
-  sugars?: number;
-  protein?: number;
-  salt?: number;
-  netQuantityCl?: number;
-  hasEstimationSign?: boolean;
-  alcoholPercentage?: number;
-  optionalLabelling?: string | null;
-  countryOfOrigin?: string;
-  placeOfOrigin?: string;
-  wineryInformation?: string;
-  instructionsForUse?: string | null;
-  conservationConditions?: string | null;
-  drainedWeightGrams?: number | null;
-  operatorName?: string;
-  operatorAddress?: string;
-  registrationNumber?: string;
-  imageUrl?: string | null;
-  ingredients: { ingredientName: string; isAllergen: boolean }[];
-  productionVariants: { variantName: string }[];
-  certifications: { certificationName: string }[];
 }
 
 export function WineForm({ initialData, isEditing = false }: WineFormProps) {

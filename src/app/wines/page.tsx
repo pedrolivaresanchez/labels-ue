@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { generateQRCode } from "@/utils/qr";
-import type { Wine } from "@/components/WinesTable";
+import type { Wine } from "@/types/wine";
 import Link from "next/link";
 import { PlusCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -23,12 +23,8 @@ import {
 export default function WinesPage() {
   const [wines, setWines] = useState<Wine[]>([]);
   const [loading, setLoading] = useState(true);
-  const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; wineId: string | null }>({
-    isOpen: false,
-    wineId: null
-  });
+  const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; wineId: string | null }>({ isOpen: false, wineId: null });
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClientComponentClient();
   const { toast } = useToast();
@@ -158,7 +154,6 @@ export default function WinesPage() {
         onDelete={handleDeleteClick}
         onQRDownload={handleQRDownload}
         onDuplicate={handleDuplicate}
-        duplicatingId={duplicatingId}
       />
 
       <Dialog 
