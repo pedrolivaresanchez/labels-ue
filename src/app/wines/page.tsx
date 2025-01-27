@@ -142,19 +142,17 @@ export default function WinesPage() {
     <>
       <Card className="mb-6">
         <CardContent className="pt-6">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold tracking-tight text-foreground">Mis Etiquetas</h1>
               <p className="text-sm text-muted-foreground mt-1">Gestiona tus etiquetas de vino</p>
             </div>
-            <div className="flex justify-end">
-              <Link href="/wines/new">
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Nueva Etiqueta
-                </Button>
-              </Link>
-            </div>
+            <Link href="/wines/new" className="sm:flex-shrink-0">
+              <Button className="w-full">
+                <Plus className="h-4 w-4 mr-2" />
+                Nueva Etiqueta
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>

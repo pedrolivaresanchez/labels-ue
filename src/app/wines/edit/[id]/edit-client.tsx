@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { WineForm } from '@/components/WineForm';
 import { Loader2 } from "lucide-react";
 import type { Wine } from '@/types/wine';
+import { Card, CardContent } from "@/components/ui/card";
 
 interface EditWineClientProps {
   id: string;
@@ -44,10 +45,15 @@ export function EditWineClient({ id }: EditWineClientProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">Editar Etiqueta</h1>
-      </div>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">Editar Etiqueta</h1>
+            <p className="text-sm text-muted-foreground">Modifica los detalles de tu etiqueta.</p>
+          </div>
+        </CardContent>
+      </Card>
       
       {wine && <WineForm initialData={wine} isEditing={true} />}
     </div>
