@@ -4,8 +4,8 @@ import { cookies } from 'next/headers';
 import type { Ingredient, ProductionVariant, Certification, DisclaimerIcon } from '@/types/wine';
 
 export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: Request,
+  context: { params: { id: string } }
 ) {
   try {
     const cookieStore = cookies();
@@ -16,7 +16,7 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = context.params;
     if (!id) {
       return new NextResponse("Wine ID is required", { status: 400 });
     }
