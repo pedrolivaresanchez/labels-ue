@@ -5,9 +5,7 @@ import Image from "next/image";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { QrButton } from "@/components/QrButton";
 import { NutritionalTable } from "@/components/NutritionalTable";
@@ -316,4 +314,4 @@ export default async function WineViewPage({ params }: { params: { id: string } 
       </div>
     </div>
   );
-} 
+}

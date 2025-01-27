@@ -55,6 +55,37 @@ type Wine = {
   disclaimer_icons: DisclaimerIcon[];
 };
 
+type WineFormData = {
+  name: string;
+  eanCode: string;
+  foodName: string;
+  energyKj: number;
+  energyKcal: number;
+  fat: number;
+  saturatedFat: number;
+  carbohydrate: number;
+  sugars: number;
+  protein: number;
+  salt: number;
+  netQuantityCl: number;
+  hasEstimationSign: boolean;
+  alcoholPercentage: number;
+  optionalLabelling: string | null;
+  countryOfOrigin: string;
+  placeOfOrigin: string;
+  wineryInformation: string;
+  instructionsForUse: string | null;
+  conservationConditions: string | null;
+  drainedWeightGrams: number | null;
+  operatorName: string;
+  operatorAddress: string;
+  registrationNumber: string;
+  ingredients: { ingredientName: string; isAllergen: boolean }[];
+  productionVariants: { variantName: string }[];
+  certifications: { certificationName: string }[];
+  disclaimerIcons: { iconName: string }[];
+};
+
 export async function POST(req: Request) {
   try {
     const cookieStore = cookies();
@@ -68,7 +99,7 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const body = await req.json();
+    const body = await req.json() as WineFormData;
 
     // Transform camelCase to snake_case and add user_id
     const wineData = {
@@ -114,8 +145,8 @@ export async function POST(req: Request) {
     // Handle ingredients
     if (body.ingredients?.length > 0) {
       const ingredients = body.ingredients
-        .filter((i: any) => i.ingredientName.trim())
-        .map((i: any) => ({
+        .filter(i => i.ingredientName.trim())
+        .map(i => ({
           wine_id: wine.id,
           ingredient_name: i.ingredientName,
           is_allergen: i.isAllergen
@@ -135,8 +166,8 @@ export async function POST(req: Request) {
     // Handle production variants
     if (body.productionVariants?.length > 0) {
       const variants = body.productionVariants
-        .filter((v: any) => v.variantName.trim())
-        .map((v: any) => ({
+        .filter(v => v.variantName.trim())
+        .map(v => ({
           wine_id: wine.id,
           variant_name: v.variantName
         }));
@@ -155,8 +186,8 @@ export async function POST(req: Request) {
     // Handle certifications
     if (body.certifications?.length > 0) {
       const certifications = body.certifications
-        .filter((c: any) => c.certificationName.trim())
-        .map((c: any) => ({
+        .filter(c => c.certificationName.trim())
+        .map(c => ({
           wine_id: wine.id,
           certification_name: c.certificationName
         }));
@@ -175,8 +206,8 @@ export async function POST(req: Request) {
     // Handle disclaimer icons
     if (body.disclaimerIcons?.length > 0) {
       const icons = body.disclaimerIcons
-        .filter((d: any) => d.iconName.trim())
-        .map((d: any) => ({
+        .filter(d => d.iconName.trim())
+        .map(d => ({
           wine_id: wine.id,
           icon_name: d.iconName
         }));
@@ -296,4 +327,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-} 
+}

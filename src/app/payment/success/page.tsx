@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 
 export default function SuccessPage() {
@@ -51,4 +50,4 @@ export default function SuccessPage() {
       </Card>
     </div>
   );
-} 
+}

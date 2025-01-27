@@ -6,6 +6,10 @@ const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/web
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 const BUCKET_NAME = 'wine-images';
 
+type StorageError = {
+  message: string;
+};
+
 export async function POST() {
   try {
     const cookieStore = cookies();
@@ -31,11 +35,12 @@ export async function POST() {
     }
 
     return NextResponse.json({ message: 'Bucket ready' });
-  } catch (error: any) {
-    console.error('Error in bucket creation:', error);
+  } catch (error) {
+    const err = error as StorageError;
+    console.error('Error in bucket creation:', err);
     return NextResponse.json(
-      { error: error.message || 'Unknown error occurred' },
+      { error: err.message || 'Unknown error occurred' },
       { status: 500 }
     );
   }
-} 
+}
