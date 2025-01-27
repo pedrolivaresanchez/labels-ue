@@ -9,7 +9,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { generateQRCode } from "@/utils/qr";
 import type { Wine } from "@/types/wine";
 import Link from "next/link";
-import { PlusCircle, Loader2 } from "lucide-react";
+import { PlusCircle, Loader2, Plus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
@@ -139,14 +139,17 @@ export default function WinesPage() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-8 mb-8">
-        <h1 className="text-3xl font-bold">Mis Etiquetas</h1>
-        <Button asChild>
-          <Link href="/wines/new">
-            <PlusCircle className="mr-2 h-4 w-4" />
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Mis Etiquetas</h1>
+          <p className="text-sm text-muted-foreground mt-1">Gestiona tus etiquetas de vino</p>
+        </div>
+        <Link href="/wines/new">
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
             Nueva Etiqueta
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </div>
 
       <WinesTable

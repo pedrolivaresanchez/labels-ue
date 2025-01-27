@@ -4,7 +4,7 @@ export default function WinesLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-6">
       {children}
     </div>
   );

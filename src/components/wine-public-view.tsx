@@ -163,7 +163,7 @@ function NutritionalInfo({ wine }: { wine: Wine }) {
 
 export function WinePublicView({ wine }: { wine: Wine }) {
   return (
-    <div className="container mx-auto px-6 sm:px-6 lg:px-8 py-8 max-w-4xl">
+    <div className="max-w-3xl mx-auto px-6 sm:px-8">
       {/* Image Section - Full width on mobile */}
       {wine.image_url && (
         <div className="mb-8">
