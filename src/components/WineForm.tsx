@@ -126,21 +126,24 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   // Initialize form data when editing
   useEffect(() => {
     if (initialData && isEditing) {
-      // Set ingredients
-      setIngredients(initialData.ingredients?.map((i) => ({
+      // Set ingredients from initialData
+      const mappedIngredients = initialData.ingredients?.map(i => ({
         ingredient_name: i.ingredient_name,
         is_allergen: i.is_allergen
-      })) || [])
+      })) || [];
+      setIngredients(mappedIngredients);
       
-      // Set production variants
-      setProductionVariants(initialData.productionVariants?.map((variant: { variant_name: string }) => ({
-        variant_name: variant.variant_name
-      })) || [])
+      // Set production variants from initialData
+      const mappedVariants = initialData.production_variants?.map(v => ({
+        variant_name: v.variant_name
+      })) || [];
+      setProductionVariants(mappedVariants);
       
-      // Set certifications
-      setCertifications(initialData.certifications?.map((cert) => ({
-        certification_name: cert.certification_name
-      })) || [])
+      // Set certifications from initialData
+      const mappedCertifications = initialData.certifications?.map(c => ({
+        certification_name: c.certification_name
+      })) || [];
+      setCertifications(mappedCertifications);
 
       // Set form data
       setFormData({
@@ -169,55 +172,61 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         operatorAddress: initialData.operator_address,
         registrationNumber: initialData.registration_number,
         imageUrl: initialData.image_url ?? null,
-        ingredients: initialData.ingredients?.map(i => ({
+        ingredients: mappedIngredients.map(i => ({
           ingredientName: i.ingredient_name,
           isAllergen: i.is_allergen
-        })) || [],
-        productionVariants: initialData.productionVariants?.map((v: { variant_name: string }) => ({
+        })),
+        productionVariants: mappedVariants.map(v => ({
           variantName: v.variant_name
-        })) || [],
-        certifications: initialData.certifications?.map(c => ({
+        })),
+        certifications: mappedCertifications.map(c => ({
           certificationName: c.certification_name
-        })) || []
-      })
+        }))
+      });
 
       // Set image preview if exists
       if (initialData.image_url) {
-        setImagePreview(initialData.image_url)
+        setImagePreview(initialData.image_url);
       }
     }
-  }, [initialData, isEditing])
+  }, [initialData, isEditing]);
 
   // Update preview data when ingredients change
   useEffect(() => {
-    setFormData((prev: FormData) => ({
-      ...prev,
-      ingredients: ingredients.map(i => ({
-        ingredientName: i.ingredient_name,
-        isAllergen: i.is_allergen
-      }))
-    }))
-  }, [ingredients])
+    if (ingredients.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        ingredients: ingredients.map(i => ({
+          ingredientName: i.ingredient_name,
+          isAllergen: i.is_allergen
+        }))
+      }));
+    }
+  }, [ingredients]);
 
   // Update preview data when production variants change
   useEffect(() => {
-    setFormData((prev: FormData) => ({
-      ...prev,
-      productionVariants: productionVariants.map(v => ({
-        variantName: v.variant_name
-      }))
-    }))
-  }, [productionVariants])
+    if (productionVariants.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        productionVariants: productionVariants.map(v => ({
+          variantName: v.variant_name
+        }))
+      }));
+    }
+  }, [productionVariants]);
 
   // Update preview data when certifications change
   useEffect(() => {
-    setFormData((prev: FormData) => ({
-      ...prev,
-      certifications: certifications.map(c => ({
-        certificationName: c.certification_name
-      }))
-    }))
-  }, [certifications])
+    if (certifications.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        certifications: certifications.map(c => ({
+          certificationName: c.certification_name
+        }))
+      }));
+    }
+  }, [certifications]);
 
   const addIngredient = () => {
     if (newIngredient.trim()) {
