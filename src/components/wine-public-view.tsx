@@ -180,17 +180,18 @@ export function WinePublicView({ wine }: { wine: Wine }) {
         </div>
       )}
 
-      {/* Basic Information - Stacked on mobile */}
-      <div className="text-center sm:text-left mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-3">{wine.name}</h1>
-        <p className="text-xl sm:text-2xl text-muted-foreground mb-2">{wine.foodName}</p>
-        <p className="text-xl sm:text-2xl font-medium">{wine.operatorName}</p>
-      </div>
-
       {/* Product Details Card */}
       <Card className="mb-8">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-2 gap-6">
+        <CardContent className="p-6 space-y-6">
+          {/* Basic Information */}
+          <div className="text-center border-b pb-6">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-3">{wine.name}</h1>
+            <p className="text-xl sm:text-2xl text-muted-foreground mb-2">{wine.foodName}</p>
+            <p className="text-xl sm:text-2xl font-medium">{wine.operatorName}</p>
+          </div>
+
+          {/* Product Specifications */}
+          <div className="grid grid-cols-2 gap-6 pt-2">
             <div className="text-center">
               <h3 className="text-sm font-medium text-muted-foreground mb-1">Cantidad neta</h3>
               <p className="text-2xl font-semibold">{wine.netQuantityCl} cl</p>
