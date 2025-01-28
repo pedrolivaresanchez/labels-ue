@@ -27,10 +27,6 @@ interface FormIngredient {
   is_allergen: boolean;
 }
 
-interface FormProductionVariant {
-  variant_name: string;
-}
-
 interface FormCertification {
   certification_name: string;
 }
@@ -82,13 +78,13 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
-  const [ingredients, setIngredients] = useState<Array<{ name: string; isAllergen: boolean }>>([])
-  const [productionVariants, setProductionVariants] = useState<Array<{ variantName: string }>>([])
-  const [certifications, setCertifications] = useState<Array<{ certificationName: string }>>([])
-  const [newIngredient, setNewIngredient] = useState("")
-  const [isAllergen, setIsAllergen] = useState(false)
-  const [newVariant, setNewVariant] = useState("")
-  const [newCertification, setNewCertification] = useState("")
+  const [ingredients, setIngredients] = useState<Array<{ name: string; isAllergen: boolean }>>([]);
+  const [certifications, setCertifications] = useState<Array<{ certificationName: string }>>([]);
+  const [productionVariants, setProductionVariants] = useState<Array<{ variantName: string }>>([]);
+  const [newIngredient, setNewIngredient] = useState("");
+  const [newVariant, setNewVariant] = useState("");
+  const [isAllergen, setIsAllergen] = useState(false);
+  const [newCertification, setNewCertification] = useState("");
   const [formData, setFormData] = useState<FormData>({
     name: '',
     eanCode: '',
@@ -251,7 +247,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   };
 
   const removeVariant = (index: number) => {
-    const newVariants = productionVariants.filter((_, i) => i !== index);
+    const newVariants = productionVariants.filter((_, i: number) => i !== index);
     setProductionVariants(newVariants);
     setFormData(prev => ({
       ...prev,
@@ -1006,7 +1002,11 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
           <div className="sticky top-8">
             <Card>
               <CardContent className="p-6">
-                <WinePreview formData={{ ...formData, imageUrl: imagePreview }} />
+                <WinePreview formData={{ 
+                  ...formData, 
+                  imageUrl: imagePreview,
+                  productionVariants: productionVariants
+                }} />
               </CardContent>
             </Card>
           </div>
