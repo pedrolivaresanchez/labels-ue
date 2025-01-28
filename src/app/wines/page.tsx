@@ -41,13 +41,7 @@ export default function WinesPage() {
 
         const { data: wines, error } = await supabase
           .from('wines')
-          .select(`
-            *,
-            ingredients (id, wine_id, ingredient_name, is_allergen),
-            certifications (id, wine_id, certification_name),
-            production_variants (id, wine_id, variant_name),
-            disclaimer_icons (id, wine_id, icon_name)
-          `)
+          .select('*')
           .eq('user_id', session.user.id)
           .order('created_at', { ascending: false });
 

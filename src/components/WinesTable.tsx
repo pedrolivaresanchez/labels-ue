@@ -98,7 +98,17 @@ export const columns: ColumnDef<Wine>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
+    cell: ({ row }) => {
+      const wine = row.original;
+      return (
+        <div className="flex items-center gap-2">
+          <div className="font-medium">{wine.name}</div>
+          {wine.ingredients?.some(i => i.isAllergen) && (
+            <span className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded">Alérgeno</span>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "ean_code",
