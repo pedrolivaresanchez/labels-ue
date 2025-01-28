@@ -36,10 +36,19 @@ type Wine = {
   operatorName: string;
   operatorAddress: string;
   registrationNumber: string;
-  ingredients: { ingredientName: string; isAllergen: boolean }[];
-  certifications: { certificationName: string }[];
-  productionVariants: { variantName: string }[];
-  disclaimerIcons: { iconName: string }[];
+  ingredients: Array<{
+    name: string;
+    isAllergen: boolean;
+  }>;
+  certifications: Array<{
+    certificationName: string;
+  }>;
+  productionVariants: Array<{
+    variantName: string;
+  }>;
+  disclaimerIcons: Array<{
+    iconName: string;
+  }>;
   image_url?: string;
 };
 
@@ -70,30 +79,7 @@ async function getWine(id: string): Promise<Wine> {
 
   const { data: wine, error } = await supabase
     .from('wines')
-    .select(`
-      *,
-      ingredients (
-        id,
-        wine_id,
-        ingredient_name,
-        is_allergen
-      ),
-      certifications (
-        id,
-        wine_id,
-        certification_name
-      ),
-      production_variants (
-        id,
-        wine_id,
-        variant_name
-      ),
-      disclaimer_icons (
-        id,
-        wine_id,
-        icon_name
-      )
-    `)
+    .select('*')
     .eq('id', id)
     .eq('user_id', session.user.id)
     .single();
@@ -105,7 +91,7 @@ async function getWine(id: string): Promise<Wine> {
 
   // Transform the data to match the expected format
   return {
-    ...wine,
+    id: wine.id,
     name: wine.name,
     eanCode: wine.ean_code,
     foodName: wine.food_name,
@@ -130,19 +116,10 @@ async function getWine(id: string): Promise<Wine> {
     operatorName: wine.operator_name,
     operatorAddress: wine.operator_address,
     registrationNumber: wine.registration_number,
-    ingredients: wine.ingredients?.map((i: DBIngredient) => ({
-      ingredientName: i.ingredient_name,
-      isAllergen: i.is_allergen
-    })) || [],
-    certifications: wine.certifications?.map((c: DBCertification) => ({
-      certificationName: c.certification_name
-    })) || [],
-    productionVariants: wine.production_variants?.map((v: DBProductionVariant) => ({
-      variantName: v.variant_name
-    })) || [],
-    disclaimerIcons: wine.disclaimer_icons?.map((d: DBDisclaimerIcon) => ({
-      iconName: d.icon_name
-    })) || [],
+    ingredients: wine.ingredients || [],
+    certifications: wine.certifications || [],
+    productionVariants: wine.production_variants || [],
+    disclaimerIcons: wine.disclaimer_icons || [],
     image_url: wine.image_url
   };
 }
@@ -152,8 +129,18 @@ export default async function WineViewPage({ params }: { params: { id: string } 
   const wine = await getWine(id);
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-4">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-6 sm:py-6">
+      <div className="flex flex-col gap-6">
+        {/* Header Section */}
+        <Card className="mb-2">
+          <CardContent className="pt-6">
+            <div className="flex flex-col gap-1">
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">Vista Privada</h1>
+              <p className="text-sm text-muted-foreground">Visualiza y gestiona los detalles de tu etiqueta.</p>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Breadcrumb and Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <Breadcrumb>
@@ -230,7 +217,7 @@ export default async function WineViewPage({ params }: { params: { id: string } 
                       <p className="text-lg">
                         {wine.ingredients.map((ingredient, index) => (
                           <span key={index}>
-                            {ingredient.ingredientName}
+                            {ingredient.name}
                             {index < wine.ingredients.length - 1 ? ', ' : ''}
                           </span>
                         ))}
