@@ -116,11 +116,11 @@ async function getWine(id: string): Promise<Wine> {
     operatorName: wine.operator_name,
     operatorAddress: wine.operator_address,
     registrationNumber: wine.registration_number,
+    image_url: wine.image_url,
     ingredients: wine.ingredients || [],
-    certifications: wine.certifications || [],
     productionVariants: wine.production_variants || [],
-    disclaimerIcons: wine.disclaimer_icons || [],
-    image_url: wine.image_url
+    certifications: wine.certifications || [],
+    disclaimerIcons: []
   };
 }
 
