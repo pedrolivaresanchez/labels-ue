@@ -296,13 +296,9 @@ export const columns: ColumnDef<Wine>[] = [
                 )}
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem
-              onClick={() => {
-                if (wine.id) onDelete(wine.id);
-              }}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              <span>Eliminar</span>
+            <DropdownMenuItem onClick={() => wine.id && onDelete(wine.id)}>
+              <Trash2 className="h-4 w-4 mr-2" />
+              <span className="text-red-600">Eliminar</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

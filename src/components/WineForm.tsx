@@ -70,8 +70,12 @@ interface FormData {
     name: string;
     isAllergen: boolean;
   }>;
-  productionVariants: string[];
-  certifications: string[];
+  productionVariants: Array<{
+    variantName: string;
+  }>;
+  certifications: Array<{
+    certificationName: string;
+  }>;
 }
 
 export function WineForm({ initialData, isEditing = false }: WineFormProps) {
@@ -79,8 +83,8 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [ingredients, setIngredients] = useState<Array<{ name: string; isAllergen: boolean }>>([])
-  const [productionVariants, setProductionVariants] = useState<string[]>([])
-  const [certifications, setCertifications] = useState<string[]>([])
+  const [productionVariants, setProductionVariants] = useState<Array<{ variantName: string }>>([])
+  const [certifications, setCertifications] = useState<Array<{ certificationName: string }>>([])
   const [newIngredient, setNewIngredient] = useState("")
   const [isAllergen, setIsAllergen] = useState(false)
   const [newVariant, setNewVariant] = useState("")
@@ -130,10 +134,16 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       setIngredients(mappedIngredients);
       
       // Set production variants from initialData
-      setProductionVariants(initialData.productionVariants || []);
+      const mappedVariants = initialData.productionVariants?.map(v => ({
+        variantName: typeof v === 'string' ? v : v.variantName
+      })) || [];
+      setProductionVariants(mappedVariants);
       
       // Set certifications from initialData
-      setCertifications(initialData.certifications || []);
+      const mappedCertifications = initialData.certifications?.map(c => ({
+        certificationName: typeof c === 'string' ? c : c.certificationName
+      })) || [];
+      setCertifications(mappedCertifications);
 
       // Set form data
       setFormData({
@@ -163,8 +173,8 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         registrationNumber: initialData.registration_number,
         imageUrl: initialData.image_url ?? null,
         ingredients: mappedIngredients,
-        productionVariants: initialData.productionVariants || [],
-        certifications: initialData.certifications || []
+        productionVariants: mappedVariants,
+        certifications: mappedCertifications
       });
 
       if (initialData.image_url) {
@@ -230,7 +240,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
 
   const addVariant = () => {
     if (newVariant.trim()) {
-      const newVariants = [...productionVariants, newVariant.trim()];
+      const newVariants = [...productionVariants, { variantName: newVariant.trim() }];
       setProductionVariants(newVariants);
       setFormData(prev => ({
         ...prev,
@@ -251,7 +261,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
 
   const addCertification = () => {
     if (newCertification.trim()) {
-      const newCertifications = [...certifications, newCertification.trim()];
+      const newCertifications = [...certifications, { certificationName: newCertification.trim() }];
       setCertifications(newCertifications);
       setFormData(prev => ({
         ...prev,
@@ -918,7 +928,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                   <div className="space-y-2">
                     {productionVariants.map((variant, index) => (
                       <div key={index} className="flex items-center justify-between p-2 border rounded">
-                        <span>{variant}</span>
+                        <span>{variant.variantName}</span>
                         <Button
                           type="button"
                           variant="ghost"
@@ -960,7 +970,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                   <div className="space-y-2">
                     {certifications.map((cert, index) => (
                       <div key={index} className="flex items-center justify-between p-2 border rounded">
-                        <span>{cert}</span>
+                        <span>{cert.certificationName}</span>
                         <Button
                           type="button"
                           variant="ghost"

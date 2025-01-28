@@ -59,9 +59,15 @@ export interface Wine {
     name: string;
     isAllergen: boolean;
   }>;
-  productionVariants: string[];
-  certifications: string[];
-  production_variants?: string[];
+  productionVariants: Array<{
+    variantName: string;
+  }>;
+  certifications: Array<{
+    certificationName: string;
+  }>;
+  production_variants?: Array<{
+    variant_name: string;
+  }>;
   disclaimer_icons?: Array<{ icon_name: string }>;
 }
 
@@ -95,6 +101,10 @@ export interface WineFormData {
     name: string;
     isAllergen: boolean;
   }>;
-  productionVariants: string[];
-  certifications: string[];
+  productionVariants: Array<{
+    variantName: string;
+  }>;
+  certifications: Array<{
+    certificationName: string;
+  }>;
 }

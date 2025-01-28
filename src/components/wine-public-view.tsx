@@ -289,12 +289,17 @@ export function WinePublicView({ wine }: { wine: Wine }) {
                     <h3 className="text-sm font-medium text-muted-foreground">Lugar de procedencia</h3>
                     <p className="text-base sm:text-lg">{wine.placeOfOrigin}</p>
                   </div>
-                  {wine.productionVariants.length > 0 && (
+                  {wine.productionVariants && wine.productionVariants.length > 0 && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Variantes de producción</h3>
-                      {wine.productionVariants.map((variant, index) => (
-                        <p key={index} className="text-base sm:text-lg">{variant.variantName}</p>
-                      ))}
+                      <div className="text-base sm:text-lg">
+                        {wine.productionVariants.map((variant, index) => (
+                          <span key={index}>
+                            {variant.variantName}
+                            {index < wine.productionVariants.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   )}
                   {wine.instructionsForUse && (

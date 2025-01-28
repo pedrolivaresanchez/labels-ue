@@ -57,18 +57,7 @@ export type Wine = {
 async function getWine(id: string): Promise<Wine | null> {
   const { data: wine, error } = await supabase
     .from('wines')
-    .select(`
-      *,
-      ingredients (
-        id, wine_id, ingredient_name, is_allergen
-      ),
-      production_variants (
-        id, wine_id, variant_name
-      ),
-      disclaimer_icons (
-        id, wine_id, icon_name
-      )
-    `)
+    .select('*')
     .eq('id', id)
     .single();
 
@@ -92,16 +81,19 @@ async function getWine(id: string): Promise<Wine | null> {
     salt: wine.salt,
     netQuantityCl: wine.net_quantity_cl,
     alcoholPercentage: wine.alcohol_percentage,
-    ingredients: wine.ingredients?.map((i: Ingredient) => ({
-      name: i.ingredient_name
+    ingredients: wine.ingredients?.map((i: any) => ({
+      name: i.name || i.ingredient_name,
+      isAllergen: i.isAllergen || i.is_allergen
     })) || [],
-    productionVariants: wine.production_variants?.map((v: ProductionVariant) => ({
-      variantName: v.variant_name
+    productionVariants: wine.production_variants?.map((v: any) => ({
+      variantName: v.variantName || v.variant_name
     })) || [],
-    disclaimerIcons: wine.disclaimer_icons?.map((d: DisclaimerIcon) => ({
-      iconName: d.icon_name
+    disclaimerIcons: wine.disclaimer_icons?.map((d: any) => ({
+      iconName: d.iconName || d.icon_name
     })) || [],
-    certifications: [],
+    certifications: wine.certifications?.map((c: any) => ({
+      name: c.name || c.certification_name
+    })) || [],
     image_url: wine.image_url,
     countryOfOrigin: wine.country_of_origin,
     placeOfOrigin: wine.place_of_origin,

@@ -172,7 +172,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
             <p>
               {formData.productionVariants.map((variant, index) => (
                 <span key={index}>
-                  {variant}
+                  {variant.variantName}
                   {index < formData.productionVariants.length - 1 ? ', ' : ''}
                 </span>
               ))}
@@ -187,7 +187,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
             <p>
               {formData.certifications.map((cert, index) => (
                 <span key={index}>
-                  {cert}
+                  {cert.certificationName}
                   {index < formData.certifications.length - 1 ? ', ' : ''}
                 </span>
               ))}
@@ -293,7 +293,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Variantes de producción</h3>
                       {formData.productionVariants.map((variant, index) => (
-                        <p key={index} className="text-lg">{variant}</p>
+                        <p key={index} className="text-lg">{variant.variantName}</p>
                       ))}
                     </div>
                   )}
@@ -301,7 +301,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Certificaciones</h3>
                       {formData.certifications.map((cert, index) => (
-                        <p key={index} className="text-lg">{cert}</p>
+                        <p key={index} className="text-lg">{cert.certificationName}</p>
                       ))}
                     </div>
                   )}
