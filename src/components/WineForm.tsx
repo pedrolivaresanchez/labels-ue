@@ -66,9 +66,6 @@ interface FormData {
     name: string;
     isAllergen: boolean;
   }>;
-  productionVariants: Array<{
-    variantName: string;
-  }>;
   certifications: Array<{
     certificationName: string;
   }>;
@@ -80,9 +77,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   const [loading, setLoading] = useState(false)
   const [ingredients, setIngredients] = useState<Array<{ name: string; isAllergen: boolean }>>([]);
   const [certifications, setCertifications] = useState<Array<{ certificationName: string }>>([]);
-  const [productionVariants, setProductionVariants] = useState<Array<{ variantName: string }>>([]);
   const [newIngredient, setNewIngredient] = useState("");
-  const [newVariant, setNewVariant] = useState("");
   const [isAllergen, setIsAllergen] = useState(false);
   const [newCertification, setNewCertification] = useState("");
   const [formData, setFormData] = useState<FormData>({
@@ -112,7 +107,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     registrationNumber: '',
     imageUrl: null,
     ingredients: [],
-    productionVariants: [],
     certifications: []
   })
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -128,12 +122,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         isAllergen: i.isAllergen
       })) || [];
       setIngredients(mappedIngredients);
-      
-      // Set production variants from initialData
-      const mappedVariants = initialData.productionVariants?.map(v => ({
-        variantName: typeof v === 'string' ? v : v.variantName
-      })) || [];
-      setProductionVariants(mappedVariants);
       
       // Set certifications from initialData
       const mappedCertifications = initialData.certifications?.map(c => ({
@@ -169,7 +157,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         registrationNumber: initialData.registration_number,
         imageUrl: initialData.image_url ?? null,
         ingredients: mappedIngredients,
-        productionVariants: mappedVariants,
         certifications: mappedCertifications
       });
 
@@ -188,16 +175,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       }));
     }
   }, [ingredients]);
-
-  // Update preview data when production variants change
-  useEffect(() => {
-    if (productionVariants.length > 0) {
-      setFormData(prev => ({
-        ...prev,
-        productionVariants
-      }));
-    }
-  }, [productionVariants]);
 
   // Update preview data when certifications change
   useEffect(() => {
@@ -231,27 +208,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     setFormData(prev => ({
       ...prev,
       ingredients: newIngredients
-    }));
-  };
-
-  const addVariant = () => {
-    if (newVariant.trim()) {
-      const newVariants = [...productionVariants, { variantName: newVariant.trim() }];
-      setProductionVariants(newVariants);
-      setFormData(prev => ({
-        ...prev,
-        productionVariants: newVariants
-      }));
-      setNewVariant("");
-    }
-  };
-
-  const removeVariant = (index: number) => {
-    const newVariants = productionVariants.filter((_, i: number) => i !== index);
-    setProductionVariants(newVariants);
-    setFormData(prev => ({
-      ...prev,
-      productionVariants: newVariants
     }));
   };
 
@@ -898,48 +854,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardContent>
             </Card>
 
-            {/* Production Variants */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Variantes de producción</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Input
-                      value={newVariant}
-                      onChange={(e) => setNewVariant(e.target.value)}
-                      placeholder="Añadir variante"
-                      className="flex-1"
-                    />
-                    <Button 
-                      type="button"
-                      onClick={addVariant}
-                      disabled={!newVariant.trim()}
-                      className="w-full sm:w-auto whitespace-nowrap"
-                    >
-                      Añadir
-                    </Button>
-                  </div>
-                  <div className="space-y-2">
-                    {productionVariants.map((variant, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 border rounded">
-                        <span>{variant.variantName}</span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeVariant(index)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Certifications */}
             <Card>
               <CardHeader>
@@ -1005,7 +919,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                 <WinePreview formData={{ 
                   ...formData, 
                   imageUrl: imagePreview,
-                  productionVariants: productionVariants
+                  productionVariants: []
                 }} />
               </CardContent>
             </Card>
