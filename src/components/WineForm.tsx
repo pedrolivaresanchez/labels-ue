@@ -40,7 +40,43 @@ interface WineFormProps {
   isEditing?: boolean;
 }
 
-type FormData = WineFormData;
+interface FormData {
+  name: string;
+  eanCode: string;
+  foodName: string;
+  energyKj: number;
+  energyKcal: number;
+  fat: number;
+  saturatedFat: number;
+  carbohydrate: number;
+  sugars: number;
+  protein: number;
+  salt: number;
+  netQuantityCl: number;
+  hasEstimationSign: boolean;
+  alcoholPercentage: number;
+  optionalLabelling: string;
+  countryOfOrigin: string;
+  placeOfOrigin: string;
+  wineryInformation: string;
+  instructionsForUse: string;
+  conservationConditions: string;
+  drainedWeightGrams: number;
+  operatorName: string;
+  operatorAddress: string;
+  registrationNumber: string;
+  imageUrl: string | null;
+  ingredients: Array<{
+    ingredientName: string;
+    isAllergen: boolean;
+  }>;
+  productionVariants: Array<{
+    variantName: string;
+  }>;
+  certifications: Array<{
+    certificationName: string;
+  }>;
+}
 
 export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   const router = useRouter()
@@ -90,17 +126,23 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   // Initialize form data when editing
   useEffect(() => {
     if (initialData && isEditing) {
+      // Set ingredients
       setIngredients(initialData.ingredients?.map((i) => ({
         ingredient_name: i.ingredient_name,
         is_allergen: i.is_allergen
       })) || [])
-      setProductionVariants(initialData.production_variants?.map((v) => ({
-        variant_name: v.variant_name
+      
+      // Set production variants
+      setProductionVariants(initialData.productionVariants?.map((variant: { variant_name: string }) => ({
+        variant_name: variant.variant_name
       })) || [])
-      setCertifications(initialData.certifications?.map((c) => ({
-        certification_name: c.certification_name
+      
+      // Set certifications
+      setCertifications(initialData.certifications?.map((cert) => ({
+        certification_name: cert.certification_name
       })) || [])
-      // Transform snake_case to camelCase when setting form data
+
+      // Set form data
       setFormData({
         name: initialData.name,
         eanCode: initialData.ean_code,
@@ -116,28 +158,33 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         netQuantityCl: initialData.net_quantity_cl,
         hasEstimationSign: initialData.has_estimation_sign,
         alcoholPercentage: initialData.alcohol_percentage,
-        optionalLabelling: initialData.optional_labelling,
+        optionalLabelling: initialData.optional_labelling ?? '',
         countryOfOrigin: initialData.country_of_origin,
         placeOfOrigin: initialData.place_of_origin,
         wineryInformation: initialData.winery_information,
-        instructionsForUse: initialData.instructions_for_use,
-        conservationConditions: initialData.conservation_conditions,
-        drainedWeightGrams: initialData.drained_weight_grams,
+        instructionsForUse: initialData.instructions_for_use ?? '',
+        conservationConditions: initialData.conservation_conditions ?? '',
+        drainedWeightGrams: initialData.drained_weight_grams ?? 0,
         operatorName: initialData.operator_name,
         operatorAddress: initialData.operator_address,
         registrationNumber: initialData.registration_number,
-        imageUrl: initialData.image_url,
-        ingredients: (initialData.ingredients || []).map(i => ({
+        imageUrl: initialData.image_url ?? null,
+        ingredients: initialData.ingredients?.map(i => ({
           ingredientName: i.ingredient_name,
           isAllergen: i.is_allergen
-        })),
-        productionVariants: (initialData.production_variants || []).map(v => ({
+        })) || [],
+        productionVariants: initialData.productionVariants?.map((v: { variant_name: string }) => ({
           variantName: v.variant_name
-        })),
-        certifications: (initialData.certifications || []).map(c => ({
+        })) || [],
+        certifications: initialData.certifications?.map(c => ({
           certificationName: c.certification_name
-        }))
+        })) || []
       })
+
+      // Set image preview if exists
+      if (initialData.image_url) {
+        setImagePreview(initialData.image_url)
+      }
     }
   }, [initialData, isEditing])
 
@@ -174,39 +221,98 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
 
   const addIngredient = () => {
     if (newIngredient.trim()) {
-      setIngredients([...ingredients, { 
+      const newIngredients = [...ingredients, { 
         ingredient_name: newIngredient.trim(), 
         is_allergen: isAllergen 
-      }]);
+      }];
+      setIngredients(newIngredients);
+      
+      // Update form data while preserving other state
+      setFormData(prev => ({
+        ...prev,
+        ingredients: newIngredients.map(i => ({
+          ingredientName: i.ingredient_name,
+          isAllergen: i.is_allergen
+        }))
+      }));
+      
       setNewIngredient("");
       setIsAllergen(false);
     }
   };
 
   const removeIngredient = (index: number) => {
-    setIngredients(ingredients.filter((_, i) => i !== index));
+    const newIngredients = ingredients.filter((_, i) => i !== index);
+    setIngredients(newIngredients);
+    
+    // Update form data while preserving other state
+    setFormData(prev => ({
+      ...prev,
+      ingredients: newIngredients.map(i => ({
+        ingredientName: i.ingredient_name,
+        isAllergen: i.is_allergen
+      }))
+    }));
   };
 
   const addVariant = () => {
     if (newVariant.trim()) {
-      setProductionVariants([...productionVariants, { variant_name: newVariant.trim() }]);
+      const newVariants = [...productionVariants, { variant_name: newVariant.trim() }];
+      setProductionVariants(newVariants);
+      
+      // Update form data while preserving other state
+      setFormData(prev => ({
+        ...prev,
+        productionVariants: newVariants.map(v => ({
+          variantName: v.variant_name
+        }))
+      }));
+      
       setNewVariant("");
     }
   };
 
   const removeVariant = (index: number) => {
-    setProductionVariants(productionVariants.filter((_, i) => i !== index));
+    const newVariants = productionVariants.filter((_, i) => i !== index);
+    setProductionVariants(newVariants);
+    
+    // Update form data while preserving other state
+    setFormData(prev => ({
+      ...prev,
+      productionVariants: newVariants.map(v => ({
+        variantName: v.variant_name
+      }))
+    }));
   };
 
   const addCertification = () => {
     if (newCertification.trim()) {
-      setCertifications([...certifications, { certification_name: newCertification.trim() }]);
+      const newCertifications = [...certifications, { certification_name: newCertification.trim() }];
+      setCertifications(newCertifications);
+      
+      // Update form data while preserving other state
+      setFormData(prev => ({
+        ...prev,
+        certifications: newCertifications.map(c => ({
+          certificationName: c.certification_name
+        }))
+      }));
+      
       setNewCertification("");
     }
   };
 
   const removeCertification = (index: number) => {
-    setCertifications(certifications.filter((_, i) => i !== index));
+    const newCertifications = certifications.filter((_, i) => i !== index);
+    setCertifications(newCertifications);
+    
+    // Update form data while preserving other state
+    setFormData(prev => ({
+      ...prev,
+      certifications: newCertifications.map(c => ({
+        certificationName: c.certification_name
+      }))
+    }));
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
