@@ -2,21 +2,10 @@
 
 import { WineForm } from "@/components/WineForm"
 import { Card, CardContent } from "@/components/ui/card";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumb";
-import { ChevronLeft } from "lucide-react";
 
 export default function NewWinePage() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <Breadcrumb className="mb-4 sm:mb-6">
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/wines">
-            <ChevronLeft className="h-4 w-4" />
-            Volver a la lista
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-      </Breadcrumb>
-
       <Card className="mb-6">
         <CardContent className="pt-6">
           <div className="flex flex-col gap-1">

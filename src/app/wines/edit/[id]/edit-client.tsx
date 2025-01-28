@@ -3,10 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { WineForm } from '@/components/WineForm';
-import { Loader2, ChevronLeft } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import type { Wine } from '@/types/wine';
 import { Card, CardContent } from "@/components/ui/card";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumb";
 
 interface EditWineClientProps {
   id: string;
@@ -47,15 +46,6 @@ export function EditWineClient({ id }: EditWineClientProps) {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <Breadcrumb className="mb-4 sm:mb-6">
-        <BreadcrumbItem>
-          <BreadcrumbLink href={`/wines/view/${id}`}>
-            <ChevronLeft className="h-4 w-4" />
-            Volver al vino
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-      </Breadcrumb>
-
       <Card className="mb-6">
         <CardContent className="pt-6">
           <div className="flex flex-col gap-1">
