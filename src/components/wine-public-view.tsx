@@ -187,6 +187,22 @@ export function WinePublicView({ wine }: { wine: Wine }) {
         <p className="text-xl sm:text-2xl font-medium">{wine.operatorName}</p>
       </div>
 
+      {/* Product Details Card */}
+      <Card className="mb-8">
+        <CardContent className="p-6">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="text-center">
+              <h3 className="text-sm font-medium text-muted-foreground mb-1">Cantidad neta</h3>
+              <p className="text-2xl font-semibold">{wine.netQuantityCl} cl</p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-sm font-medium text-muted-foreground mb-1">Alcohol</h3>
+              <p className="text-2xl font-semibold">{wine.alcoholPercentage}% vol</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Warning Icons - Centered on mobile */}
       <div className="flex justify-center gap-4 mb-8">
         <Image
