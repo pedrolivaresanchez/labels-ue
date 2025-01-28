@@ -354,7 +354,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     setLoading(true)
 
     try {
-      let imageUrl = formData.imageUrl;
+      let imageUrl = null;
 
       // Handle image upload if there's a new image file
       if (imageFile) {
@@ -362,8 +362,9 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         if (isEditing && initialData?.image_url) {
           await deleteWineImage(initialData.image_url);
         }
-        // Upload new image
+        // Upload new image and get the path
         imageUrl = await uploadWineImage(imageFile, initialData?.id || 'temp');
+        console.log('Image URL to be saved:', imageUrl);
       }
 
       const wineData = {
@@ -391,7 +392,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         operator_name: formData.operatorName,
         operator_address: formData.operatorAddress,
         registration_number: formData.registrationNumber,
-        image_url: imageUrl,
+        image_url: imageUrl, // Use the path returned from uploadWineImage
         ingredients: formData.ingredients,
         production_variants: formData.productionVariants.map(v => ({
           variantName: v.variantName
