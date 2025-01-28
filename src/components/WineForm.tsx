@@ -122,6 +122,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   })
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image_url || null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(initialData?.image_url || null);
   const [showDimensionsDialog, setShowDimensionsDialog] = useState(false);
 
   // Initialize form data when editing
@@ -353,16 +354,17 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     setLoading(true)
 
     try {
-      let imageUrl = formData.imageUrl;
+      let imageUrl = uploadedImageUrl;
 
       // Only handle image upload if there's a new image file
       if (imageFile) {
         // Delete old image if exists
-        if (formData.imageUrl) {
-          await deleteWineImage(formData.imageUrl);
+        if (uploadedImageUrl) {
+          await deleteWineImage(uploadedImageUrl);
         }
         // Upload new image
         imageUrl = await uploadWineImage(imageFile, initialData?.id || 'temp');
+        setUploadedImageUrl(imageUrl);
       }
 
       const wineData = {
