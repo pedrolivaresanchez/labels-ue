@@ -362,7 +362,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         },
         body: JSON.stringify({
           ...formData,
-          imageUrl: null // Initially set to null
+          imageUrl: imageFile ? null : initialData?.image_url // Preserve existing image if no new image
         })
       })
 
