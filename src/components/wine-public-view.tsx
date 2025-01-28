@@ -124,36 +124,36 @@ function NutritionalInfo({ wine }: { wine: Wine }) {
   return (
     <Table>
       <TableBody>
-        <TableRow>
-          <TableCell>valor energético kJ</TableCell>
+        <TableRow className="border-b">
+          <TableCell className="font-bold">valor energético kJ</TableCell>
           <TableCell className="text-right">{wine.energyKj} kJ</TableCell>
         </TableRow>
-        <TableRow>
-          <TableCell>valor energético kcal</TableCell>
+        <TableRow className="border-b">
+          <TableCell className="font-bold">valor energético kcal</TableCell>
           <TableCell className="text-right">{wine.energyKcal} kcal</TableCell>
         </TableRow>
-        <TableRow>
-          <TableCell>grasas</TableCell>
+        <TableRow className="border-b">
+          <TableCell className="font-bold">grasas</TableCell>
           <TableCell className="text-right">{wine.fat} g</TableCell>
         </TableRow>
-        <TableRow>
+        <TableRow className="border-b">
           <TableCell className="pl-8">de las cuales saturadas</TableCell>
           <TableCell className="text-right">{wine.saturatedFat} g</TableCell>
         </TableRow>
-        <TableRow>
-          <TableCell>hidratos de carbono</TableCell>
+        <TableRow className="border-b">
+          <TableCell className="font-bold">hidratos de carbono</TableCell>
           <TableCell className="text-right">{wine.carbohydrate} g</TableCell>
         </TableRow>
-        <TableRow>
+        <TableRow className="border-b">
           <TableCell className="pl-8">de los cuales azúcares</TableCell>
           <TableCell className="text-right">{wine.sugars} g</TableCell>
         </TableRow>
-        <TableRow>
-          <TableCell>proteínas</TableCell>
+        <TableRow className="border-b">
+          <TableCell className="font-bold">proteínas</TableCell>
           <TableCell className="text-right">{wine.protein} g</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell>sal</TableCell>
+          <TableCell className="font-bold">sal</TableCell>
           <TableCell className="text-right">{wine.salt} g</TableCell>
         </TableRow>
       </TableBody>
@@ -316,6 +316,19 @@ export function WinePublicView({ wine }: { wine: Wine }) {
                           <span key={index}>
                             {variant.variantName}
                             {index < wine.productionVariants.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {wine.certifications && wine.certifications.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">Certificaciones</h3>
+                      <div className="text-base sm:text-lg">
+                        {wine.certifications.map((cert, index) => (
+                          <span key={index}>
+                            {cert.name}
+                            {index < wine.certifications.length - 1 ? ', ' : ''}
                           </span>
                         ))}
                       </div>
