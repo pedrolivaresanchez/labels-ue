@@ -332,10 +332,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
-        setFormData(prev => ({
-          ...prev,
-          imageUrl: reader.result as string
-        }));
       };
       reader.readAsDataURL(file);
       setImageFile(file);
@@ -354,119 +350,66 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     setLoading(true)
 
     try {
-      let imageUrl = uploadedImageUrl;
-      let wineId = initialData?.id;
+      let imageUrl = formData.imageUrl;
 
-      // If we're creating a new wine, first create it without the image
-      if (!isEditing) {
-        const wineData = {
-          name: formData.name,
-          ean_code: formData.eanCode,
-          food_name: formData.foodName,
-          energy_kj: formData.energyKj,
-          energy_kcal: formData.energyKcal,
-          fat: formData.fat,
-          saturated_fat: formData.saturatedFat,
-          carbohydrate: formData.carbohydrate,
-          sugars: formData.sugars,
-          protein: formData.protein,
-          salt: formData.salt,
-          net_quantity_cl: formData.netQuantityCl,
-          has_estimation_sign: formData.hasEstimationSign,
-          alcohol_percentage: formData.alcoholPercentage,
-          optional_labelling: formData.optionalLabelling || null,
-          country_of_origin: formData.countryOfOrigin,
-          place_of_origin: formData.placeOfOrigin,
-          winery_information: formData.wineryInformation,
-          instructions_for_use: formData.instructionsForUse || null,
-          conservation_conditions: formData.conservationConditions || null,
-          drained_weight_grams: formData.drainedWeightGrams || null,
-          operator_name: formData.operatorName,
-          operator_address: formData.operatorAddress,
-          registration_number: formData.registrationNumber,
-          image_url: null,
-          ingredients: formData.ingredients,
-          production_variants: formData.productionVariants.map(v => ({
-            variantName: v.variantName
-          })),
-          certifications: formData.certifications.map(c => ({
-            certificationName: c.certificationName
-          }))
+      // Handle image upload if there's a new image file
+      if (imageFile) {
+        // Delete old image if exists and we're editing
+        if (isEditing && initialData?.image_url) {
+          await deleteWineImage(initialData.image_url);
         }
+        // Upload new image
+        imageUrl = await uploadWineImage(imageFile, initialData?.id || 'temp');
+      }
 
-        const { data, error } = await supabase
+      const wineData = {
+        name: formData.name,
+        ean_code: formData.eanCode,
+        food_name: formData.foodName,
+        energy_kj: formData.energyKj,
+        energy_kcal: formData.energyKcal,
+        fat: formData.fat,
+        saturated_fat: formData.saturatedFat,
+        carbohydrate: formData.carbohydrate,
+        sugars: formData.sugars,
+        protein: formData.protein,
+        salt: formData.salt,
+        net_quantity_cl: formData.netQuantityCl,
+        has_estimation_sign: formData.hasEstimationSign,
+        alcohol_percentage: formData.alcoholPercentage,
+        optional_labelling: formData.optionalLabelling || null,
+        country_of_origin: formData.countryOfOrigin,
+        place_of_origin: formData.placeOfOrigin,
+        winery_information: formData.wineryInformation,
+        instructions_for_use: formData.instructionsForUse || null,
+        conservation_conditions: formData.conservationConditions || null,
+        drained_weight_grams: formData.drainedWeightGrams || null,
+        operator_name: formData.operatorName,
+        operator_address: formData.operatorAddress,
+        registration_number: formData.registrationNumber,
+        image_url: imageUrl,
+        ingredients: formData.ingredients,
+        production_variants: formData.productionVariants.map(v => ({
+          variantName: v.variantName
+        })),
+        certifications: formData.certifications.map(c => ({
+          certificationName: c.certificationName
+        }))
+      }
+
+      if (isEditing) {
+        const { error } = await supabase
           .from('wines')
-          .insert([wineData])
-          .select()
+          .update(wineData)
+          .eq('id', initialData?.id)
 
         if (error) {
           throw error
         }
-
-        wineId = data[0].id
-      }
-
-      // Handle image upload if there's a new image file
-      if (imageFile && wineId) {
-        // Delete old image if exists
-        if (uploadedImageUrl) {
-          await deleteWineImage(uploadedImageUrl);
-        }
-        // Upload new image with the actual wine ID
-        imageUrl = await uploadWineImage(imageFile, wineId);
-        
-        // Update the wine with the new image URL
-        const { error: updateError } = await supabase
-          .from('wines')
-          .update({ image_url: imageUrl })
-          .eq('id', wineId)
-
-        if (updateError) {
-          throw updateError
-        }
-      }
-
-      // If we're editing and there's no new image, just update the wine data
-      if (isEditing && !imageFile) {
-        const wineData = {
-          name: formData.name,
-          ean_code: formData.eanCode,
-          food_name: formData.foodName,
-          energy_kj: formData.energyKj,
-          energy_kcal: formData.energyKcal,
-          fat: formData.fat,
-          saturated_fat: formData.saturatedFat,
-          carbohydrate: formData.carbohydrate,
-          sugars: formData.sugars,
-          protein: formData.protein,
-          salt: formData.salt,
-          net_quantity_cl: formData.netQuantityCl,
-          has_estimation_sign: formData.hasEstimationSign,
-          alcohol_percentage: formData.alcoholPercentage,
-          optional_labelling: formData.optionalLabelling || null,
-          country_of_origin: formData.countryOfOrigin,
-          place_of_origin: formData.placeOfOrigin,
-          winery_information: formData.wineryInformation,
-          instructions_for_use: formData.instructionsForUse || null,
-          conservation_conditions: formData.conservationConditions || null,
-          drained_weight_grams: formData.drainedWeightGrams || null,
-          operator_name: formData.operatorName,
-          operator_address: formData.operatorAddress,
-          registration_number: formData.registrationNumber,
-          image_url: imageUrl,
-          ingredients: formData.ingredients,
-          production_variants: formData.productionVariants.map(v => ({
-            variantName: v.variantName
-          })),
-          certifications: formData.certifications.map(c => ({
-            certificationName: c.certificationName
-          }))
-        }
-
+      } else {
         const { error } = await supabase
           .from('wines')
-          .update(wineData)
-          .eq('id', wineId)
+          .insert([wineData])
 
         if (error) {
           throw error
