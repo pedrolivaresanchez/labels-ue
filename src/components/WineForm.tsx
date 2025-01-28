@@ -391,24 +391,31 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
 
       let wineId: string;
       
-      if (isEditing) {
-        const { data: updatedWine, error } = await supabase
+      if (isEditing && initialData?.id) {
+        const { error } = await supabase
           .from('wines')
           .update(wineData)
-          .eq('id', initialData?.id)
-          .select()
-          .single()
+          .eq('id', initialData.id)
 
         if (error) throw error;
-        wineId = updatedWine.id;
+        wineId = initialData.id;
       } else {
+        // Get current user
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+        if (userError) throw userError;
+        if (!user) throw new Error('No user found');
+
         const { data: newWine, error } = await supabase
           .from('wines')
-          .insert([wineData])
-          .select()
+          .insert([{
+            ...wineData,
+            user_id: user.id
+          }])
+          .select('id')
           .single()
 
         if (error) throw error;
+        if (!newWine) throw new Error('Failed to create wine');
         wineId = newWine.id;
       }
 
@@ -439,7 +446,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         description: isEditing ? "El vino ha sido actualizado correctamente." : "El vino ha sido creado correctamente.",
       })
     } catch (error) {
-      console.error(error)
+      console.error('Detailed error:', error)
       toast({
         title: "Error",
         description: "Ha ocurrido un error. Por favor, inténtalo de nuevo.",
