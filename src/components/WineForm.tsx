@@ -354,6 +354,19 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     setLoading(true)
 
     try {
+      // Check authentication first
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      if (sessionError) throw sessionError;
+      if (!session) {
+        toast({
+          title: "Error de autenticación",
+          description: "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.",
+          variant: "destructive",
+        })
+        router.push('/login')
+        return;
+      }
+
       // First create/update the wine record without the image
       const wineData = {
         name: formData.name,
@@ -400,16 +413,12 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         if (error) throw error;
         wineId = initialData.id;
       } else {
-        // Get current user
-        const { data: { user }, error: userError } = await supabase.auth.getUser()
-        if (userError) throw userError;
-        if (!user) throw new Error('No user found');
-
+        // Use the session we already have
         const { data: newWine, error } = await supabase
           .from('wines')
           .insert([{
             ...wineData,
-            user_id: user.id
+            user_id: session.user.id
           }])
           .select('id')
           .single()
@@ -430,15 +439,21 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         const imageUrl = await uploadWineImage(imageFile, wineId);
         console.log('Image uploaded, URL:', imageUrl);
 
-        // Update the wine record with the image URL
+        // Update the wine record with the image URL and wait for it to complete
         const { error: updateError } = await supabase
           .from('wines')
           .update({ image_url: imageUrl })
-          .eq('id', wineId);
+          .eq('id', wineId)
+          .select()
+          .single();
 
-        if (updateError) throw updateError;
+        if (updateError) {
+          console.error('Error updating wine with image URL:', updateError);
+          throw updateError;
+        }
       }
 
+      // Only redirect after all operations are complete
       router.refresh()
       router.push('/wines')
       toast({
