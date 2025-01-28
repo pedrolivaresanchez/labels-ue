@@ -21,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { supabase } from "@/lib/supabase"
 
 interface FormIngredient {
   ingredient_name: string;
@@ -145,6 +146,11 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       })) || [];
       setCertifications(mappedCertifications);
 
+      // Set image preview if exists
+      if (initialData.image_url) {
+        setImagePreview(initialData.image_url);
+      }
+
       // Set form data
       setFormData({
         name: initialData.name,
@@ -171,15 +177,11 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         operatorName: initialData.operator_name,
         operatorAddress: initialData.operator_address,
         registrationNumber: initialData.registration_number,
-        imageUrl: initialData.image_url ?? null,
+        imageUrl: initialData.image_url,
         ingredients: mappedIngredients,
         productionVariants: mappedVariants,
         certifications: mappedCertifications
       });
-
-      if (initialData.image_url) {
-        setImagePreview(initialData.image_url);
-      }
     }
   }, [initialData, isEditing]);
 
@@ -348,80 +350,91 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setLoading(true)
+
     try {
-      setLoading(true)
+      let imageUrl = formData.imageUrl;
 
-      // First create or update the wine without the image
-      const endpoint = isEditing ? `/api/wines/${initialData?.id}` : '/api/wines'
-      const method = isEditing ? 'PUT' : 'POST'
-
-      const response = await fetch(endpoint, {
-        method,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          ...formData,
-          imageUrl: null // Initially set to null
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('Error al guardar el vino')
+      // Only handle image upload if there's a new image file
+      if (imageFile) {
+        // Delete old image if exists
+        if (formData.imageUrl) {
+          await deleteWineImage(formData.imageUrl);
+        }
+        // Upload new image
+        imageUrl = await uploadWineImage(imageFile, initialData?.id || 'temp');
       }
 
-      const wine = await response.json()
+      const wineData = {
+        name: formData.name,
+        ean_code: formData.eanCode,
+        food_name: formData.foodName,
+        energy_kj: formData.energyKj,
+        energy_kcal: formData.energyKcal,
+        fat: formData.fat,
+        saturated_fat: formData.saturatedFat,
+        carbohydrate: formData.carbohydrate,
+        sugars: formData.sugars,
+        protein: formData.protein,
+        salt: formData.salt,
+        net_quantity_cl: formData.netQuantityCl,
+        has_estimation_sign: formData.hasEstimationSign,
+        alcohol_percentage: formData.alcoholPercentage,
+        optional_labelling: formData.optionalLabelling || null,
+        country_of_origin: formData.countryOfOrigin,
+        place_of_origin: formData.placeOfOrigin,
+        winery_information: formData.wineryInformation,
+        instructions_for_use: formData.instructionsForUse || null,
+        conservation_conditions: formData.conservationConditions || null,
+        drained_weight_grams: formData.drainedWeightGrams || null,
+        operator_name: formData.operatorName,
+        operator_address: formData.operatorAddress,
+        registration_number: formData.registrationNumber,
+        image_url: imageUrl,
+        ingredients: formData.ingredients.map(i => ({
+          name: i.name,
+          isAllergen: i.isAllergen
+        })),
+        production_variants: formData.productionVariants.map(v => ({
+          variant_name: v.variantName
+        })),
+        certifications: formData.certifications.map(c => ({
+          certification_name: c.certificationName
+        })),
+        disclaimer_icons: []
+      }
 
-      // Now handle the image upload if there's a new image
-      if (imageFile) {
-        try {
-          // If editing and there's an existing image, delete it
-          if (isEditing && initialData?.image_url) {
-            await deleteWineImage(initialData.image_url)
-          }
-          
-          // Upload new image with the wine's ID
-          const imageUrl = await uploadWineImage(imageFile, wine.id)
+      if (isEditing) {
+        const { error } = await supabase
+          .from('wines')
+          .update(wineData)
+          .eq('id', initialData?.id)
 
-          // Update the wine with the new image URL
-          const imageUpdateResponse = await fetch(`/api/wines/${wine.id}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              ...formData,
-              imageUrl
-            })
-          })
+        if (error) {
+          throw error
+        }
+      } else {
+        const { error } = await supabase
+          .from('wines')
+          .insert([wineData])
 
-          if (!imageUpdateResponse.ok) {
-            throw new Error('Error al actualizar la imagen del vino')
-          }
-        } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : 'Error al subir la imagen'
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: errorMessage,
-          })
-          // Continue even if image upload fails
+        if (error) {
+          throw error
         }
       }
 
-      toast({
-        title: "Éxito",
-        description: isEditing ? "Vino actualizado correctamente" : "Vino creado correctamente",
-      })
-
-      router.push('/wines')
       router.refresh()
-    } catch (error) {
-      console.error('Error:', error)
+      router.push('/wines')
       toast({
-        variant: "destructive",
+        title: isEditing ? "Vino actualizado" : "Vino creado",
+        description: isEditing ? "El vino ha sido actualizado correctamente." : "El vino ha sido creado correctamente.",
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Error al procesar la solicitud",
+        description: "Ha ocurrido un error. Por favor, inténtalo de nuevo.",
+        variant: "destructive",
       })
     } finally {
       setLoading(false)
