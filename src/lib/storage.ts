@@ -54,13 +54,9 @@ export async function uploadWineImage(file: File, wineId: string) {
 
     console.log('Upload successful, data:', data);
 
-    // Get the public URL for the uploaded file
-    const { data: { publicUrl } } = supabase.storage
-      .from(BUCKET_NAME)
-      .getPublicUrl(data.path);
-
-    console.log('Generated public URL:', publicUrl);
-    return publicUrl;
+    // Return just the filename instead of the public URL
+    console.log('Returning filename:', fileName);
+    return fileName;
   } catch (error: unknown) {
     console.error('Detailed error information:', {
       error,
