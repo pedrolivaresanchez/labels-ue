@@ -391,15 +391,12 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         operator_address: formData.operatorAddress,
         registration_number: formData.registrationNumber,
         image_url: imageUrl,
-        ingredients: formData.ingredients.map(i => ({
-          name: i.name,
-          isAllergen: i.isAllergen
-        })),
+        ingredients: formData.ingredients,
         production_variants: formData.productionVariants.map(v => ({
-          variant_name: v.variantName
+          variantName: v.variantName
         })),
         certifications: formData.certifications.map(c => ({
-          certification_name: c.certificationName
+          certificationName: c.certificationName
         })),
         disclaimer_icons: []
       }
