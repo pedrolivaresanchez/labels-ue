@@ -84,19 +84,10 @@ async function getWine(id: string): Promise<Wine | null> {
     salt: wine.salt,
     netQuantityCl: wine.net_quantity_cl,
     alcoholPercentage: wine.alcohol_percentage,
-    ingredients: wine.ingredients?.map((i: any) => ({
-      name: i.name || i.ingredient_name,
-      isAllergen: i.isAllergen || i.is_allergen
-    })) || [],
-    productionVariants: wine.production_variants?.map((v: any) => ({
-      variantName: v.variantName || v.variant_name
-    })) || [],
-    disclaimerIcons: wine.disclaimer_icons?.map((d: any) => ({
-      iconName: d.iconName || d.icon_name
-    })) || [],
-    certifications: wine.certifications?.map((c: any) => ({
-      name: c.name || c.certification_name
-    })) || [],
+    ingredients: wine.ingredients || [],
+    productionVariants: wine.production_variants || [],
+    disclaimerIcons: wine.disclaimer_icons || [],
+    certifications: wine.certifications || [],
     image_url: wine.image_url,
     countryOfOrigin: wine.country_of_origin,
     placeOfOrigin: wine.place_of_origin,
