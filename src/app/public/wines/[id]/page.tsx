@@ -69,6 +69,16 @@ async function getWine(id: string): Promise<Wine | null> {
     return null;
   }
 
+  // Get the public URL for the image if it exists
+  let imageUrl = wine.image_url;
+  if (imageUrl) {
+    const { data } = supabase
+      .storage
+      .from('wine-images')
+      .getPublicUrl(imageUrl);
+    imageUrl = data.publicUrl;
+  }
+
   return {
     id: wine.id,
     name: wine.name,
@@ -88,7 +98,7 @@ async function getWine(id: string): Promise<Wine | null> {
     productionVariants: wine.production_variants || [],
     certifications: wine.certifications || [],
     disclaimerIcons: [],
-    image_url: wine.image_url,
+    image_url: imageUrl,
     countryOfOrigin: wine.country_of_origin,
     placeOfOrigin: wine.place_of_origin,
     winery_information: wine.winery_information,
