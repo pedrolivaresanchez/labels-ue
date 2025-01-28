@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Wine } from "@/app/public/wines/[id]/page";
 import Image from "next/image";
+import { supabase } from "@/lib/supabase";
 
 function NutritionalInfoSkeleton() {
   return (
@@ -162,14 +163,19 @@ function NutritionalInfo({ wine }: { wine: Wine }) {
 }
 
 export function WinePublicView({ wine }: { wine: Wine }) {
+  // Get the public URL for the image path
+  const imageUrl = wine.image_url ? 
+    supabase.storage.from('wine-images').getPublicUrl(wine.image_url).data.publicUrl 
+    : null;
+
   return (
     <div className="max-w-3xl mx-auto px-6 sm:px-8">
       {/* Image Section - Full width on mobile */}
-      {wine.image_url && (
+      {imageUrl && (
         <div className="mb-8">
           <div className="relative w-full max-w-sm mx-auto aspect-square">
             <Image
-              src={wine.image_url}
+              src={imageUrl}
               alt={wine.name}
               fill
               className="object-contain"

@@ -121,7 +121,11 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     certifications: []
   })
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image_url || null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    initialData?.image_url 
+      ? supabase.storage.from('wine-images').getPublicUrl(initialData.image_url).data.publicUrl 
+      : null
+  );
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(initialData?.image_url || null);
   const [showDimensionsDialog, setShowDimensionsDialog] = useState(false);
 
@@ -466,6 +470,10 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                             onClick={() => {
                               setImagePreview(null);
                               setImageFile(null);
+                              setFormData(prev => ({
+                                ...prev,
+                                imageUrl: null
+                              }));
                             }}
                           >
                             <X className="h-4 w-4" />
