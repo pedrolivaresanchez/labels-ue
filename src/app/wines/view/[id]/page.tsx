@@ -266,6 +266,19 @@ export default async function WineViewPage({ params }: { params: { id: string } 
                           </p>
                         </div>
                       )}
+                      {wine.certifications.length > 0 && (
+                        <div>
+                          <h3 className="text-sm font-medium text-muted-foreground">Certificaciones</h3>
+                          <p className="text-lg">
+                            {wine.certifications.map((cert, index) => (
+                              <span key={index}>
+                                {cert.certificationName}
+                                {index < wine.certifications.length - 1 ? ', ' : ''}
+                              </span>
+                            ))}
+                          </p>
+                        </div>
+                      )}
                       {wine.instructionsForUse && (
                         <div>
                           <h3 className="text-sm font-medium text-muted-foreground">Modo de empleo</h3>
