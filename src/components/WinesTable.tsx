@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, QrCode, Eye, Loader2 } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, QrCode, Eye, Loader2, Trash2 } from "lucide-react"
 import Link from "next/link"
 import {
   Tooltip,
@@ -43,6 +43,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { UUID } from "@/lib/supabase"
+import { Wine } from "@/types/wine"
 
 const columnLabels: Record<string, string> = {
   ean_code: "Código EAN",
@@ -53,63 +54,11 @@ const columnLabels: Record<string, string> = {
   origin: "Origen"
 };
 
-export type Wine = {
-  id: UUID;
-  user_id: string;
-  name: string;
-  ean_code: string;
-  food_name: string;
-  energy_kj: number;
-  energy_kcal: number;
-  fat: number;
-  saturated_fat: number;
-  carbohydrate: number;
-  sugars: number;
-  protein: number;
-  salt: number;
-  net_quantity_cl: number;
-  has_estimation_sign: boolean;
-  alcohol_percentage: number;
-  optional_labelling?: string | null;
-  country_of_origin: string;
-  place_of_origin: string;
-  winery_information: string;
-  instructions_for_use?: string | null;
-  conservation_conditions?: string | null;
-  drained_weight_grams?: number | null;
-  operator_name: string;
-  operator_address: string;
-  registration_number: string;
-  created_at?: string;
-  updated_at?: string;
-  ingredients: {
-    id: string;
-    wine_id: string;
-    ingredient_name: string;
-    is_allergen: boolean;
-  }[];
-  certifications: {
-    id: string;
-    wine_id: string;
-    certification_name: string;
-  }[];
-  production_variants: {
-    id: string;
-    wine_id: string;
-    variant_name: string;
-  }[];
-  disclaimer_icons: {
-    id: string;
-    wine_id: string;
-    icon_name: string;
-  }[];
-};
-
 export interface WinesTableProps {
   data: Wine[]
-  onDelete: (id: UUID) => void
-  onQRDownload?: (wine: Wine) => Promise<{ dataUrl: string; fileName: string }>
-  onDuplicate?: (wine: Wine) => void
+  onDelete: (id: string) => void
+  onQRDownload: (wine: Wine) => Promise<{ dataUrl: string; fileName: string }>
+  onDuplicate: (wine: Wine) => void
   duplicatingId?: string | null
 }
 
@@ -280,7 +229,7 @@ export const columns: ColumnDef<Wine>[] = [
     cell: ({ row, table }) => {
       const wine = row.original;
       const { onDelete, onQRDownload, onDuplicate, duplicatingId } = table.options.meta as { 
-        onDelete: (id: UUID) => void, 
+        onDelete: (id: string) => void, 
         onQRDownload?: (wine: Wine) => Promise<{ dataUrl: string; fileName: string }>,
         onDuplicate?: (wine: Wine) => void,
         duplicatingId?: string | null
@@ -337,11 +286,13 @@ export const columns: ColumnDef<Wine>[] = [
                 )}
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem 
-              onClick={() => onDelete(wine.id)}
-              className="text-red-600 focus:text-red-600"
+            <DropdownMenuItem
+              onClick={() => {
+                if (wine.id) onDelete(wine.id);
+              }}
             >
-              Eliminar
+              <Trash2 className="mr-2 h-4 w-4" />
+              <span>Eliminar</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

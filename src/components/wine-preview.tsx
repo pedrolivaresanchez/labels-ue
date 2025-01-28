@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { WineFormData } from "@/types/wine";
 
 // Constants for image dimensions
 const MAX_IMAGE_DIMENSIONS = 3000;
@@ -24,37 +25,8 @@ type Certification = {
   certificationName: string;
 };
 
-type WinePreviewProps = {
-  formData: {
-    name?: string;
-    eanCode?: string;
-    foodName?: string;
-    energyKj?: number;
-    energyKcal?: number;
-    fat?: number;
-    saturatedFat?: number;
-    carbohydrate?: number;
-    sugars?: number;
-    protein?: number;
-    salt?: number;
-    netQuantityCl?: number;
-    hasEstimationSign?: boolean;
-    alcoholPercentage?: number;
-    optionalLabelling?: string | null;
-    countryOfOrigin?: string;
-    placeOfOrigin?: string;
-    winery_information?: string;
-    instructionsForUse?: string | null;
-    conservationConditions?: string | null;
-    drainedWeightGrams?: number | null;
-    operatorName?: string;
-    operatorAddress?: string;
-    registrationNumber?: string;
-    imageUrl?: string | null;
-    ingredients: Ingredient[];
-    productionVariants: ProductionVariant[];
-    certifications: Certification[];
-  };
+interface WinePreviewProps {
+  formData: WineFormData;
 }
 
 function NutritionalInfo({ formData }: WinePreviewProps) {
@@ -176,6 +148,52 @@ export function WinePreview({ formData }: WinePreviewProps) {
             height={40}
           />
         </div>
+
+        {/* Ingredients */}
+        {formData.ingredients.length > 0 && (
+          <div className="mb-4">
+            <h3 className="font-semibold mb-1">Ingredientes:</h3>
+            <p>
+              {formData.ingredients.map((ingredient, index) => (
+                <span key={index}>
+                  {ingredient.name}
+                  {ingredient.isAllergen && <sup>*</sup>}
+                  {index < formData.ingredients.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </p>
+          </div>
+        )}
+
+        {/* Production Variants */}
+        {formData.productionVariants.length > 0 && (
+          <div className="mb-4">
+            <h3 className="font-semibold mb-1">Variantes de producción:</h3>
+            <p>
+              {formData.productionVariants.map((variant, index) => (
+                <span key={index}>
+                  {variant}
+                  {index < formData.productionVariants.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </p>
+          </div>
+        )}
+
+        {/* Certifications */}
+        {formData.certifications.length > 0 && (
+          <div className="mb-4">
+            <h3 className="font-semibold mb-1">Certificaciones:</h3>
+            <p>
+              {formData.certifications.map((cert, index) => (
+                <span key={index}>
+                  {cert}
+                  {index < formData.certifications.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </p>
+          </div>
+        )}
       </div>
 
       <Accordion type="single" collapsible defaultValue="referencia" className="w-full space-y-4">
@@ -212,7 +230,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
                     <div className="text-lg space-x-1">
                       {formData.ingredients.map((ingredient, index) => (
                         <span key={index}>
-                          {ingredient.ingredientName}
+                          {ingredient.name}
                           {ingredient.isAllergen && (
                             <Badge variant="destructive" className="ml-2">Alérgeno</Badge>
                           )}
@@ -275,7 +293,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Variantes de producción</h3>
                       {formData.productionVariants.map((variant, index) => (
-                        <p key={index} className="text-lg">{variant.variantName}</p>
+                        <p key={index} className="text-lg">{variant}</p>
                       ))}
                     </div>
                   )}
@@ -283,7 +301,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Certificaciones</h3>
                       {formData.certifications.map((cert, index) => (
-                        <p key={index} className="text-lg">{cert.certificationName}</p>
+                        <p key={index} className="text-lg">{cert}</p>
                       ))}
                     </div>
                   )}

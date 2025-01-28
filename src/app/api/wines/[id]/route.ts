@@ -1,23 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-
-type Ingredient = {
-  ingredient_name: string;
-  is_allergen: boolean;
-};
-
-type Certification = {
-  certification_name: string;
-};
-
-type ProductionVariant = {
-  variant_name: string;
-};
-
-type DisclaimerIcon = {
-  icon_name: string;
-};
+import { Wine } from "@/types/wine";
 
 export async function GET(
   req: Request,
@@ -39,30 +23,7 @@ export async function GET(
 
     const { data: wine, error } = await supabase
       .from('wines')
-      .select(`
-        *,
-        ingredients (
-          id,
-          wine_id,
-          ingredient_name,
-          is_allergen
-        ),
-        certifications (
-          id,
-          wine_id,
-          certification_name
-        ),
-        production_variants (
-          id,
-          wine_id,
-          variant_name
-        ),
-        disclaimer_icons (
-          id,
-          wine_id,
-          icon_name
-        )
-      `)
+      .select('*')
       .eq('id', id)
       .eq('user_id', session.user.id)
       .single();
@@ -72,49 +33,7 @@ export async function GET(
       return new NextResponse("Not found", { status: 404 });
     }
 
-    // Transform the data to match the expected format
-    const transformedWine = {
-      ...wine,
-      name: wine.name,
-      eanCode: wine.ean_code,
-      foodName: wine.food_name,
-      energyKj: wine.energy_kj,
-      energyKcal: wine.energy_kcal,
-      fat: wine.fat,
-      saturatedFat: wine.saturated_fat,
-      carbohydrate: wine.carbohydrate,
-      sugars: wine.sugars,
-      protein: wine.protein,
-      salt: wine.salt,
-      netQuantityCl: wine.net_quantity_cl,
-      alcoholPercentage: wine.alcohol_percentage,
-      optionalLabelling: wine.optional_labelling,
-      countryOfOrigin: wine.country_of_origin,
-      placeOfOrigin: wine.place_of_origin,
-      wineryInformation: wine.winery_information,
-      instructionsForUse: wine.instructions_for_use,
-      conservationConditions: wine.conservation_conditions,
-      drainedWeightGrams: wine.drained_weight_grams,
-      operatorName: wine.operator_name,
-      operatorAddress: wine.operator_address,
-      registrationNumber: wine.registration_number,
-      imageUrl: wine.image_url,
-      ingredients: wine.ingredients?.map((i: Ingredient) => ({
-        ingredientName: i.ingredient_name,
-        isAllergen: i.is_allergen
-      })) || [],
-      certifications: wine.certifications?.map((c: Certification) => ({
-        certificationName: c.certification_name
-      })) || [],
-      productionVariants: wine.production_variants?.map((v: ProductionVariant) => ({
-        variantName: v.variant_name
-      })) || [],
-      disclaimerIcons: wine.disclaimer_icons?.map((d: DisclaimerIcon) => ({
-        iconName: d.icon_name
-      })) || []
-    };
-
-    return NextResponse.json(transformedWine);
+    return NextResponse.json(wine);
   } catch (error) {
     console.error("[WINE_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
@@ -167,7 +86,10 @@ export async function PUT(
       operator_name: body.operatorName,
       operator_address: body.operatorAddress,
       registration_number: body.registrationNumber,
-      image_url: body.imageUrl
+      image_url: body.imageUrl,
+      ingredients: body.ingredients,
+      production_variants: body.productionVariants,
+      certifications: body.certifications
     };
 
     // Update the wine
@@ -183,119 +105,7 @@ export async function PUT(
       return new NextResponse("Not found", { status: 404 });
     }
 
-    // Handle ingredients update
-    if (body.ingredients) {
-      // First delete existing ingredients
-      await supabase
-        .from('ingredients')
-        .delete()
-        .eq('wine_id', id);
-    
-      // Then insert new ones
-      const ingredients = body.ingredients
-        .filter((i: { ingredientName: string; isAllergen: boolean }) => 
-          i && typeof i.ingredientName === 'string' && i.ingredientName.trim())
-        .map((i: { ingredientName: string; isAllergen: boolean }) => ({
-          wine_id: id,
-          ingredient_name: i.ingredientName,
-          is_allergen: i.isAllergen
-        }));
-    
-      if (ingredients.length > 0) {
-        await supabase.from('ingredients').insert(ingredients);
-      }
-    }
-
-    // Handle production variants update
-    if (body.productionVariants) {
-      // First delete existing variants
-      await supabase
-        .from('production_variants')
-        .delete()
-        .eq('wine_id', id);
-
-      // Then insert new ones
-      const variants = body.productionVariants
-        .filter((v: { variantName: string }) => v.variantName.trim())
-        .map((v: { variantName: string }) => ({
-          wine_id: id,
-          variant_name: v.variantName
-        }));
-
-      if (variants.length > 0) {
-        await supabase.from('production_variants').insert(variants);
-      }
-    }
-
-    // Handle certifications update
-    if (body.certifications) {
-      // First delete existing certifications
-      await supabase
-        .from('certifications')
-        .delete()
-        .eq('wine_id', id);
-
-      // Then insert new ones
-      const certifications = body.certifications
-        .filter((c: { certificationName: string }) => c.certificationName.trim())
-        .map((c: { certificationName: string }) => ({
-          wine_id: id,
-          certification_name: c.certificationName
-        }));
-
-      if (certifications.length > 0) {
-        await supabase.from('certifications').insert(certifications);
-      }
-    }
-
-    // Handle disclaimer icons update
-    if (body.disclaimerIcons) {
-      // First delete existing icons
-      await supabase
-        .from('disclaimer_icons')
-        .delete()
-        .eq('wine_id', id);
-
-      // Then insert new ones
-      const icons = body.disclaimerIcons
-        .filter((d: { iconName: string }) => d.iconName.trim())
-        .map((d: { iconName: string }) => ({
-          wine_id: id,
-          icon_name: d.iconName
-        }));
-
-      if (icons.length > 0) {
-        await supabase.from('disclaimer_icons').insert(icons);
-      }
-    }
-
-    // Fetch the complete updated wine with all relations
-    const { data: completeWine, error: fetchError } = await supabase
-      .from('wines')
-      .select(`
-        *,
-        ingredients (
-          id, wine_id, ingredient_name, is_allergen
-        ),
-        certifications (
-          id, wine_id, certification_name
-        ),
-        production_variants (
-          id, wine_id, variant_name
-        ),
-        disclaimer_icons (
-          id, wine_id, icon_name
-        )
-      `)
-      .eq('id', id)
-      .single();
-
-    if (fetchError) {
-      console.error("[WINE_PUT_FETCH]", fetchError);
-      return new NextResponse("Error fetching updated wine", { status: 500 });
-    }
-
-    return NextResponse.json(completeWine);
+    return NextResponse.json(wine);
   } catch (error) {
     console.error("[WINE_PUT]", error);
     return new NextResponse("Internal error", { status: 500 });
@@ -318,22 +128,10 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const resolvedParams = await Promise.resolve(params);
-    const { id } = resolvedParams;
-
+    const { id } = params;
     if (!id) {
       return new NextResponse("Wine ID is required", { status: 400 });
     }
-
-    // Delete related records first
-    const deletePromises = [
-      supabase.from('ingredients').delete().eq('wine_id', id),
-      supabase.from('production_variants').delete().eq('wine_id', id),
-      supabase.from('disclaimer_icons').delete().eq('wine_id', id),
-      supabase.from('certifications').delete().eq('wine_id', id)
-    ];
-
-    await Promise.all(deletePromises);
 
     // Delete the wine
     const { error } = await supabase

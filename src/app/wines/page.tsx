@@ -97,6 +97,7 @@ export default function WinesPage() {
   };
 
   const handleQRDownload = async (wine: Wine) => {
+    if (!wine.id) return { dataUrl: '', fileName: '' };
     const qrData = await generateQRCode(wine.id);
     return {
       dataUrl: qrData,
@@ -158,10 +159,10 @@ export default function WinesPage() {
       </Card>
 
       <WinesTable
-        data={wines as unknown as import("@/components/WinesTable").Wine[]}
+        data={wines}
         onDelete={handleDeleteClick}
-        onQRDownload={handleQRDownload as (wine: import("@/components/WinesTable").Wine) => Promise<{ dataUrl: string; fileName: string; }>}
-        onDuplicate={handleDuplicate as unknown as (wine: import("@/components/WinesTable").Wine) => void}
+        onQRDownload={handleQRDownload}
+        onDuplicate={handleDuplicate}
       />
 
       <Dialog open={deleteDialog.isOpen} onOpenChange={(open) => setDeleteDialog({ isOpen: open, wineId: null })}>
