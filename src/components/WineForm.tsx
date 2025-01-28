@@ -21,7 +21,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { supabase } from "@/lib/supabase"
 
 interface FormIngredient {
   ingredient_name: string;
@@ -121,12 +120,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     certifications: []
   })
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    initialData?.image_url 
-      ? supabase.storage.from('wine-images').getPublicUrl(initialData.image_url).data.publicUrl 
-      : null
-  );
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(initialData?.image_url || null);
+  const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image_url || null);
   const [showDimensionsDialog, setShowDimensionsDialog] = useState(false);
 
   // Initialize form data when editing
@@ -150,11 +144,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         certificationName: typeof c === 'string' ? c : c.certificationName
       })) || [];
       setCertifications(mappedCertifications);
-
-      // Set image preview if exists
-      if (initialData.image_url) {
-        setImagePreview(initialData.image_url);
-      }
 
       // Set form data
       setFormData({
@@ -182,11 +171,15 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         operatorName: initialData.operator_name,
         operatorAddress: initialData.operator_address,
         registrationNumber: initialData.registration_number,
-        imageUrl: initialData.image_url,
+        imageUrl: initialData.image_url ?? null,
         ingredients: mappedIngredients,
         productionVariants: mappedVariants,
         certifications: mappedCertifications
       });
+
+      if (initialData.image_url) {
+        setImagePreview(initialData.image_url);
+      }
     }
   }, [initialData, isEditing]);
 
@@ -336,6 +329,10 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
+        setFormData(prev => ({
+          ...prev,
+          imageUrl: reader.result as string
+        }));
       };
       reader.readAsDataURL(file);
       setImageFile(file);
@@ -351,121 +348,80 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setLoading(true)
-
     try {
-      // Check authentication first
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-      if (sessionError) throw sessionError;
-      if (!session) {
-        toast({
-          title: "Error de autenticación",
-          description: "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.",
-          variant: "destructive",
+      setLoading(true)
+
+      // First create or update the wine without the image
+      const endpoint = isEditing ? `/api/wines/${initialData?.id}` : '/api/wines'
+      const method = isEditing ? 'PUT' : 'POST'
+
+      const response = await fetch(endpoint, {
+        method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          imageUrl: null // Initially set to null
         })
-        router.push('/login')
-        return;
-      }
-
-      // First create/update the wine record without the image
-      const wineData = {
-        name: formData.name,
-        ean_code: formData.eanCode,
-        food_name: formData.foodName,
-        energy_kj: formData.energyKj,
-        energy_kcal: formData.energyKcal,
-        fat: formData.fat,
-        saturated_fat: formData.saturatedFat,
-        carbohydrate: formData.carbohydrate,
-        sugars: formData.sugars,
-        protein: formData.protein,
-        salt: formData.salt,
-        net_quantity_cl: formData.netQuantityCl,
-        has_estimation_sign: formData.hasEstimationSign,
-        alcohol_percentage: formData.alcoholPercentage,
-        optional_labelling: formData.optionalLabelling || null,
-        country_of_origin: formData.countryOfOrigin,
-        place_of_origin: formData.placeOfOrigin,
-        winery_information: formData.wineryInformation,
-        instructions_for_use: formData.instructionsForUse || null,
-        conservation_conditions: formData.conservationConditions || null,
-        drained_weight_grams: formData.drainedWeightGrams || null,
-        operator_name: formData.operatorName,
-        operator_address: formData.operatorAddress,
-        registration_number: formData.registrationNumber,
-        ingredients: formData.ingredients,
-        production_variants: formData.productionVariants.map(v => ({
-          variantName: v.variantName
-        })),
-        certifications: formData.certifications.map(c => ({
-          certificationName: c.certificationName
-        }))
-      }
-
-      let wineId: string;
-      
-      if (isEditing && initialData?.id) {
-        const { error } = await supabase
-          .from('wines')
-          .update(wineData)
-          .eq('id', initialData.id)
-
-        if (error) throw error;
-        wineId = initialData.id;
-      } else {
-        // Use the session we already have
-        const { data: newWine, error } = await supabase
-          .from('wines')
-          .insert([{
-            ...wineData,
-            user_id: session.user.id
-          }])
-          .select('id')
-          .single()
-
-        if (error) throw error;
-        if (!newWine) throw new Error('Failed to create wine');
-        wineId = newWine.id;
-      }
-
-      // Handle image upload if there's a new image file
-      if (imageFile) {
-        // Delete old image if exists and we're editing
-        if (isEditing && initialData?.image_url) {
-          await deleteWineImage(initialData.image_url);
-        }
-
-        // Upload new image with the actual wine ID
-        const imageUrl = await uploadWineImage(imageFile, wineId);
-        console.log('Image uploaded, URL:', imageUrl);
-
-        // Update the wine record with the image URL and wait for it to complete
-        const { error: updateError } = await supabase
-          .from('wines')
-          .update({ image_url: imageUrl })
-          .eq('id', wineId)
-          .select()
-          .single();
-
-        if (updateError) {
-          console.error('Error updating wine with image URL:', updateError);
-          throw updateError;
-        }
-      }
-
-      // Only redirect after all operations are complete
-      router.refresh()
-      router.push('/wines')
-      toast({
-        title: isEditing ? "Vino actualizado" : "Vino creado",
-        description: isEditing ? "El vino ha sido actualizado correctamente." : "El vino ha sido creado correctamente.",
       })
-    } catch (error) {
-      console.error('Detailed error:', error)
+
+      if (!response.ok) {
+        throw new Error('Error al guardar el vino')
+      }
+
+      const wine = await response.json()
+
+      // Now handle the image upload if there's a new image
+      if (imageFile) {
+        try {
+          // If editing and there's an existing image, delete it
+          if (isEditing && initialData?.image_url) {
+            await deleteWineImage(initialData.image_url)
+          }
+          
+          // Upload new image with the wine's ID
+          const imageUrl = await uploadWineImage(imageFile, wine.id)
+
+          // Update the wine with the new image URL
+          const imageUpdateResponse = await fetch(`/api/wines/${wine.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              ...formData,
+              imageUrl
+            })
+          })
+
+          if (!imageUpdateResponse.ok) {
+            throw new Error('Error al actualizar la imagen del vino')
+          }
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Error al subir la imagen'
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: errorMessage,
+          })
+          // Continue even if image upload fails
+        }
+      }
+
       toast({
-        title: "Error",
-        description: "Ha ocurrido un error. Por favor, inténtalo de nuevo.",
+        title: "Éxito",
+        description: isEditing ? "Vino actualizado correctamente" : "Vino creado correctamente",
+      })
+
+      router.push('/wines')
+      router.refresh()
+    } catch (error) {
+      console.error('Error:', error)
+      toast({
         variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Error al procesar la solicitud",
       })
     } finally {
       setLoading(false)
@@ -504,10 +460,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                             onClick={() => {
                               setImagePreview(null);
                               setImageFile(null);
-                              setFormData(prev => ({
-                                ...prev,
-                                imageUrl: null
-                              }));
                             }}
                           >
                             <X className="h-4 w-4" />

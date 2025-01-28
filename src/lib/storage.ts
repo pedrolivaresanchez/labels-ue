@@ -54,9 +54,13 @@ export async function uploadWineImage(file: File, wineId: string) {
 
     console.log('Upload successful, data:', data);
 
-    // Return just the filename instead of the public URL
-    console.log('Returning filename:', fileName);
-    return fileName;
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from(BUCKET_NAME)
+      .getPublicUrl(fileName);
+
+    console.log('Generated public URL:', publicUrl);
+    return publicUrl;
   } catch (error: unknown) {
     console.error('Detailed error information:', {
       error,
@@ -75,9 +79,7 @@ export async function deleteWineImage(imageUrl: string) {
   try {
     console.log('Starting image deletion process...');
     const supabase = createClientComponentClient();
-    
-    // The imageUrl is already just the filename
-    const fileName = imageUrl;
+    const fileName = imageUrl.split('/').pop();
     if (!fileName) throw new Error('Invalid image URL');
 
     console.log('Attempting to delete file:', fileName);
