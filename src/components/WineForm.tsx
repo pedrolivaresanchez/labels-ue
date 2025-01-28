@@ -354,19 +354,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
     setLoading(true)
 
     try {
-      let imageUrl = null;
-
-      // Handle image upload if there's a new image file
-      if (imageFile) {
-        // Delete old image if exists and we're editing
-        if (isEditing && initialData?.image_url) {
-          await deleteWineImage(initialData.image_url);
-        }
-        // Upload new image and get the path
-        imageUrl = await uploadWineImage(imageFile, initialData?.id || 'temp');
-        console.log('Image URL to be saved:', imageUrl);
-      }
-
+      // First create/update the wine record without the image
       const wineData = {
         name: formData.name,
         ean_code: formData.eanCode,
@@ -392,7 +380,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         operator_name: formData.operatorName,
         operator_address: formData.operatorAddress,
         registration_number: formData.registrationNumber,
-        image_url: imageUrl, // Use the path returned from uploadWineImage
         ingredients: formData.ingredients,
         production_variants: formData.productionVariants.map(v => ({
           variantName: v.variantName
@@ -402,23 +389,47 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         }))
       }
 
+      let wineId: string;
+      
       if (isEditing) {
-        const { error } = await supabase
+        const { data: updatedWine, error } = await supabase
           .from('wines')
           .update(wineData)
           .eq('id', initialData?.id)
+          .select()
+          .single()
 
-        if (error) {
-          throw error
-        }
+        if (error) throw error;
+        wineId = updatedWine.id;
       } else {
-        const { error } = await supabase
+        const { data: newWine, error } = await supabase
           .from('wines')
           .insert([wineData])
+          .select()
+          .single()
 
-        if (error) {
-          throw error
+        if (error) throw error;
+        wineId = newWine.id;
+      }
+
+      // Handle image upload if there's a new image file
+      if (imageFile) {
+        // Delete old image if exists and we're editing
+        if (isEditing && initialData?.image_url) {
+          await deleteWineImage(initialData.image_url);
         }
+
+        // Upload new image with the actual wine ID
+        const imageUrl = await uploadWineImage(imageFile, wineId);
+        console.log('Image uploaded, URL:', imageUrl);
+
+        // Update the wine record with the image URL
+        const { error: updateError } = await supabase
+          .from('wines')
+          .update({ image_url: imageUrl })
+          .eq('id', wineId);
+
+        if (updateError) throw updateError;
       }
 
       router.refresh()
