@@ -54,8 +54,8 @@ export async function uploadWineImage(file: File, wineId: string) {
 
     console.log('Upload successful, data:', data);
 
-    // Return the full path including the bucket name
-    return `${BUCKET_NAME}/${data.path}`;
+    // Just return the path
+    return data.path;
   } catch (error: unknown) {
     console.error('Detailed error information:', {
       error,
@@ -75,8 +75,8 @@ export async function deleteWineImage(imageUrl: string) {
     console.log('Starting image deletion process...');
     const supabase = createClientComponentClient();
     
-    // Remove the bucket name from the path if it exists
-    const fileName = imageUrl.replace(`${BUCKET_NAME}/`, '');
+    // The imageUrl is already just the filename
+    const fileName = imageUrl;
     if (!fileName) throw new Error('Invalid image URL');
 
     console.log('Attempting to delete file:', fileName);
