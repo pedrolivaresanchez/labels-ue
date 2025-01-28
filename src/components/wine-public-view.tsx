@@ -243,7 +243,9 @@ export function WinePublicView({ wine }: { wine: Wine }) {
                     <div className="text-base sm:text-lg space-x-1">
                       {wine.ingredients.map((ingredient, index) => (
                         <span key={index}>
-                          {ingredient.name}
+                          <span className={ingredient.isAllergen ? "font-bold" : ""}>
+                            {ingredient.name}
+                          </span>
                           {index < wine.ingredients.length - 1 ? ', ' : ''}
                         </span>
                       ))}

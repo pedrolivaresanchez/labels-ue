@@ -103,9 +103,6 @@ export const columns: ColumnDef<Wine>[] = [
       return (
         <div className="flex items-center gap-2">
           <div className="font-medium">{wine.name}</div>
-          {wine.ingredients?.some(i => i.isAllergen) && (
-            <span className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded">Alérgeno</span>
-          )}
         </div>
       );
     },
@@ -297,7 +294,6 @@ export const columns: ColumnDef<Wine>[] = [
               </DropdownMenuItem>
             )}
             <DropdownMenuItem onClick={() => wine.id && onDelete(wine.id)}>
-              <Trash2 className="h-4 w-4 mr-2" />
               <span className="text-red-600">Eliminar</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

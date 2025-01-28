@@ -156,8 +156,9 @@ export function WinePreview({ formData }: WinePreviewProps) {
             <p>
               {formData.ingredients.map((ingredient, index) => (
                 <span key={index}>
-                  {ingredient.name}
-                  {ingredient.isAllergen && <sup>*</sup>}
+                  <span className={ingredient.isAllergen ? "font-bold" : ""}>
+                    {ingredient.name}
+                  </span>
                   {index < formData.ingredients.length - 1 ? ', ' : ''}
                 </span>
               ))}
@@ -230,10 +231,9 @@ export function WinePreview({ formData }: WinePreviewProps) {
                     <div className="text-lg space-x-1">
                       {formData.ingredients.map((ingredient, index) => (
                         <span key={index}>
-                          {ingredient.name}
-                          {ingredient.isAllergen && (
-                            <Badge variant="destructive" className="ml-2">Alérgeno</Badge>
-                          )}
+                          <span className={ingredient.isAllergen ? "font-bold" : ""}>
+                            {ingredient.name}
+                          </span>
                           {index < formData.ingredients.length - 1 ? ', ' : ''}
                         </span>
                       ))}

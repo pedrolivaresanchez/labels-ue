@@ -38,7 +38,10 @@ export type Wine = {
   salt: number;
   netQuantityCl: number;
   alcoholPercentage: number;
-  ingredients: { name: string }[];
+  ingredients: { 
+    name: string;
+    isAllergen: boolean;
+  }[];
   productionVariants: { variantName: string }[];
   disclaimerIcons: { iconName: string }[];
   certifications: { name: string }[];
