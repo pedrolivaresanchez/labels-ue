@@ -397,8 +397,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
         })),
         certifications: formData.certifications.map(c => ({
           certificationName: c.certificationName
-        })),
-        disclaimer_icons: []
+        }))
       }
 
       if (isEditing) {

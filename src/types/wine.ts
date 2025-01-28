@@ -19,12 +19,6 @@ export interface Certification {
   certification_name: string;
 }
 
-export interface DisclaimerIcon {
-  id?: string;
-  wine_id?: string;
-  icon_name: string;
-}
-
 export interface Wine {
   id?: string;
   created_at?: string;
@@ -65,10 +59,6 @@ export interface Wine {
   certifications: Array<{
     certificationName: string;
   }>;
-  production_variants?: Array<{
-    variant_name: string;
-  }>;
-  disclaimer_icons?: Array<{ icon_name: string }>;
 }
 
 export interface WineFormData {
