@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Wine } from "@/app/public/wines/[id]/page";
 import Image from "next/image";
+import { uiLabels } from "@/lib/translate";
 
 function NutritionalInfoSkeleton() {
   return (
@@ -120,40 +121,42 @@ function WineViewSkeleton() {
   );
 }
 
-function NutritionalInfo({ wine }: { wine: Wine }) {
+function NutritionalInfo({ wine, lang = 'es' }: { wine: Wine; lang?: string }) {
+  const labels = uiLabels[lang as keyof typeof uiLabels] || uiLabels.es;
+
   return (
     <Table>
       <TableBody>
         <TableRow className="border-b">
-          <TableCell className="font-bold">valor energético kJ</TableCell>
+          <TableCell className="font-bold">{labels.energyValue} kJ</TableCell>
           <TableCell className="text-right">{wine.energyKj} kJ</TableCell>
         </TableRow>
         <TableRow className="border-b">
-          <TableCell className="font-bold">valor energético kcal</TableCell>
+          <TableCell className="font-bold">{labels.energyValue} kcal</TableCell>
           <TableCell className="text-right">{wine.energyKcal} kcal</TableCell>
         </TableRow>
         <TableRow className="border-b">
-          <TableCell className="font-bold">grasas</TableCell>
+          <TableCell className="font-bold">{labels.fats}</TableCell>
           <TableCell className="text-right">{wine.fat} g</TableCell>
         </TableRow>
         <TableRow className="border-b">
-          <TableCell className="pl-8">de las cuales saturadas</TableCell>
+          <TableCell className="pl-8">{labels.saturatedFats}</TableCell>
           <TableCell className="text-right">{wine.saturatedFat} g</TableCell>
         </TableRow>
         <TableRow className="border-b">
-          <TableCell className="font-bold">hidratos de carbono</TableCell>
+          <TableCell className="font-bold">{labels.carbohydrates}</TableCell>
           <TableCell className="text-right">{wine.carbohydrate} g</TableCell>
         </TableRow>
         <TableRow className="border-b">
-          <TableCell className="pl-8">de los cuales azúcares</TableCell>
+          <TableCell className="pl-8">{labels.sugars}</TableCell>
           <TableCell className="text-right">{wine.sugars} g</TableCell>
         </TableRow>
         <TableRow className="border-b">
-          <TableCell className="font-bold">proteínas</TableCell>
+          <TableCell className="font-bold">{labels.proteins}</TableCell>
           <TableCell className="text-right">{wine.protein} g</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="font-bold">sal</TableCell>
+          <TableCell className="font-bold">{labels.salt}</TableCell>
           <TableCell className="text-right">{wine.salt} g</TableCell>
         </TableRow>
       </TableBody>
@@ -161,7 +164,9 @@ function NutritionalInfo({ wine }: { wine: Wine }) {
   );
 }
 
-export function WinePublicView({ wine }: { wine: Wine }) {
+export function WinePublicView({ wine, lang = 'es' }: { wine: Wine; lang?: string }) {
+  const labels = uiLabels[lang as keyof typeof uiLabels] || uiLabels.es;
+
   return (
     <div className="max-w-3xl mx-auto px-6 sm:px-8">
       {/* Image Section - Full width on mobile */}
@@ -193,11 +198,11 @@ export function WinePublicView({ wine }: { wine: Wine }) {
           {/* Product Specifications */}
           <div className="grid grid-cols-2 gap-6 pt-2">
             <div className="text-center">
-              <h3 className="text-sm font-medium text-muted-foreground mb-1">Cantidad neta</h3>
-              <p className="text-2xl font-semibold">{wine.netQuantityCl} cl</p>
+              <h3 className="text-sm font-medium text-muted-foreground mb-1">{labels.netQuantity}</h3>
+              <p className="text-2xl font-semibold">{wine.netQuantityCl} {labels.centiliters}</p>
             </div>
             <div className="text-center">
-              <h3 className="text-sm font-medium text-muted-foreground mb-1">Alcohol</h3>
+              <h3 className="text-sm font-medium text-muted-foreground mb-1">{labels.alcohol}</h3>
               <p className="text-2xl font-semibold">{wine.alcoholPercentage}% vol</p>
             </div>
           </div>
@@ -228,16 +233,16 @@ export function WinePublicView({ wine }: { wine: Wine }) {
 
       <Accordion type="single" collapsible defaultValue="referencia" className="w-full space-y-4">
         <AccordionItem value="referencia">
-          <AccordionTrigger className="text-lg sm:text-xl font-semibold">Referencia</AccordionTrigger>
+          <AccordionTrigger className="text-lg sm:text-xl font-semibold">{labels.reference}</AccordionTrigger>
           <AccordionContent>
             <Card>
               <CardContent className="space-y-4 p-6">
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Nombre</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">{labels.name}</h3>
                   <p className="text-base sm:text-lg">{wine.name}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Código EAN</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">{labels.eanCode}</h3>
                   <p className="text-base sm:text-lg">{wine.eanCode}</p>
                 </div>
               </CardContent>
@@ -246,17 +251,17 @@ export function WinePublicView({ wine }: { wine: Wine }) {
         </AccordionItem>
 
         <AccordionItem value="informacion-nutricional">
-          <AccordionTrigger className="text-lg sm:text-xl font-semibold">Información nutricional</AccordionTrigger>
+          <AccordionTrigger className="text-lg sm:text-xl font-semibold">{labels.nutritionalInfo}</AccordionTrigger>
           <AccordionContent>
             <div className="grid gap-4 sm:gap-6">
               <Card>
                 <CardContent className="space-y-4 p-6">
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Denominación del alimento</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.foodName}</h3>
                     <p className="text-base sm:text-lg">{wine.foodName}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Lista de ingredientes</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.ingredients}</h3>
                     <div className="text-base sm:text-lg space-x-1">
                       {wine.ingredients.map((ingredient, index) => (
                         <span key={index}>
@@ -274,18 +279,18 @@ export function WinePublicView({ wine }: { wine: Wine }) {
               <Card>
                 <CardContent className="p-6">
                   <h3 className="text-sm font-medium text-muted-foreground mb-4">100 ml</h3>
-                  <NutritionalInfo wine={wine} />
+                  <NutritionalInfo wine={wine} lang={lang} />
                 </CardContent>
               </Card>
 
               <Card>
                 <CardContent className="space-y-4 p-6">
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Cantidad neta</h3>
-                    <p className="text-base sm:text-lg">{wine.netQuantityCl} Centilitros</p>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.netQuantity}</h3>
+                    <p className="text-base sm:text-lg">{wine.netQuantityCl} {labels.centiliters}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Porcentaje de alcohol</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.alcohol}</h3>
                     <p className="text-base sm:text-lg">{wine.alcoholPercentage}% vol</p>
                   </div>
                 </CardContent>
@@ -295,22 +300,22 @@ export function WinePublicView({ wine }: { wine: Wine }) {
         </AccordionItem>
 
         <AccordionItem value="detalles">
-          <AccordionTrigger className="text-lg sm:text-xl font-semibold">Detalles adicionales</AccordionTrigger>
+          <AccordionTrigger className="text-lg sm:text-xl font-semibold">{labels.additionalDetails}</AccordionTrigger>
           <AccordionContent>
             <div className="space-y-4 sm:space-y-6">
               <Card>
                 <CardContent className="space-y-4 p-6">
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">País de origen</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.countryOfOrigin}</h3>
                     <p className="text-base sm:text-lg">{wine.countryOfOrigin}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Lugar de procedencia</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.placeOfOrigin}</h3>
                     <p className="text-base sm:text-lg">{wine.placeOfOrigin}</p>
                   </div>
                   {wine.productionVariants && wine.productionVariants.length > 0 && (
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Variantes de producción</h3>
+                      <h3 className="text-sm font-medium text-muted-foreground">{labels.productionVariants}</h3>
                       <div className="text-base sm:text-lg">
                         {wine.productionVariants.map((variant, index) => (
                           <span key={index}>
@@ -323,7 +328,7 @@ export function WinePublicView({ wine }: { wine: Wine }) {
                   )}
                   {wine.certifications && wine.certifications.length > 0 && (
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Certificaciones</h3>
+                      <h3 className="text-sm font-medium text-muted-foreground">{labels.certifications}</h3>
                       <div className="text-base sm:text-lg">
                         {wine.certifications.map((cert, index) => (
                           <span key={index}>
@@ -336,20 +341,20 @@ export function WinePublicView({ wine }: { wine: Wine }) {
                   )}
                   {wine.instructionsForUse && (
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Modo de empleo</h3>
+                      <h3 className="text-sm font-medium text-muted-foreground">{labels.instructionsForUse}</h3>
                       <p className="text-base sm:text-lg">{wine.instructionsForUse}</p>
                     </div>
                   )}
                   {wine.conservationConditions && (
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Condiciones de conservación</h3>
+                      <h3 className="text-sm font-medium text-muted-foreground">{labels.conservationConditions}</h3>
                       <p className="text-base sm:text-lg">{wine.conservationConditions}</p>
                     </div>
                   )}
                   {wine.drainedWeightGrams && (
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Peso escurrido</h3>
-                      <p className="text-base sm:text-lg">{wine.drainedWeightGrams} Gramos</p>
+                      <h3 className="text-sm font-medium text-muted-foreground">{labels.drainedWeight}</h3>
+                      <p className="text-base sm:text-lg">{wine.drainedWeightGrams} {labels.grams}</p>
                     </div>
                   )}
                 </CardContent>
@@ -357,17 +362,17 @@ export function WinePublicView({ wine }: { wine: Wine }) {
 
               <Card>
                 <CardContent className="space-y-4 p-6">
-                  <h3 className="text-lg font-semibold mb-4">Datos del operador</h3>
+                  <h3 className="text-lg font-semibold mb-4">{labels.operatorData}</h3>
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Nombre del operador / importador</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.operatorName}</h3>
                     <p className="text-base sm:text-lg">{wine.operatorName}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Dirección del operador / importador</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.operatorAddress}</h3>
                     <p className="text-base sm:text-lg">{wine.operatorAddress}</p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">Registro</h3>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.registration}</h3>
                     <p className="text-base sm:text-lg">{wine.registrationNumber}</p>
                   </div>
                 </CardContent>

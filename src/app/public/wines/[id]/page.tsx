@@ -116,14 +116,16 @@ export default async function PublicWineViewPage({
     notFound();
   }
 
+  const lang = searchParams.lang || 'es';
+
   // Translate the wine data if a language is specified
-  const translatedWine = await translateWine(wine, searchParams.lang || 'es');
+  const translatedWine = await translateWine(wine, lang);
 
   return (
     <div className="min-h-screen flex flex-col">
       <PublicNavbar />
       <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        <WinePublicView wine={translatedWine} />
+        <WinePublicView wine={translatedWine} lang={lang} />
       </main>
     </div>
   );
