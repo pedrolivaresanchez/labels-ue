@@ -18,9 +18,9 @@ const languages = [
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-  { code: 'ca', name: 'Català', flag: '🏴󠁥󠁳󠁣󠁴󠁿' },
-  { code: 'gl', name: 'Galego', flag: '🏴󠁥󠁳󠁧󠁡󠁿' },
-  { code: 'eu', name: 'Euskara', flag: '🏴󠁥󠁳󠁰󠁶󠁿' },
+  { code: 'ca', name: 'Català', flag: '⬜🟦' },
+  { code: 'gl', name: 'Galego', flag: '⬜🟦' },
+  { code: 'eu', name: 'Euskara', flag: '🟥⬜🟩' },
   { code: 'bg', name: 'Български', flag: '🇧🇬' },
   { code: 'cs', name: 'Čeština', flag: '🇨🇿' },
   { code: 'da', name: 'Dansk', flag: '🇩🇰' },
@@ -56,7 +56,7 @@ export function PublicNavbar() {
 
   return (
     <div className="border-b">
-      <div className="flex h-16 items-center justify-between px-4 max-w-4xl mx-auto">
+      <div className="flex h-16 items-center justify-between px-2 sm:px-4 max-w-4xl mx-auto">
         <Link href="/" className="flex items-center">
           <Image 
             src="/icons/VinoVeo Logo.png" 
@@ -69,9 +69,9 @@ export function PublicNavbar() {
         </Link>
         
         <Select value={currentLang} onValueChange={handleLanguageChange}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[140px] sm:w-[180px] px-2 sm:px-3">
             <SelectValue>
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-1 sm:gap-2">
                 <span>{currentLanguage?.flag}</span>
                 <span>{currentLanguage?.name}</span>
               </span>
@@ -83,9 +83,9 @@ export function PublicNavbar() {
                 <SelectItem 
                   key={lang.code} 
                   value={lang.code}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3"
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-1 sm:gap-2">
                     <span>{lang.flag}</span>
                     <span>{lang.name}</span>
                   </span>
