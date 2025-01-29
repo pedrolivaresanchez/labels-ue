@@ -92,6 +92,7 @@ export const columns: ColumnDef<Wine>[] = [
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="w-[120px]"
         >
           Nombre
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -101,8 +102,8 @@ export const columns: ColumnDef<Wine>[] = [
     cell: ({ row }) => {
       const wine = row.original;
       return (
-        <div className="flex items-center gap-2">
-          <div className="font-medium">{wine.name}</div>
+        <div className="w-[120px]">
+          <div className="font-medium truncate">{wine.name}</div>
         </div>
       );
     },
