@@ -2,7 +2,50 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import { WinePublicView } from "@/components/wine-public-view";
 import { PublicNavbar } from "@/components/public-navbar";
-import { getUILabels, translateWine, languageOptions, type SupportedLanguage } from "@/lib/translate";
+import { uiLabels, type Labels } from "@/lib/translate";
+import { TranslationServiceClient } from '@google-cloud/translate';
+
+// Initialize translation client
+const translationClient = new TranslationServiceClient({
+  credentials: {
+    client_email: process.env.GOOGLE_TRANSLATE_CLIENT_EMAIL,
+    private_key: process.env.GOOGLE_TRANSLATE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  },
+  projectId: process.env.GOOGLE_TRANSLATE_PROJECT_ID,
+});
+
+const projectId = process.env.GOOGLE_TRANSLATE_PROJECT_ID!;
+const location = 'global';
+
+const languageOptions = {
+  es: 'Español',
+  ca: 'Català/Valencià',
+  eu: 'Euskara',
+  gl: 'Galego',
+  bg: 'Български',
+  cs: 'Čeština',
+  da: 'Dansk',
+  de: 'Deutsch',
+  el: 'Ελληνικά',
+  en: 'English',
+  et: 'Eesti keel',
+  fi: 'Suomi',
+  fr: 'Français',
+  ga: 'Gaeilge',
+  hr: 'Hrvatski',
+  it: 'Italiano',
+  lv: 'Latviešu valoda',
+  lt: 'Lietuvių kalba',
+  hu: 'Magyar',
+  mt: 'Malti',
+  nl: 'Nederlands',
+  pl: 'Polski',
+  pt: 'Português',
+  ro: 'Română',
+  sk: 'Slovenčina',
+  sl: 'Slovenščina',
+  sv: 'Svenska'
+};
 
 export type Ingredient = {
   id: string;
@@ -56,6 +99,79 @@ export type Wine = {
   operatorAddress: string;
   registrationNumber: string;
 };
+
+async function translateText(text: string, targetLanguage: string) {
+  if (targetLanguage === 'es') return text;
+  if (!text) return text;
+  
+  try {
+    const request = {
+      parent: `projects/${projectId}/locations/${location}`,
+      contents: [text],
+      mimeType: 'text/plain',
+      sourceLanguageCode: 'es',
+      targetLanguageCode: targetLanguage,
+    };
+
+    const [response] = await translationClient.translateText(request);
+    return response.translations?.[0]?.translatedText || text;
+  } catch (error) {
+    console.error('Translation error:', error);
+    return text;
+  }
+}
+
+async function translateWineLocal(wine: Wine, targetLanguage: string) {
+  if (targetLanguage === 'es') return wine;
+
+  const translatedWine = { ...wine };
+
+  // Translate basic fields except for specific ones
+  // Do not translate: name, operatorName, placeOfOrigin, operatorAddress
+  translatedWine.foodName = await translateText(wine.foodName, targetLanguage);
+  if (wine.instructionsForUse) {
+    translatedWine.instructionsForUse = await translateText(wine.instructionsForUse, targetLanguage);
+  }
+  if (wine.conservationConditions) {
+    translatedWine.conservationConditions = await translateText(wine.conservationConditions, targetLanguage);
+  }
+  translatedWine.countryOfOrigin = await translateText(wine.countryOfOrigin, targetLanguage);
+  if (wine.winery_information) {
+    translatedWine.winery_information = await translateText(wine.winery_information, targetLanguage);
+  }
+
+  // Translate ingredients
+  if (wine.ingredients?.length > 0) {
+    translatedWine.ingredients = await Promise.all(
+      wine.ingredients.map(async (ingredient) => ({
+        ...ingredient,
+        name: await translateText(ingredient.name, targetLanguage),
+      }))
+    );
+  }
+
+  // Translate production variants
+  if (wine.productionVariants?.length > 0) {
+    translatedWine.productionVariants = await Promise.all(
+      wine.productionVariants.map(async (variant) => ({
+        ...variant,
+        variantName: await translateText(variant.variantName, targetLanguage),
+      }))
+    );
+  }
+
+  // Translate certifications
+  if (wine.certifications?.length > 0) {
+    translatedWine.certifications = await Promise.all(
+      wine.certifications.map(async (cert) => ({
+        ...cert,
+        name: await translateText(cert.name, targetLanguage),
+      }))
+    );
+  }
+
+  return translatedWine;
+}
 
 async function getWine(id: string): Promise<Wine | null> {
   const { data: wine, error } = await supabase
@@ -116,14 +232,9 @@ export default async function PublicWineViewPage({
     notFound();
   }
 
-  // Validate the language parameter
-  const lang = (searchParams.lang || 'es') as SupportedLanguage;
-  const isValidLang = lang in languageOptions;
-  const validLang = isValidLang ? lang : 'es';
-
-  // Get translated content
-  const translatedWine = await translateWine(wine, validLang);
-  const labels = await getUILabels(validLang);
+  const lang = searchParams.lang || 'es';
+  const translatedWine = await translateWineLocal(wine, lang);
+  const labels = (uiLabels[lang as keyof typeof uiLabels] || uiLabels.es) as Labels;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -138,7 +249,7 @@ export default async function PublicWineViewPage({
               url.searchParams.set('lang', newLang);
               window.location.href = url.toString();
             }}
-            value={validLang}
+            value={lang}
           >
             {Object.entries(languageOptions).map(([code, name]) => (
               <option key={code} value={code}>
