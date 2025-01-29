@@ -110,7 +110,7 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
             Calcular Energía
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[800px] mx-4 sm:mx-0">
+        <DialogContent className="sm:max-w-[800px] mx-4 sm:mx-0 rounded-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               Calcular Energía
@@ -259,10 +259,14 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-6">
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={calculateNutrients}>Aplicar</Button>
+            <div className="flex w-full sm:w-auto gap-3 sm:justify-end">
+              <Button variant="outline" onClick={() => setOpen(false)} className="flex-1 sm:flex-initial sm:w-[100px]">
+                Cancelar
+              </Button>
+              <Button onClick={calculateNutrients} className="flex-1 sm:flex-initial sm:w-[100px]">
+                Aplicar
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
