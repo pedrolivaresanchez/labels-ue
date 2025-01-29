@@ -59,8 +59,8 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
     });
 
     const values = {
-      energyKj: result.energyKj,
-      energyKcal: result.energyKcal,
+      energyKj: Math.round(result.energyKj),
+      energyKcal: Math.round(result.energyKcal),
       carbohydrate: result.carbohydrate,
       sugars: result.sugars,
     };
@@ -90,8 +90,8 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
     });
 
     setPreview({
-      energyKj: result.energyKj,
-      energyKcal: result.energyKcal,
+      energyKj: Math.round(result.energyKj),
+      energyKcal: Math.round(result.energyKcal),
       carbohydrate: result.carbohydrate,
       sugars: result.sugars,
     });
@@ -105,12 +105,12 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
     <TooltipProvider>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="default" size="sm" className="gap-2">
             <Calculator className="h-4 w-4" />
             Calcular Energía
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[800px]">
+        <DialogContent className="sm:max-w-[800px] mx-4 sm:mx-0">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               Calcular Energía
