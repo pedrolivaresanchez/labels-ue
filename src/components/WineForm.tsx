@@ -21,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { WineCalculatorDialog } from "@/components/wine-calculator-dialog"
 
 interface FormIngredient {
   ingredient_name: string;
@@ -483,6 +484,19 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4">
+                  <div className="flex justify-end">
+                    <WineCalculatorDialog 
+                      onCalculate={(values) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          energyKj: values.energyKj,
+                          energyKcal: values.energyKcal,
+                          carbohydrate: values.carbohydrate,
+                          sugars: values.sugars,
+                        }));
+                      }}
+                    />
+                  </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="energyKj">Energía (kJ)</Label>
