@@ -19,6 +19,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
+import { calculateWineNutrition } from "@/lib/wine-utils";
 
 interface WineCalculatorDialogProps {
   onCalculate: (values: {
@@ -37,27 +38,23 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
   const [open, setOpen] = useState(false);
 
   const calculateNutrients = () => {
-    const alcohol = parseFloat(alcoholByVolume) || 0;
+    const abv = parseFloat(alcoholByVolume) || 0;
     const sugar = parseFloat(residualSugar) || 0;
     const acidity = parseFloat(totalAcidity) || 0;
     const glycerolValue = parseFloat(glycerol) || 0;
 
-    // Calculations based on standard wine composition formulas
-    const alcoholEnergy = alcohol * 5.65; // kcal per gram of alcohol
-    const sugarEnergy = sugar * 4; // kcal per gram of carbohydrates
-    const glycerolEnergy = glycerolValue * 4.32; // kcal per gram of glycerol
-
-    const totalKcal = alcoholEnergy + sugarEnergy + glycerolEnergy;
-    const totalKj = totalKcal * 4.184; // Convert kcal to kJ
-
-    const carbohydrates = sugar;
-    const sugarsValue = sugar;
+    const result = calculateWineNutrition({
+      abv,
+      residualSugar: sugar,
+      totalAcidity: acidity,
+      glycerol: glycerolValue,
+    });
 
     onCalculate({
-      energyKj: Math.round(totalKj * 10) / 10,
-      energyKcal: Math.round(totalKcal * 10) / 10,
-      carbohydrate: Math.round(carbohydrates * 10) / 10,
-      sugars: Math.round(sugarsValue * 10) / 10,
+      energyKj: result.energyKj,
+      energyKcal: result.energyKcal,
+      carbohydrate: result.carbohydrate,
+      sugars: result.sugars,
     });
 
     setOpen(false);
@@ -69,22 +66,22 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
         <DialogTrigger asChild>
           <Button variant="outline" size="sm" className="gap-2">
             <Calculator className="h-4 w-4" />
-            Calculate Energy
+            Calcular Energía
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              Calculate Energy
+              Calcular Energía
               <Tooltip>
                 <TooltipTrigger asChild>
                   <HelpCircle className="h-4 w-4 text-muted-foreground" />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p className="max-w-xs">
-                    Calculate the energy, carbohydrates, and sugars of your wine by
-                    providing some basic information contained in a standard laboratory
-                    analysis.
+                    Calcula la energía, carbohidratos y azúcares de tu vino
+                    proporcionando información básica contenida en un análisis
+                    de laboratorio estándar.
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -93,13 +90,13 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="alcohol">
-                Alcohol by Volume
+                Alcohol por Volumen
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="max-w-xs">The alcohol content in percentage by volume.</p>
+                    <p className="max-w-xs">El contenido de alcohol en porcentaje por volumen.</p>
                   </TooltipContent>
                 </Tooltip>
               </Label>
@@ -108,21 +105,23 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
                   id="alcohol"
                   value={alcoholByVolume}
                   onChange={(e) => setAlcoholByVolume(e.target.value)}
-                  placeholder="15.0"
+                  placeholder="13.5"
                   className="flex-1"
+                  type="number"
+                  step="0.1"
                 />
                 <span className="text-sm text-muted-foreground">% (Vol.)</span>
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="sugar">
-                Residual Sugar
+                Azúcar Residual
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="max-w-xs">The amount of sugar remaining after fermentation.</p>
+                    <p className="max-w-xs">La cantidad de azúcar que queda después de la fermentación.</p>
                   </TooltipContent>
                 </Tooltip>
               </Label>
@@ -133,19 +132,21 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
                   onChange={(e) => setResidualSugar(e.target.value)}
                   placeholder="2.0"
                   className="flex-1"
+                  type="number"
+                  step="0.1"
                 />
                 <span className="text-sm text-muted-foreground">g/L</span>
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="acidity">
-                Total Acidity
+                Acidez Total
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="max-w-xs">The total acid content of the wine.</p>
+                    <p className="max-w-xs">El contenido total de ácido del vino.</p>
                   </TooltipContent>
                 </Tooltip>
               </Label>
@@ -156,19 +157,21 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
                   onChange={(e) => setTotalAcidity(e.target.value)}
                   placeholder="5.5"
                   className="flex-1"
+                  type="number"
+                  step="0.1"
                 />
                 <span className="text-sm text-muted-foreground">g/L</span>
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="glycerol">
-                Glycerol
+                Glicerol
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p className="max-w-xs">The glycerol content produced during fermentation.</p>
+                    <p className="max-w-xs">El contenido de glicerol producido durante la fermentación.</p>
                   </TooltipContent>
                 </Tooltip>
               </Label>
@@ -177,8 +180,10 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
                   id="glycerol"
                   value={glycerol}
                   onChange={(e) => setGlycerol(e.target.value)}
-                  placeholder="12.0"
+                  placeholder="8.0"
                   className="flex-1"
+                  type="number"
+                  step="0.1"
                 />
                 <span className="text-sm text-muted-foreground">g/L</span>
               </div>
@@ -186,9 +191,9 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
           </div>
           <div className="flex justify-end gap-3">
             <Button variant="outline" onClick={() => setOpen(false)}>
-              Cancel
+              Cancelar
             </Button>
-            <Button onClick={calculateNutrients}>Calculate</Button>
+            <Button onClick={calculateNutrients}>Calcular</Button>
           </div>
         </DialogContent>
       </Dialog>
