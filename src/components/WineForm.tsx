@@ -525,76 +525,44 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <p className="text-sm text-muted-foreground">
                       Introduce los valores nutricionales medios por 100 ml. Utiliza la calculadora para obtener los valores de energía en kJ y kcal.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-2 shrink-0 w-full sm:w-auto">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm" className="w-full sm:w-[140px]">
-                            <Info className="h-4 w-4 mr-2" />
-                            Tolerancias UE
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[600px]">
-                          <DialogHeader>
-                            <DialogTitle>Tolerancias en la declaración nutricional</DialogTitle>
-                          </DialogHeader>
-                          <div className="space-y-4 py-4">
-                            <p className="text-sm text-muted-foreground">
-                              En las directrices de etiquetado nutricional de la UE (EU 1169/2011), se puede usar "0g" para indicar 
-                              niveles insignificantes de grasas, grasas saturadas, proteínas y sal. Estas directrices se encuentran 
-                              en la sección 6, tabla 4 de los documentos de orientación de la UE sobre etiquetado nutricional.
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              Usted es responsable de declarar los valores que excedan estas tolerancias, aunque cuando se trata de 
-                              vinos típicos, muchos expertos sugieren que no se necesitan pruebas adicionales si los valores están 
-                              dentro de estas tolerancias. Las tolerancias permitidas para el vino están armonizadas dentro de la UE.
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              Para vinos con menos de 100 g/l de azúcar (que es el caso de la mayoría de los vinos excepto los vinos 
-                              dulces), se permite una tolerancia de 2 g/100 ml (equivalente a 20 g/l) para la declaración de azúcares 
-                              e hidratos de carbono.
-                            </p>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                      <div className="w-full sm:w-[140px]">
-                        <WineCalculatorDialog 
-                          onCalculate={(values) => {
-                            const abv = parseFloat(document.getElementById('alcohol')?.getAttribute('data-abv') || '0');
-                            setFormData(prev => ({
-                              ...prev,
-                              energyKj: values.energyKj,
-                              energyKcal: values.energyKcal,
-                              carbohydrate: values.carbohydrate,
-                              sugars: values.sugars,
-                              alcoholPercentage: abv,
-                              fat: 0,
-                              saturatedFat: 0,
-                              protein: 0.1,
-                              salt: 0,
-                            }));
+                    <div className="shrink-0">
+                      <WineCalculatorDialog 
+                        onCalculate={(values) => {
+                          const abv = parseFloat(document.getElementById('alcohol')?.getAttribute('data-abv') || '0');
+                          setFormData(prev => ({
+                            ...prev,
+                            energyKj: values.energyKj,
+                            energyKcal: values.energyKcal,
+                            carbohydrate: values.carbohydrate,
+                            sugars: values.sugars,
+                            alcoholPercentage: abv,
+                            fat: 0,
+                            saturatedFat: 0,
+                            protein: 0.1,
+                            salt: 0,
+                          }));
 
-                            // Actualizar los valores en los inputs
-                            const inputs = {
-                              energyKj: values.energyKj,
-                              energyKcal: values.energyKcal,
-                              carbohydrate: values.carbohydrate,
-                              sugars: values.sugars,
-                              alcoholPercentage: abv,
-                              fat: 0,
-                              saturatedFat: 0,
-                              protein: 0.1,
-                              salt: 0,
-                            };
+                          // Actualizar los valores en los inputs
+                          const inputs = {
+                            energyKj: values.energyKj,
+                            energyKcal: values.energyKcal,
+                            carbohydrate: values.carbohydrate,
+                            sugars: values.sugars,
+                            alcoholPercentage: abv,
+                            fat: 0,
+                            saturatedFat: 0,
+                            protein: 0.1,
+                            salt: 0,
+                          };
 
-                            Object.entries(inputs).forEach(([key, value]) => {
-                              const input = document.getElementById(key) as HTMLInputElement;
-                              if (input) {
-                                input.value = value.toString();
-                              }
-                            });
-                          }}
-                        />
-                      </div>
+                          Object.entries(inputs).forEach(([key, value]) => {
+                            const input = document.getElementById(key) as HTMLInputElement;
+                            if (input) {
+                              input.value = value.toString();
+                            }
+                          });
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
