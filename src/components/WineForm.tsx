@@ -476,7 +476,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       onChange={handleInputChange}
                     />
                     <p className="text-sm text-muted-foreground">
-                      Nombre legal del producto según la normativa de la UE.
+                      Si es vino tinto, indicar "Vino tinto". Si es vino blanco, "Vino blanco". Para vinos especiales, indicar su denominación específica según normativa (ej: "Vino de licor", "Vino espumoso", etc.).
                     </p>
                   </div>
                 </div>
@@ -485,54 +485,53 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
 
             {/* Nutritional Information */}
             <Card>
-              <CardHeader>
-                <CardTitle>Información nutricional</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Introduce los valores nutricionales medios por 100 ml. Utiliza la calculadora para obtener los valores de energía en kJ y kcal. 
-                  Los valores se redondearán automáticamente como se muestra en la vista previa.
-                </p>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <div className="space-y-1">
+                  <CardTitle>Información nutricional</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Introduce los valores nutricionales medios por 100 ml. Utiliza la calculadora para obtener los valores de energía en kJ y kcal.
+                  </p>
+                </div>
+                <WineCalculatorDialog 
+                  onCalculate={(values) => {
+                    const abv = parseFloat(document.getElementById('alcohol')?.getAttribute('data-abv') || '0');
+                    setFormData(prev => ({
+                      ...prev,
+                      energyKj: values.energyKj,
+                      energyKcal: values.energyKcal,
+                      carbohydrate: values.carbohydrate,
+                      sugars: values.sugars,
+                      alcoholPercentage: abv,
+                      fat: 0,
+                      saturatedFat: 0,
+                      protein: 0.1,
+                      salt: 0,
+                    }));
+
+                    // Actualizar los valores en los inputs
+                    const inputs = {
+                      energyKj: values.energyKj,
+                      energyKcal: values.energyKcal,
+                      carbohydrate: values.carbohydrate,
+                      sugars: values.sugars,
+                      alcoholPercentage: abv,
+                      fat: 0,
+                      saturatedFat: 0,
+                      protein: 0.1,
+                      salt: 0,
+                    };
+
+                    Object.entries(inputs).forEach(([key, value]) => {
+                      const input = document.getElementById(key) as HTMLInputElement;
+                      if (input) {
+                        input.value = value.toString();
+                      }
+                    });
+                  }}
+                />
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 pt-0">
                 <div className="grid gap-4">
-                  <div className="flex justify-end">
-                    <WineCalculatorDialog 
-                      onCalculate={(values) => {
-                        const abv = parseFloat(document.getElementById('alcohol')?.getAttribute('data-abv') || '0');
-                        setFormData(prev => ({
-                          ...prev,
-                          energyKj: values.energyKj,
-                          energyKcal: values.energyKcal,
-                          carbohydrate: values.carbohydrate,
-                          sugars: values.sugars,
-                          alcoholPercentage: abv,
-                          fat: 0,
-                          saturatedFat: 0,
-                          protein: 0.1,
-                          salt: 0,
-                        }));
-
-                        // Actualizar los valores en los inputs
-                        const inputs = {
-                          energyKj: values.energyKj,
-                          energyKcal: values.energyKcal,
-                          carbohydrate: values.carbohydrate,
-                          sugars: values.sugars,
-                          alcoholPercentage: abv,
-                          fat: 0,
-                          saturatedFat: 0,
-                          protein: 0.1,
-                          salt: 0,
-                        };
-
-                        Object.entries(inputs).forEach(([key, value]) => {
-                          const input = document.getElementById(key) as HTMLInputElement;
-                          if (input) {
-                            input.value = value.toString();
-                          }
-                        });
-                      }}
-                    />
-                  </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="energyKj">Energía (kJ)</Label>
@@ -665,7 +664,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="alcoholPercentage">Alcohol por Volumen % (Vol.)</Label>
+                      <Label htmlFor="alcoholPercentage">Alcohol por Vol. %</Label>
                       <Input 
                         id="alcoholPercentage" 
                         name="alcoholPercentage" 
@@ -744,6 +743,9 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       required 
                       onChange={handleInputChange}
                     />
+                    <p className="text-sm text-muted-foreground">
+                      Región específica de origen del vino (ej: Ribera del Duero, Rioja, Penedès, etc.).
+                    </p>
                   </div>
 
                   <div className="grid gap-2">

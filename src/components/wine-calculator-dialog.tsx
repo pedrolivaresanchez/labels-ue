@@ -110,7 +110,7 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
             Calcular Energía
           </Button>
         </DialogTrigger>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="sm:max-w-[800px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               Calcular Energía
@@ -128,7 +128,7 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
               </Tooltip>
             </DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
             <div className="space-y-4">
               <div className="grid gap-4">
                 <div className="grid gap-2">
