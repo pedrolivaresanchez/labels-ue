@@ -222,15 +222,16 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
             <p className="text-xl sm:text-2xl font-medium">{wine.operatorName}</p>
           </div>
 
-          {/* Product Specifications */}
-          <div className="grid grid-cols-2 gap-6 pt-2">
+          {/* Product Specifications - More compact on mobile */}
+          <div className="flex justify-center items-center gap-4 pt-2">
             <div className="text-center">
-              <h3 className="text-sm font-medium text-muted-foreground mb-1">{labels.netQuantity}</h3>
-              <p className="text-2xl font-semibold">{wine.netQuantityCl} {labels.centiliters}</p>
+              <h3 className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">{labels.netQuantity}</h3>
+              <p className="text-lg sm:text-2xl font-semibold">{wine.netQuantityCl} {labels.centiliters}</p>
             </div>
+            <div className="w-px h-8 bg-border" /> {/* Vertical divider */}
             <div className="text-center">
-              <h3 className="text-sm font-medium text-muted-foreground mb-1">{labels.alcohol}</h3>
-              <p className="text-2xl font-semibold">{wine.alcoholPercentage}% vol</p>
+              <h3 className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">{labels.alcohol}</h3>
+              <p className="text-lg sm:text-2xl font-semibold">{wine.alcoholPercentage}% vol</p>
             </div>
           </div>
         </CardContent>
