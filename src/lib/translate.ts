@@ -43,80 +43,39 @@ export type Labels = {
   centiliters: string;
 }
 
-export async function translateText(text: string, targetLanguage: string) {
-  if (targetLanguage === 'es') return text;
-  
-  try {
-    const request = {
-      parent: `projects/${projectId}/locations/${location}`,
-      contents: [text],
-      mimeType: 'text/plain',
-      sourceLanguageCode: 'es',
-      targetLanguageCode: targetLanguage,
-    };
+export const languageOptions = {
+  es: 'Español',
+  ca: 'Català/Valencià',
+  eu: 'Euskara',
+  gl: 'Galego',
+  bg: 'Български',
+  cs: 'Čeština',
+  da: 'Dansk',
+  de: 'Deutsch',
+  el: 'Ελληνικά',
+  en: 'English',
+  et: 'Eesti keel',
+  fi: 'Suomi',
+  fr: 'Français',
+  ga: 'Gaeilge',
+  hr: 'Hrvatski',
+  it: 'Italiano',
+  lv: 'Latviešu valoda',
+  lt: 'Lietuvių kalba',
+  hu: 'Magyar',
+  mt: 'Malti',
+  nl: 'Nederlands',
+  pl: 'Polski',
+  pt: 'Português',
+  ro: 'Română',
+  sk: 'Slovenčina',
+  sl: 'Slovenščina',
+  sv: 'Svenska'
+};
 
-    const [response] = await translationClient.translateText(request);
-    return response.translations?.[0]?.translatedText || text;
-  } catch (error) {
-    console.error('Translation error:', error);
-    return text;
-  }
-}
+export type SupportedLanguage = keyof typeof languageOptions;
 
-export async function translateWine(wine: any, targetLanguage: string) {
-  if (targetLanguage === 'es') return wine;
-
-  const translatedWine = { ...wine };
-
-  // Translate basic fields except for specific ones
-  // Do not translate: name, operatorName, placeOfOrigin, operatorAddress
-  translatedWine.foodName = await translateText(wine.foodName, targetLanguage);
-  if (wine.instructionsForUse) {
-    translatedWine.instructionsForUse = await translateText(wine.instructionsForUse, targetLanguage);
-  }
-  if (wine.conservationConditions) {
-    translatedWine.conservationConditions = await translateText(wine.conservationConditions, targetLanguage);
-  }
-  translatedWine.countryOfOrigin = await translateText(wine.countryOfOrigin, targetLanguage);
-  if (wine.wineryInformation) {
-    translatedWine.wineryInformation = await translateText(wine.wineryInformation, targetLanguage);
-  }
-
-  // Translate ingredients
-  if (wine.ingredients?.length > 0) {
-    translatedWine.ingredients = await Promise.all(
-      wine.ingredients.map(async (ingredient: any) => ({
-        ...ingredient,
-        name: await translateText(ingredient.name, targetLanguage),
-      }))
-    );
-  }
-
-  // Translate production variants
-  if (wine.productionVariants?.length > 0) {
-    translatedWine.productionVariants = await Promise.all(
-      wine.productionVariants.map(async (variant: any) => ({
-        ...variant,
-        variantName: await translateText(variant.variantName, targetLanguage),
-      }))
-    );
-  }
-
-  // Translate certifications
-  if (wine.certifications?.length > 0) {
-    translatedWine.certifications = await Promise.all(
-      wine.certifications.map(async (cert: any) => ({
-        ...cert,
-        name: await translateText(cert.name, targetLanguage),
-      }))
-    );
-  }
-
-  return translatedWine;
-}
-
-// Add translations for UI labels
-export const uiLabels: Record<string, Labels> = {
+export const uiLabels: Partial<Record<SupportedLanguage, Labels>> = {
   es: {
     reference: 'Referencia',
     nutritionalInfo: 'Información nutricional',
@@ -271,5 +230,114 @@ export const uiLabels: Record<string, Labels> = {
     registration: 'Registrazione',
     grams: 'grammi',
     centiliters: 'centilitri'
+  },
+  bg: {} as Labels,
+  ca: {} as Labels,
+  cs: {} as Labels,
+  da: {} as Labels,
+  el: {} as Labels,
+  et: {} as Labels,
+  eu: {} as Labels,
+  fi: {} as Labels,
+  ga: {} as Labels,
+  gl: {} as Labels,
+  hr: {} as Labels,
+  hu: {} as Labels,
+  lt: {} as Labels,
+  lv: {} as Labels,
+  mt: {} as Labels,
+  nl: {} as Labels,
+  pl: {} as Labels,
+  pt: {} as Labels,
+  ro: {} as Labels,
+  sk: {} as Labels,
+  sl: {} as Labels,
+  sv: {} as Labels,
+};
+
+export async function translateText(text: string, targetLanguage: SupportedLanguage) {
+  if (targetLanguage === 'es' || !text) return text;
+  
+  try {
+    const request = {
+      parent: `projects/${projectId}/locations/${location}`,
+      contents: [text],
+      mimeType: 'text/plain',
+      sourceLanguageCode: 'es',
+      targetLanguageCode: targetLanguage,
+    };
+
+    const [response] = await translationClient.translateText(request);
+    return response.translations?.[0]?.translatedText || text;
+  } catch (error) {
+    console.error('Translation error:', error);
+    return text;
   }
-}; 
+}
+
+export async function translateWine(wine: any, targetLanguage: SupportedLanguage) {
+  if (targetLanguage === 'es') return wine;
+
+  const translatedWine = { ...wine };
+
+  // Translate basic fields except for specific ones
+  // Do not translate: name, operatorName, placeOfOrigin, operatorAddress
+  translatedWine.foodName = await translateText(wine.foodName, targetLanguage);
+  if (wine.instructionsForUse) {
+    translatedWine.instructionsForUse = await translateText(wine.instructionsForUse, targetLanguage);
+  }
+  if (wine.conservationConditions) {
+    translatedWine.conservationConditions = await translateText(wine.conservationConditions, targetLanguage);
+  }
+  translatedWine.countryOfOrigin = await translateText(wine.countryOfOrigin, targetLanguage);
+  if (wine.wineryInformation) {
+    translatedWine.wineryInformation = await translateText(wine.wineryInformation, targetLanguage);
+  }
+
+  // Translate ingredients
+  if (wine.ingredients?.length > 0) {
+    translatedWine.ingredients = await Promise.all(
+      wine.ingredients.map(async (ingredient: any) => ({
+        ...ingredient,
+        name: await translateText(ingredient.name, targetLanguage),
+      }))
+    );
+  }
+
+  // Translate production variants
+  if (wine.productionVariants?.length > 0) {
+    translatedWine.productionVariants = await Promise.all(
+      wine.productionVariants.map(async (variant: any) => ({
+        ...variant,
+        variantName: await translateText(variant.variantName, targetLanguage),
+      }))
+    );
+  }
+
+  // Translate certifications
+  if (wine.certifications?.length > 0) {
+    translatedWine.certifications = await Promise.all(
+      wine.certifications.map(async (cert: any) => ({
+        ...cert,
+        name: await translateText(cert.name, targetLanguage),
+      }))
+    );
+  }
+
+  return translatedWine;
+}
+
+export async function getUILabels(targetLanguage: SupportedLanguage): Promise<Labels> {
+  if (Object.keys(uiLabels[targetLanguage] || {}).length > 0) {
+    return uiLabels[targetLanguage] as Labels;
+  }
+
+  const spanishLabels = uiLabels.es as Labels;
+  const translatedLabels: Partial<Labels> = {};
+
+  for (const [key, value] of Object.entries(spanishLabels)) {
+    translatedLabels[key as keyof Labels] = await translateText(value, targetLanguage);
+  }
+
+  return translatedLabels as Labels;
+} 

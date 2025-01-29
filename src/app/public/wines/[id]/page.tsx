@@ -2,20 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import { WinePublicView } from "@/components/wine-public-view";
 import { PublicNavbar } from "@/components/public-navbar";
-import { uiLabels } from "@/lib/translate";
-import { TranslationServiceClient } from '@google-cloud/translate';
-
-// Initialize translation client
-const translationClient = new TranslationServiceClient({
-  credentials: {
-    client_email: process.env.GOOGLE_TRANSLATE_CLIENT_EMAIL,
-    private_key: process.env.GOOGLE_TRANSLATE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-  },
-  projectId: process.env.GOOGLE_TRANSLATE_PROJECT_ID,
-});
-
-const projectId = process.env.GOOGLE_TRANSLATE_PROJECT_ID!;
-const location = 'global';
+import { getUILabels, translateWine, languageOptions, type SupportedLanguage } from "@/lib/translate";
 
 export type Ingredient = {
   id: string;
@@ -69,79 +56,6 @@ export type Wine = {
   operatorAddress: string;
   registrationNumber: string;
 };
-
-async function translateText(text: string, targetLanguage: string) {
-  if (targetLanguage === 'es') return text;
-  if (!text) return text;
-  
-  try {
-    const request = {
-      parent: `projects/${projectId}/locations/${location}`,
-      contents: [text],
-      mimeType: 'text/plain',
-      sourceLanguageCode: 'es',
-      targetLanguageCode: targetLanguage,
-    };
-
-    const [response] = await translationClient.translateText(request);
-    return response.translations?.[0]?.translatedText || text;
-  } catch (error) {
-    console.error('Translation error:', error);
-    return text;
-  }
-}
-
-async function translateWine(wine: Wine, targetLanguage: string) {
-  if (targetLanguage === 'es') return wine;
-
-  const translatedWine = { ...wine };
-
-  // Translate basic fields except for specific ones
-  // Do not translate: name, operatorName, placeOfOrigin, operatorAddress
-  translatedWine.foodName = await translateText(wine.foodName, targetLanguage);
-  if (wine.instructionsForUse) {
-    translatedWine.instructionsForUse = await translateText(wine.instructionsForUse, targetLanguage);
-  }
-  if (wine.conservationConditions) {
-    translatedWine.conservationConditions = await translateText(wine.conservationConditions, targetLanguage);
-  }
-  translatedWine.countryOfOrigin = await translateText(wine.countryOfOrigin, targetLanguage);
-  if (wine.winery_information) {
-    translatedWine.winery_information = await translateText(wine.winery_information, targetLanguage);
-  }
-
-  // Translate ingredients
-  if (wine.ingredients?.length > 0) {
-    translatedWine.ingredients = await Promise.all(
-      wine.ingredients.map(async (ingredient) => ({
-        ...ingredient,
-        name: await translateText(ingredient.name, targetLanguage),
-      }))
-    );
-  }
-
-  // Translate production variants
-  if (wine.productionVariants?.length > 0) {
-    translatedWine.productionVariants = await Promise.all(
-      wine.productionVariants.map(async (variant) => ({
-        ...variant,
-        variantName: await translateText(variant.variantName, targetLanguage),
-      }))
-    );
-  }
-
-  // Translate certifications
-  if (wine.certifications?.length > 0) {
-    translatedWine.certifications = await Promise.all(
-      wine.certifications.map(async (cert) => ({
-        ...cert,
-        name: await translateText(cert.name, targetLanguage),
-      }))
-    );
-  }
-
-  return translatedWine;
-}
 
 async function getWine(id: string): Promise<Wine | null> {
   const { data: wine, error } = await supabase
@@ -202,14 +116,37 @@ export default async function PublicWineViewPage({
     notFound();
   }
 
-  const lang = searchParams.lang || 'es';
-  const translatedWine = await translateWine(wine, lang);
-  const labels = uiLabels[lang as keyof typeof uiLabels] || uiLabels.es;
+  // Validate the language parameter
+  const lang = (searchParams.lang || 'es') as SupportedLanguage;
+  const isValidLang = lang in languageOptions;
+  const validLang = isValidLang ? lang : 'es';
+
+  // Get translated content
+  const translatedWine = await translateWine(wine, validLang);
+  const labels = await getUILabels(validLang);
 
   return (
     <div className="min-h-screen flex flex-col">
       <PublicNavbar />
       <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <div className="mb-4">
+          <select 
+            className="block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            onChange={(e) => {
+              const newLang = e.target.value;
+              const url = new URL(window.location.href);
+              url.searchParams.set('lang', newLang);
+              window.location.href = url.toString();
+            }}
+            value={validLang}
+          >
+            {Object.entries(languageOptions).map(([code, name]) => (
+              <option key={code} value={code}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </div>
         <WinePublicView wine={translatedWine} labels={labels} />
       </main>
     </div>
