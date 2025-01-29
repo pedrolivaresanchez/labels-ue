@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import { WinePublicView } from "@/components/wine-public-view";
 import { PublicNavbar } from "@/components/public-navbar";
+import { uiLabels } from "@/lib/translate";
 
 export type Ingredient = {
   id: string;
@@ -103,24 +104,54 @@ async function getWine(id: string): Promise<Wine | null> {
 export const revalidate = 3600; // Revalidate every hour
 
 async function getTranslatedData(wine: Wine, lang: string) {
+  // Use absolute URL with protocol
   const baseUrl = process.env.VERCEL_URL ? 
     `https://${process.env.VERCEL_URL}` : 
-    'http://localhost:3000';
+    process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-  const response = await fetch(`${baseUrl}/api/translate?lang=${lang}`, {
-    method: 'POST',
-    body: JSON.stringify(wine),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const url = `${baseUrl}/api/translate?lang=${lang}`;
+  
+  try {
+    console.log('Fetching translations from:', url);
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(wine),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Add cache: 'no-store' to prevent caching
+      cache: 'no-store'
+    });
 
-  if (!response.ok) {
-    console.error('Translation failed:', await response.text());
-    return { wine, labels: {} };
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Translation failed:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText
+      });
+      return { 
+        wine, 
+        labels: uiLabels.es // Import uiLabels from translate.ts as fallback
+      };
+    }
+
+    const data = await response.json();
+    console.log('Translation response:', {
+      hasWine: !!data.wine,
+      hasLabels: !!data.labels,
+      language: lang
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Translation request failed:', error);
+    return { 
+      wine, 
+      labels: uiLabels.es // Import uiLabels from translate.ts as fallback
+    };
   }
-
-  return response.json();
 }
 
 export default async function PublicWineViewPage({
