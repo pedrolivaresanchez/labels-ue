@@ -11,6 +11,38 @@ const translationClient = new TranslationServiceClient({
 const projectId = process.env.GOOGLE_TRANSLATE_PROJECT_ID!;
 const location = 'global';
 
+export type Labels = {
+  reference: string;
+  nutritionalInfo: string;
+  additionalDetails: string;
+  name: string;
+  eanCode: string;
+  foodName: string;
+  ingredients: string;
+  netQuantity: string;
+  alcohol: string;
+  energyValue: string;
+  fats: string;
+  saturatedFats: string;
+  carbohydrates: string;
+  sugars: string;
+  proteins: string;
+  salt: string;
+  countryOfOrigin: string;
+  placeOfOrigin: string;
+  productionVariants: string;
+  certifications: string;
+  instructionsForUse: string;
+  conservationConditions: string;
+  drainedWeight: string;
+  operatorData: string;
+  operatorName: string;
+  operatorAddress: string;
+  registration: string;
+  grams: string;
+  centiliters: string;
+}
+
 export async function translateText(text: string, targetLanguage: string) {
   if (targetLanguage === 'es') return text;
   
@@ -84,37 +116,37 @@ export async function translateWine(wine: any, targetLanguage: string) {
 }
 
 // Add translations for UI labels
-export const uiLabels: Record<string, Record<string, string>> = {
+export const uiLabels: Record<string, Labels> = {
   es: {
     reference: 'Referencia',
     nutritionalInfo: 'Información nutricional',
     additionalDetails: 'Detalles adicionales',
     name: 'Nombre',
     eanCode: 'Código EAN',
-    foodName: 'Denominación del alimento',
-    ingredients: 'Lista de ingredientes',
+    foodName: 'Nombre del alimento',
+    ingredients: 'Ingredientes',
     netQuantity: 'Cantidad neta',
     alcohol: 'Alcohol',
-    energyValue: 'valor energético',
-    fats: 'grasas',
-    saturatedFats: 'de las cuales saturadas',
-    carbohydrates: 'hidratos de carbono',
-    sugars: 'de los cuales azúcares',
-    proteins: 'proteínas',
-    salt: 'sal',
+    energyValue: 'Valor energético',
+    fats: 'Grasas',
+    saturatedFats: 'Grasas saturadas',
+    carbohydrates: 'Carbohidratos',
+    sugars: 'Azúcares',
+    proteins: 'Proteínas',
+    salt: 'Sal',
     countryOfOrigin: 'País de origen',
-    placeOfOrigin: 'Lugar de procedencia',
+    placeOfOrigin: 'Lugar de origen',
     productionVariants: 'Variantes de producción',
     certifications: 'Certificaciones',
-    instructionsForUse: 'Modo de empleo',
+    instructionsForUse: 'Instrucciones de uso',
     conservationConditions: 'Condiciones de conservación',
     drainedWeight: 'Peso escurrido',
     operatorData: 'Datos del operador',
-    operatorName: 'Nombre del operador / importador',
-    operatorAddress: 'Dirección del operador / importador',
+    operatorName: 'Nombre del operador',
+    operatorAddress: 'Dirección del operador',
     registration: 'Registro',
-    grams: 'Gramos',
-    centiliters: 'Centilitros'
+    grams: 'gramos',
+    centiliters: 'centilitros'
   },
   en: {
     reference: 'Reference',
@@ -123,29 +155,29 @@ export const uiLabels: Record<string, Record<string, string>> = {
     name: 'Name',
     eanCode: 'EAN Code',
     foodName: 'Food Name',
-    ingredients: 'List of Ingredients',
+    ingredients: 'Ingredients',
     netQuantity: 'Net Quantity',
     alcohol: 'Alcohol',
-    energyValue: 'energy value',
-    fats: 'fats',
-    saturatedFats: 'of which saturates',
-    carbohydrates: 'carbohydrates',
-    sugars: 'of which sugars',
-    proteins: 'proteins',
-    salt: 'salt',
+    energyValue: 'Energy Value',
+    fats: 'Fats',
+    saturatedFats: 'Saturated Fats',
+    carbohydrates: 'Carbohydrates',
+    sugars: 'Sugars',
+    proteins: 'Proteins',
+    salt: 'Salt',
     countryOfOrigin: 'Country of Origin',
     placeOfOrigin: 'Place of Origin',
     productionVariants: 'Production Variants',
     certifications: 'Certifications',
     instructionsForUse: 'Instructions for Use',
-    conservationConditions: 'Storage Conditions',
+    conservationConditions: 'Conservation Conditions',
     drainedWeight: 'Drained Weight',
     operatorData: 'Operator Data',
-    operatorName: 'Operator / Importer Name',
-    operatorAddress: 'Operator / Importer Address',
+    operatorName: 'Operator Name',
+    operatorAddress: 'Operator Address',
     registration: 'Registration',
-    grams: 'Grams',
-    centiliters: 'Centiliters'
+    grams: 'grams',
+    centiliters: 'centiliters'
   },
   fr: {
     reference: 'Référence',
@@ -153,49 +185,49 @@ export const uiLabels: Record<string, Record<string, string>> = {
     additionalDetails: 'Détails Supplémentaires',
     name: 'Nom',
     eanCode: 'Code EAN',
-    foodName: 'Dénomination de l\'aliment',
-    ingredients: 'Liste des ingrédients',
-    netQuantity: 'Quantité nette',
+    foodName: 'Nom de l\'aliment',
+    ingredients: 'Ingrédients',
+    netQuantity: 'Quantité Nette',
     alcohol: 'Alcool',
-    energyValue: 'valeur énergétique',
-    fats: 'matières grasses',
-    saturatedFats: 'dont acides gras saturés',
-    carbohydrates: 'glucides',
-    sugars: 'dont sucres',
-    proteins: 'protéines',
-    salt: 'sel',
+    energyValue: 'Valeur Énergétique',
+    fats: 'Matières grasses',
+    saturatedFats: 'Acides gras saturés',
+    carbohydrates: 'Glucides',
+    sugars: 'Sucres',
+    proteins: 'Protéines',
+    salt: 'Sel',
     countryOfOrigin: 'Pays d\'origine',
-    placeOfOrigin: 'Lieu de provenance',
-    productionVariants: 'Variantes de production',
+    placeOfOrigin: 'Lieu d\'origine',
+    productionVariants: 'Variantes de Production',
     certifications: 'Certifications',
     instructionsForUse: 'Mode d\'emploi',
-    conservationConditions: 'Conditions de conservation',
+    conservationConditions: 'Conditions de Conservation',
     drainedWeight: 'Poids égoutté',
     operatorData: 'Données de l\'opérateur',
-    operatorName: 'Nom de l\'opérateur / importateur',
-    operatorAddress: 'Adresse de l\'opérateur / importateur',
+    operatorName: 'Nom de l\'opérateur',
+    operatorAddress: 'Adresse de l\'opérateur',
     registration: 'Enregistrement',
-    grams: 'Grammes',
-    centiliters: 'Centilitres'
+    grams: 'grammes',
+    centiliters: 'centilitres'
   },
   de: {
     reference: 'Referenz',
-    nutritionalInfo: 'Nährwertinformation',
+    nutritionalInfo: 'Nährwertinformationen',
     additionalDetails: 'Zusätzliche Details',
     name: 'Name',
     eanCode: 'EAN-Code',
-    foodName: 'Lebensmittelbezeichnung',
-    ingredients: 'Zutatenliste',
+    foodName: 'Lebensmittelname',
+    ingredients: 'Zutaten',
     netQuantity: 'Nettomenge',
     alcohol: 'Alkohol',
     energyValue: 'Energiewert',
-    fats: 'Fett',
-    saturatedFats: 'davon gesättigte Fettsäuren',
+    fats: 'Fette',
+    saturatedFats: 'Gesättigte Fettsäuren',
     carbohydrates: 'Kohlenhydrate',
-    sugars: 'davon Zucker',
-    proteins: 'Eiweiß',
+    sugars: 'Zucker',
+    proteins: 'Proteine',
     salt: 'Salz',
-    countryOfOrigin: 'Ursprungsland',
+    countryOfOrigin: 'Herkunftsland',
     placeOfOrigin: 'Herkunftsort',
     productionVariants: 'Produktionsvarianten',
     certifications: 'Zertifizierungen',
@@ -203,8 +235,8 @@ export const uiLabels: Record<string, Record<string, string>> = {
     conservationConditions: 'Aufbewahrungsbedingungen',
     drainedWeight: 'Abtropfgewicht',
     operatorData: 'Betreiberdaten',
-    operatorName: 'Name des Betreibers / Importeurs',
-    operatorAddress: 'Adresse des Betreibers / Importeurs',
+    operatorName: 'Name des Betreibers',
+    operatorAddress: 'Adresse des Betreibers',
     registration: 'Registrierung',
     grams: 'Gramm',
     centiliters: 'Zentiliter'
@@ -215,29 +247,29 @@ export const uiLabels: Record<string, Record<string, string>> = {
     additionalDetails: 'Dettagli Aggiuntivi',
     name: 'Nome',
     eanCode: 'Codice EAN',
-    foodName: 'Denominazione dell\'alimento',
-    ingredients: 'Lista degli ingredienti',
-    netQuantity: 'Quantità netta',
+    foodName: 'Nome dell\'alimento',
+    ingredients: 'Ingredienti',
+    netQuantity: 'Quantità Netta',
     alcohol: 'Alcol',
-    energyValue: 'valore energetico',
-    fats: 'grassi',
-    saturatedFats: 'di cui acidi grassi saturi',
-    carbohydrates: 'carboidrati',
-    sugars: 'di cui zuccheri',
-    proteins: 'proteine',
-    salt: 'sale',
+    energyValue: 'Valore Energetico',
+    fats: 'Grassi',
+    saturatedFats: 'Acidi grassi saturi',
+    carbohydrates: 'Carboidrati',
+    sugars: 'Zuccheri',
+    proteins: 'Proteine',
+    salt: 'Sale',
     countryOfOrigin: 'Paese di origine',
-    placeOfOrigin: 'Luogo di provenienza',
-    productionVariants: 'Varianti di produzione',
+    placeOfOrigin: 'Luogo di origine',
+    productionVariants: 'Varianti di Produzione',
     certifications: 'Certificazioni',
     instructionsForUse: 'Istruzioni per l\'uso',
-    conservationConditions: 'Condizioni di conservazione',
+    conservationConditions: 'Condizioni di Conservazione',
     drainedWeight: 'Peso sgocciolato',
     operatorData: 'Dati dell\'operatore',
-    operatorName: 'Nome dell\'operatore / importatore',
-    operatorAddress: 'Indirizzo dell\'operatore / importatore',
+    operatorName: 'Nome dell\'operatore',
+    operatorAddress: 'Indirizzo dell\'operatore',
     registration: 'Registrazione',
-    grams: 'Grammi',
-    centiliters: 'Centilitri'
+    grams: 'grammi',
+    centiliters: 'centilitri'
   }
 }; 
