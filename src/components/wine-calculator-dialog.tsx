@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calculator } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HelpCircle } from "lucide-react";
 import {
   Tooltip,
@@ -20,6 +20,8 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { calculateWineNutrition } from "@/lib/wine-utils";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface WineCalculatorDialogProps {
   onCalculate: (values: {
@@ -36,6 +38,12 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
   const [totalAcidity, setTotalAcidity] = useState<string>("");
   const [glycerol, setGlycerol] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const [preview, setPreview] = useState<{
+    energyKj: number;
+    energyKcal: number;
+    carbohydrate: number;
+    sugars: number;
+  } | null>(null);
 
   const calculateNutrients = () => {
     const abv = parseFloat(alcoholByVolume) || 0;
@@ -50,15 +58,42 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
       glycerol: glycerolValue,
     });
 
-    onCalculate({
+    const values = {
+      energyKj: result.energyKj,
+      energyKcal: result.energyKcal,
+      carbohydrate: result.carbohydrate,
+      sugars: result.sugars,
+    };
+
+    setPreview(values);
+    onCalculate(values);
+    setOpen(false);
+  };
+
+  const handleCalculatePreview = () => {
+    const abv = parseFloat(alcoholByVolume) || 0;
+    const sugar = parseFloat(residualSugar) || 0;
+    const acidity = parseFloat(totalAcidity) || 0;
+    const glycerolValue = parseFloat(glycerol) || 0;
+
+    const result = calculateWineNutrition({
+      abv,
+      residualSugar: sugar,
+      totalAcidity: acidity,
+      glycerol: glycerolValue,
+    });
+
+    setPreview({
       energyKj: result.energyKj,
       energyKcal: result.energyKcal,
       carbohydrate: result.carbohydrate,
       sugars: result.sugars,
     });
-
-    setOpen(false);
   };
+
+  useEffect(() => {
+    handleCalculatePreview();
+  }, [alcoholByVolume, residualSugar, totalAcidity, glycerol]);
 
   return (
     <TooltipProvider>
@@ -69,7 +104,7 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
             Calcular Energía
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               Calcular Energía
@@ -87,113 +122,144 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
               </Tooltip>
             </DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="alcohol">
-                Alcohol por Volumen
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">El contenido de alcohol en porcentaje por volumen.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="alcohol"
-                  value={alcoholByVolume}
-                  onChange={(e) => setAlcoholByVolume(e.target.value)}
-                  placeholder="13.5"
-                  className="flex-1"
-                  type="number"
-                  step="0.1"
-                />
-                <span className="text-sm text-muted-foreground">% (Vol.)</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="alcohol">
+                    Alcohol por Volumen
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">El contenido de alcohol en porcentaje por volumen.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="alcohol"
+                      value={alcoholByVolume}
+                      onChange={(e) => setAlcoholByVolume(e.target.value)}
+                      placeholder="13.5"
+                      className="flex-1"
+                      type="number"
+                      step="0.1"
+                    />
+                    <span className="text-sm text-muted-foreground">% (Vol.)</span>
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="sugar">
+                    Azúcar Residual
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">La cantidad de azúcar que queda después de la fermentación.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="sugar"
+                      value={residualSugar}
+                      onChange={(e) => setResidualSugar(e.target.value)}
+                      placeholder="2.0"
+                      className="flex-1"
+                      type="number"
+                      step="0.1"
+                    />
+                    <span className="text-sm text-muted-foreground">g/L</span>
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="acidity">
+                    Acidez Total
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">El contenido total de ácido del vino.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="acidity"
+                      value={totalAcidity}
+                      onChange={(e) => setTotalAcidity(e.target.value)}
+                      placeholder="5.5"
+                      className="flex-1"
+                      type="number"
+                      step="0.1"
+                    />
+                    <span className="text-sm text-muted-foreground">g/L</span>
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="glycerol">
+                    Glicerol
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">El contenido de glicerol producido durante la fermentación.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="glycerol"
+                      value={glycerol}
+                      onChange={(e) => setGlycerol(e.target.value)}
+                      placeholder="8.0"
+                      className="flex-1"
+                      type="number"
+                      step="0.1"
+                    />
+                    <span className="text-sm text-muted-foreground">g/L</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="sugar">
-                Azúcar Residual
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">La cantidad de azúcar que queda después de la fermentación.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="sugar"
-                  value={residualSugar}
-                  onChange={(e) => setResidualSugar(e.target.value)}
-                  placeholder="2.0"
-                  className="flex-1"
-                  type="number"
-                  step="0.1"
-                />
-                <span className="text-sm text-muted-foreground">g/L</span>
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="acidity">
-                Acidez Total
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">El contenido total de ácido del vino.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="acidity"
-                  value={totalAcidity}
-                  onChange={(e) => setTotalAcidity(e.target.value)}
-                  placeholder="5.5"
-                  className="flex-1"
-                  type="number"
-                  step="0.1"
-                />
-                <span className="text-sm text-muted-foreground">g/L</span>
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="glycerol">
-                Glicerol
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">El contenido de glicerol producido durante la fermentación.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="glycerol"
-                  value={glycerol}
-                  onChange={(e) => setGlycerol(e.target.value)}
-                  placeholder="8.0"
-                  className="flex-1"
-                  type="number"
-                  step="0.1"
-                />
-                <span className="text-sm text-muted-foreground">g/L</span>
-              </div>
+            <div className="space-y-4">
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="text-sm font-medium text-muted-foreground mb-4">Valores nutricionales por 100ml</h3>
+                  <Table>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>Energía (kJ)</TableCell>
+                        <TableCell className="text-right">{preview?.energyKj || 0} kJ</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Energía (kcal)</TableCell>
+                        <TableCell className="text-right">{preview?.energyKcal || 0} kcal</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Hidratos de carbono</TableCell>
+                        <TableCell className="text-right">{preview?.carbohydrate || 0} g</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="pl-8">de los cuales azúcares</TableCell>
+                        <TableCell className="text-right">{preview?.sugars || 0} g</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
             </div>
           </div>
-          <div className="flex justify-end gap-3">
+          <div className="flex justify-end gap-3 mt-6">
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={calculateNutrients}>Calcular</Button>
+            <Button onClick={calculateNutrients}>Aplicar</Button>
           </div>
         </DialogContent>
       </Dialog>
