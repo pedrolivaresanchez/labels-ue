@@ -43,39 +43,80 @@ export type Labels = {
   centiliters: string;
 }
 
-export const languageOptions = {
-  es: 'Español',
-  ca: 'Català/Valencià',
-  eu: 'Euskara',
-  gl: 'Galego',
-  bg: 'Български',
-  cs: 'Čeština',
-  da: 'Dansk',
-  de: 'Deutsch',
-  el: 'Ελληνικά',
-  en: 'English',
-  et: 'Eesti keel',
-  fi: 'Suomi',
-  fr: 'Français',
-  ga: 'Gaeilge',
-  hr: 'Hrvatski',
-  it: 'Italiano',
-  lv: 'Latviešu valoda',
-  lt: 'Lietuvių kalba',
-  hu: 'Magyar',
-  mt: 'Malti',
-  nl: 'Nederlands',
-  pl: 'Polski',
-  pt: 'Português',
-  ro: 'Română',
-  sk: 'Slovenčina',
-  sl: 'Slovenščina',
-  sv: 'Svenska'
-};
+export async function translateText(text: string, targetLanguage: string) {
+  if (targetLanguage === 'es') return text;
+  
+  try {
+    const request = {
+      parent: `projects/${projectId}/locations/${location}`,
+      contents: [text],
+      mimeType: 'text/plain',
+      sourceLanguageCode: 'es',
+      targetLanguageCode: targetLanguage,
+    };
 
-export type SupportedLanguage = keyof typeof languageOptions;
+    const [response] = await translationClient.translateText(request);
+    return response.translations?.[0]?.translatedText || text;
+  } catch (error) {
+    console.error('Translation error:', error);
+    return text;
+  }
+}
 
-export const uiLabels: Partial<Record<SupportedLanguage, Labels>> = {
+export async function translateWine(wine: any, targetLanguage: string) {
+  if (targetLanguage === 'es') return wine;
+
+  const translatedWine = { ...wine };
+
+  // Translate basic fields except for specific ones
+  // Do not translate: name, operatorName, placeOfOrigin, operatorAddress
+  translatedWine.foodName = await translateText(wine.foodName, targetLanguage);
+  if (wine.instructionsForUse) {
+    translatedWine.instructionsForUse = await translateText(wine.instructionsForUse, targetLanguage);
+  }
+  if (wine.conservationConditions) {
+    translatedWine.conservationConditions = await translateText(wine.conservationConditions, targetLanguage);
+  }
+  translatedWine.countryOfOrigin = await translateText(wine.countryOfOrigin, targetLanguage);
+  if (wine.wineryInformation) {
+    translatedWine.wineryInformation = await translateText(wine.wineryInformation, targetLanguage);
+  }
+
+  // Translate ingredients
+  if (wine.ingredients?.length > 0) {
+    translatedWine.ingredients = await Promise.all(
+      wine.ingredients.map(async (ingredient: any) => ({
+        ...ingredient,
+        name: await translateText(ingredient.name, targetLanguage),
+      }))
+    );
+  }
+
+  // Translate production variants
+  if (wine.productionVariants?.length > 0) {
+    translatedWine.productionVariants = await Promise.all(
+      wine.productionVariants.map(async (variant: any) => ({
+        ...variant,
+        variantName: await translateText(variant.variantName, targetLanguage),
+      }))
+    );
+  }
+
+  // Translate certifications
+  if (wine.certifications?.length > 0) {
+    translatedWine.certifications = await Promise.all(
+      wine.certifications.map(async (cert: any) => ({
+        ...cert,
+        name: await translateText(cert.name, targetLanguage),
+      }))
+    );
+  }
+
+  return translatedWine;
+}
+
+// Add translations for UI labels
+export const uiLabels: Record<string, Labels> = {
   es: {
     reference: 'Referencia',
     nutritionalInfo: 'Información nutricional',
@@ -231,113 +272,655 @@ export const uiLabels: Partial<Record<SupportedLanguage, Labels>> = {
     grams: 'grammi',
     centiliters: 'centilitri'
   },
-  bg: {} as Labels,
-  ca: {} as Labels,
-  cs: {} as Labels,
-  da: {} as Labels,
-  el: {} as Labels,
-  et: {} as Labels,
-  eu: {} as Labels,
-  fi: {} as Labels,
-  ga: {} as Labels,
-  gl: {} as Labels,
-  hr: {} as Labels,
-  hu: {} as Labels,
-  lt: {} as Labels,
-  lv: {} as Labels,
-  mt: {} as Labels,
-  nl: {} as Labels,
-  pl: {} as Labels,
-  pt: {} as Labels,
-  ro: {} as Labels,
-  sk: {} as Labels,
-  sl: {} as Labels,
-  sv: {} as Labels,
-};
-
-export async function translateText(text: string, targetLanguage: SupportedLanguage) {
-  if (targetLanguage === 'es' || !text) return text;
-  
-  try {
-    const request = {
-      parent: `projects/${projectId}/locations/${location}`,
-      contents: [text],
-      mimeType: 'text/plain',
-      sourceLanguageCode: 'es',
-      targetLanguageCode: targetLanguage,
-    };
-
-    const [response] = await translationClient.translateText(request);
-    return response.translations?.[0]?.translatedText || text;
-  } catch (error) {
-    console.error('Translation error:', error);
-    return text;
+  ca: {
+    reference: 'Referència',
+    nutritionalInfo: 'Informació nutricional',
+    additionalDetails: 'Detalls addicionals',
+    name: 'Nom',
+    eanCode: 'Codi EAN',
+    foodName: 'Nom de l\'aliment',
+    ingredients: 'Ingredients',
+    netQuantity: 'Quantitat neta',
+    alcohol: 'Alcohol',
+    energyValue: 'Valor energètic',
+    fats: 'Greixos',
+    saturatedFats: 'Greixos saturats',
+    carbohydrates: 'Hidrats de carboni',
+    sugars: 'Sucres',
+    proteins: 'Proteïnes',
+    salt: 'Sal',
+    countryOfOrigin: 'País d\'origen',
+    placeOfOrigin: 'Lloc d\'origen',
+    productionVariants: 'Variants de producció',
+    certifications: 'Certificacions',
+    instructionsForUse: 'Instruccions d\'ús',
+    conservationConditions: 'Condicions de conservació',
+    drainedWeight: 'Pes escorregut',
+    operatorData: 'Dades de l\'operador',
+    operatorName: 'Nom de l\'operador',
+    operatorAddress: 'Adreça de l\'operador',
+    registration: 'Registre',
+    grams: 'grams',
+    centiliters: 'centilitres'
+  },
+  gl: {
+    reference: 'Referencia',
+    nutritionalInfo: 'Información nutricional',
+    additionalDetails: 'Detalles adicionais',
+    name: 'Nome',
+    eanCode: 'Código EAN',
+    foodName: 'Nome do alimento',
+    ingredients: 'Ingredientes',
+    netQuantity: 'Cantidade neta',
+    alcohol: 'Alcohol',
+    energyValue: 'Valor enerxético',
+    fats: 'Graxas',
+    saturatedFats: 'Graxas saturadas',
+    carbohydrates: 'Hidratos de carbono',
+    sugars: 'Azucres',
+    proteins: 'Proteínas',
+    salt: 'Sal',
+    countryOfOrigin: 'País de orixe',
+    placeOfOrigin: 'Lugar de orixe',
+    productionVariants: 'Variantes de produción',
+    certifications: 'Certificacións',
+    instructionsForUse: 'Instrucións de uso',
+    conservationConditions: 'Condicións de conservación',
+    drainedWeight: 'Peso escorrido',
+    operatorData: 'Datos do operador',
+    operatorName: 'Nome do operador',
+    operatorAddress: 'Enderezo do operador',
+    registration: 'Rexistro',
+    grams: 'gramos',
+    centiliters: 'centilitros'
+  },
+  pt: {
+    reference: 'Referência',
+    nutritionalInfo: 'Informação nutricional',
+    additionalDetails: 'Detalhes adicionais',
+    name: 'Nome',
+    eanCode: 'Código EAN',
+    foodName: 'Nome do alimento',
+    ingredients: 'Ingredientes',
+    netQuantity: 'Quantidade líquida',
+    alcohol: 'Álcool',
+    energyValue: 'Valor energético',
+    fats: 'Gorduras',
+    saturatedFats: 'Gorduras saturadas',
+    carbohydrates: 'Hidratos de carbono',
+    sugars: 'Açúcares',
+    proteins: 'Proteínas',
+    salt: 'Sal',
+    countryOfOrigin: 'País de origem',
+    placeOfOrigin: 'Local de origem',
+    productionVariants: 'Variantes de produção',
+    certifications: 'Certificações',
+    instructionsForUse: 'Instruções de utilização',
+    conservationConditions: 'Condições de conservação',
+    drainedWeight: 'Peso escorrido',
+    operatorData: 'Dados do operador',
+    operatorName: 'Nome do operador',
+    operatorAddress: 'Endereço do operador',
+    registration: 'Registo',
+    grams: 'gramas',
+    centiliters: 'centilitros'
+  },
+  ro: {
+    reference: 'Referință',
+    nutritionalInfo: 'Informații nutriționale',
+    additionalDetails: 'Detalii suplimentare',
+    name: 'Nume',
+    eanCode: 'Cod EAN',
+    foodName: 'Denumirea alimentului',
+    ingredients: 'Ingrediente',
+    netQuantity: 'Cantitate netă',
+    alcohol: 'Alcool',
+    energyValue: 'Valoare energetică',
+    fats: 'Grăsimi',
+    saturatedFats: 'Acizi grași saturați',
+    carbohydrates: 'Glucide',
+    sugars: 'Zaharuri',
+    proteins: 'Proteine',
+    salt: 'Sare',
+    countryOfOrigin: 'Țara de origine',
+    placeOfOrigin: 'Locul de origine',
+    productionVariants: 'Variante de producție',
+    certifications: 'Certificări',
+    instructionsForUse: 'Instrucțiuni de utilizare',
+    conservationConditions: 'Condiții de conservare',
+    drainedWeight: 'Greutate scursă',
+    operatorData: 'Date operator',
+    operatorName: 'Numele operatorului',
+    operatorAddress: 'Adresa operatorului',
+    registration: 'Înregistrare',
+    grams: 'grame',
+    centiliters: 'centilitri'
+  },
+  nl: {
+    reference: 'Referentie',
+    nutritionalInfo: 'Voedingswaarde-informatie',
+    additionalDetails: 'Aanvullende details',
+    name: 'Naam',
+    eanCode: 'EAN-code',
+    foodName: 'Naam van het levensmiddel',
+    ingredients: 'Ingrediënten',
+    netQuantity: 'Nettohoeveelheid',
+    alcohol: 'Alcohol',
+    energyValue: 'Energiewaarde',
+    fats: 'Vetten',
+    saturatedFats: 'Verzadigde vetzuren',
+    carbohydrates: 'Koolhydraten',
+    sugars: 'Suikers',
+    proteins: 'Eiwitten',
+    salt: 'Zout',
+    countryOfOrigin: 'Land van oorsprong',
+    placeOfOrigin: 'Plaats van oorsprong',
+    productionVariants: 'Productievarianten',
+    certifications: 'Certificeringen',
+    instructionsForUse: 'Gebruiksaanwijzing',
+    conservationConditions: 'Bewaaromstandigheden',
+    drainedWeight: 'Uitlekgewicht',
+    operatorData: 'Gegevens exploitant',
+    operatorName: 'Naam exploitant',
+    operatorAddress: 'Adres exploitant',
+    registration: 'Registratie',
+    grams: 'gram',
+    centiliters: 'centiliter'
+  },
+  sv: {
+    reference: 'Referens',
+    nutritionalInfo: 'Näringsinnehåll',
+    additionalDetails: 'Ytterligare detaljer',
+    name: 'Namn',
+    eanCode: 'EAN-kod',
+    foodName: 'Livsmedlets namn',
+    ingredients: 'Ingredienser',
+    netQuantity: 'Nettomängd',
+    alcohol: 'Alkohol',
+    energyValue: 'Energivärde',
+    fats: 'Fett',
+    saturatedFats: 'Mättat fett',
+    carbohydrates: 'Kolhydrater',
+    sugars: 'Sockerarter',
+    proteins: 'Protein',
+    salt: 'Salt',
+    countryOfOrigin: 'Ursprungsland',
+    placeOfOrigin: 'Ursprungsort',
+    productionVariants: 'Produktionsvarianter',
+    certifications: 'Certifieringar',
+    instructionsForUse: 'Bruksanvisning',
+    conservationConditions: 'Förvaringsvillkor',
+    drainedWeight: 'Avrunnen vikt',
+    operatorData: 'Operatörsdata',
+    operatorName: 'Operatörens namn',
+    operatorAddress: 'Operatörens adress',
+    registration: 'Registrering',
+    grams: 'gram',
+    centiliters: 'centiliter'
+  },
+  da: {
+    reference: 'Reference',
+    nutritionalInfo: 'Næringsindhold',
+    additionalDetails: 'Yderligere detaljer',
+    name: 'Navn',
+    eanCode: 'EAN-kode',
+    foodName: 'Fødevarens navn',
+    ingredients: 'Ingredienser',
+    netQuantity: 'Nettomængde',
+    alcohol: 'Alkohol',
+    energyValue: 'Energiværdi',
+    fats: 'Fedt',
+    saturatedFats: 'Mættet fedt',
+    carbohydrates: 'Kulhydrater',
+    sugars: 'Sukkerarter',
+    proteins: 'Protein',
+    salt: 'Salt',
+    countryOfOrigin: 'Oprindelsesland',
+    placeOfOrigin: 'Oprindelsessted',
+    productionVariants: 'Produktionsvarianter',
+    certifications: 'Certificeringer',
+    instructionsForUse: 'Brugsanvisning',
+    conservationConditions: 'Opbevaringsbetingelser',
+    drainedWeight: 'Afvandet vægt',
+    operatorData: 'Operatørdata',
+    operatorName: 'Operatørens navn',
+    operatorAddress: 'Operatørens adresse',
+    registration: 'Registrering',
+    grams: 'gram',
+    centiliters: 'centiliter'
+  },
+  bg: {
+    reference: 'Референция',
+    nutritionalInfo: 'Хранителна информация',
+    additionalDetails: 'Допълнителни детайли',
+    name: 'Име',
+    eanCode: 'EAN код',
+    foodName: 'Наименование на храната',
+    ingredients: 'Съставки',
+    netQuantity: 'Нетно количество',
+    alcohol: 'Алкохол',
+    energyValue: 'Енергийна стойност',
+    fats: 'Мазнини',
+    saturatedFats: 'Наситени мастни киселини',
+    carbohydrates: 'Въглехидрати',
+    sugars: 'Захари',
+    proteins: 'Белтъци',
+    salt: 'Сол',
+    countryOfOrigin: 'Страна на произход',
+    placeOfOrigin: 'Място на произход',
+    productionVariants: 'Производствени варианти',
+    certifications: 'Сертификати',
+    instructionsForUse: 'Инструкции за употреба',
+    conservationConditions: 'Условия за съхранение',
+    drainedWeight: 'Отцедено тегло',
+    operatorData: 'Данни за оператора',
+    operatorName: 'Име на оператора',
+    operatorAddress: 'Адрес на оператора',
+    registration: 'Регистрация',
+    grams: 'грама',
+    centiliters: 'сантилитра'
+  },
+  cs: {
+    reference: 'Reference',
+    nutritionalInfo: 'Výživové údaje',
+    additionalDetails: 'Další podrobnosti',
+    name: 'Název',
+    eanCode: 'EAN kód',
+    foodName: 'Název potraviny',
+    ingredients: 'Složení',
+    netQuantity: 'Čisté množství',
+    alcohol: 'Alkohol',
+    energyValue: 'Energetická hodnota',
+    fats: 'Tuky',
+    saturatedFats: 'Nasycené mastné kyseliny',
+    carbohydrates: 'Sacharidy',
+    sugars: 'Cukry',
+    proteins: 'Bílkoviny',
+    salt: 'Sůl',
+    countryOfOrigin: 'Země původu',
+    placeOfOrigin: 'Místo původu',
+    productionVariants: 'Výrobní varianty',
+    certifications: 'Certifikace',
+    instructionsForUse: 'Návod k použití',
+    conservationConditions: 'Podmínky skladování',
+    drainedWeight: 'Hmotnost po odkapání',
+    operatorData: 'Údaje o provozovateli',
+    operatorName: 'Jméno provozovatele',
+    operatorAddress: 'Adresa provozovatele',
+    registration: 'Registrace',
+    grams: 'gramů',
+    centiliters: 'centilitrů'
+  },
+  sk: {
+    reference: 'Referencia',
+    nutritionalInfo: 'Výživové údaje',
+    additionalDetails: 'Ďalšie podrobnosti',
+    name: 'Názov',
+    eanCode: 'EAN kód',
+    foodName: 'Názov potraviny',
+    ingredients: 'Zloženie',
+    netQuantity: 'Čisté množstvo',
+    alcohol: 'Alkohol',
+    energyValue: 'Energetická hodnota',
+    fats: 'Tuky',
+    saturatedFats: 'Nasýtené mastné kyseliny',
+    carbohydrates: 'Sacharidy',
+    sugars: 'Cukry',
+    proteins: 'Bielkoviny',
+    salt: 'Soľ',
+    countryOfOrigin: 'Krajina pôvodu',
+    placeOfOrigin: 'Miesto pôvodu',
+    productionVariants: 'Výrobné varianty',
+    certifications: 'Certifikácie',
+    instructionsForUse: 'Návod na použitie',
+    conservationConditions: 'Podmienky skladovania',
+    drainedWeight: 'Hmotnosť po odkvapkaní',
+    operatorData: 'Údaje o prevádzkovateľovi',
+    operatorName: 'Meno prevádzkovateľa',
+    operatorAddress: 'Adresa prevádzkovateľa',
+    registration: 'Registrácia',
+    grams: 'gramov',
+    centiliters: 'centilitrov'
+  },
+  sl: {
+    reference: 'Referenca',
+    nutritionalInfo: 'Hranilne vrednosti',
+    additionalDetails: 'Dodatne podrobnosti',
+    name: 'Ime',
+    eanCode: 'EAN koda',
+    foodName: 'Ime živila',
+    ingredients: 'Sestavine',
+    netQuantity: 'Neto količina',
+    alcohol: 'Alkohol',
+    energyValue: 'Energijska vrednost',
+    fats: 'Maščobe',
+    saturatedFats: 'Nasičene maščobe',
+    carbohydrates: 'Ogljikovi hidrati',
+    sugars: 'Sladkorji',
+    proteins: 'Beljakovine',
+    salt: 'Sol',
+    countryOfOrigin: 'Država porekla',
+    placeOfOrigin: 'Kraj porekla',
+    productionVariants: 'Proizvodne variante',
+    certifications: 'Certifikati',
+    instructionsForUse: 'Navodila za uporabo',
+    conservationConditions: 'Pogoji shranjevanja',
+    drainedWeight: 'Odcejena teža',
+    operatorData: 'Podatki o nosilcu',
+    operatorName: 'Ime nosilca',
+    operatorAddress: 'Naslov nosilca',
+    registration: 'Registracija',
+    grams: 'gramov',
+    centiliters: 'centilitrov'
+  },
+  hr: {
+    reference: 'Referenca',
+    nutritionalInfo: 'Hranjive vrijednosti',
+    additionalDetails: 'Dodatni detalji',
+    name: 'Naziv',
+    eanCode: 'EAN kod',
+    foodName: 'Naziv hrane',
+    ingredients: 'Sastojci',
+    netQuantity: 'Neto količina',
+    alcohol: 'Alkohol',
+    energyValue: 'Energetska vrijednost',
+    fats: 'Masti',
+    saturatedFats: 'Zasićene masne kiseline',
+    carbohydrates: 'Ugljikohidrati',
+    sugars: 'Šećeri',
+    proteins: 'Bjelančevine',
+    salt: 'Sol',
+    countryOfOrigin: 'Zemlja podrijetla',
+    placeOfOrigin: 'Mjesto podrijetla',
+    productionVariants: 'Proizvodne varijante',
+    certifications: 'Certifikati',
+    instructionsForUse: 'Upute za uporabu',
+    conservationConditions: 'Uvjeti čuvanja',
+    drainedWeight: 'Ocijeđena masa',
+    operatorData: 'Podaci o subjektu',
+    operatorName: 'Ime subjekta',
+    operatorAddress: 'Adresa subjekta',
+    registration: 'Registracija',
+    grams: 'grama',
+    centiliters: 'centilitara'
+  },
+  lv: {
+    reference: 'Atsauce',
+    nutritionalInfo: 'Uzturvērtība',
+    additionalDetails: 'Papildu informācija',
+    name: 'Nosaukums',
+    eanCode: 'EAN kods',
+    foodName: 'Pārtikas produkta nosaukums',
+    ingredients: 'Sastāvdaļas',
+    netQuantity: 'Neto daudzums',
+    alcohol: 'Alkohols',
+    energyValue: 'Enerģētiskā vērtība',
+    fats: 'Tauki',
+    saturatedFats: 'Piesātinātās taukskābes',
+    carbohydrates: 'Ogļhidrātī',
+    sugars: 'Cukuri',
+    proteins: 'Olbaltumvielas',
+    salt: 'Sāls',
+    countryOfOrigin: 'Izcelsmes valsts',
+    placeOfOrigin: 'Izcelsmes vieta',
+    productionVariants: 'Ražošanas varianti',
+    certifications: 'Sertifikāti',
+    instructionsForUse: 'Lietošanas instrukcija',
+    conservationConditions: 'Uzglabāšanas nosacījumi',
+    drainedWeight: 'Masa pēc notecināšanas',
+    operatorData: 'Operatora dati',
+    operatorName: 'Operatora nosaukums',
+    operatorAddress: 'Operatora adrese',
+    registration: 'Reģistrācija',
+    grams: 'grami',
+    centiliters: 'centilitri'
+  },
+  lt: {
+    reference: 'Nuoroda',
+    nutritionalInfo: 'Maistinė vertė',
+    additionalDetails: 'Papildoma informacija',
+    name: 'Pavadinimas',
+    eanCode: 'EAN kodas',
+    foodName: 'Maisto produkto pavadinimas',
+    ingredients: 'Sudedamosios dalys',
+    netQuantity: 'Grynasis kiekis',
+    alcohol: 'Alkoholis',
+    energyValue: 'Energinė vertė',
+    fats: 'Riebalai',
+    saturatedFats: 'Sočiosios riebalų rūgštys',
+    carbohydrates: 'Angliavandeniai',
+    sugars: 'Cukrūs',
+    proteins: 'Baltymai',
+    salt: 'Druska',
+    countryOfOrigin: 'Kilmės šalis',
+    placeOfOrigin: 'Kilmės vieta',
+    productionVariants: 'Gamybos variantai',
+    certifications: 'Sertifikatai',
+    instructionsForUse: 'Vartojimo instrukcija',
+    conservationConditions: 'Laikymo sąlygos',
+    drainedWeight: 'Masė po nusausinimo',
+    operatorData: 'Operatoriaus duomenys',
+    operatorName: 'Operatoriaus pavadinimas',
+    operatorAddress: 'Operatoriaus adresas',
+    registration: 'Registracija',
+    grams: 'gramai',
+    centiliters: 'centilitrai'
+  },
+  fi: {
+    reference: 'Viite',
+    nutritionalInfo: 'Ravintosisältö',
+    additionalDetails: 'Lisätiedot',
+    name: 'Nimi',
+    eanCode: 'EAN-koodi',
+    foodName: 'Elintarvikkeen nimi',
+    ingredients: 'Ainesosat',
+    netQuantity: 'Sisällön määrä',
+    alcohol: 'Alkoholi',
+    energyValue: 'Energiasisältö',
+    fats: 'Rasvat',
+    saturatedFats: 'Tyydyttyneet rasvat',
+    carbohydrates: 'Hiilihydraatit',
+    sugars: 'Sokerit',
+    proteins: 'Proteiinit',
+    salt: 'Suola',
+    countryOfOrigin: 'Alkuperämaa',
+    placeOfOrigin: 'Alkuperäpaikka',
+    productionVariants: 'Tuotantovariantit',
+    certifications: 'Sertifikaatit',
+    instructionsForUse: 'Käyttöohjeet',
+    conservationConditions: 'Säilytysolosuhteet',
+    drainedWeight: 'Valutettu paino',
+    operatorData: 'Toimijan tiedot',
+    operatorName: 'Toimijan nimi',
+    operatorAddress: 'Toimijan osoite',
+    registration: 'Rekisteröinti',
+    grams: 'grammaa',
+    centiliters: 'senttilitraa'
+  },
+  et: {
+    reference: 'Viide',
+    nutritionalInfo: 'Toitumisalane teave',
+    additionalDetails: 'Lisaandmed',
+    name: 'Nimi',
+    eanCode: 'EAN-kood',
+    foodName: 'Toidu nimetus',
+    ingredients: 'Koostisosad',
+    netQuantity: 'Netokogus',
+    alcohol: 'Alkohol',
+    energyValue: 'Energiasisaldus',
+    fats: 'Rasvad',
+    saturatedFats: 'Küllastunud rasvhapped',
+    carbohydrates: 'Süsivesikud',
+    sugars: 'Suhkrud',
+    proteins: 'Valgud',
+    salt: 'Sool',
+    countryOfOrigin: 'Päritoluriik',
+    placeOfOrigin: 'Päritolukoht',
+    productionVariants: 'Tootmisvariandid',
+    certifications: 'Sertifikaadid',
+    instructionsForUse: 'Kasutusjuhend',
+    conservationConditions: 'Säilitamistingimused',
+    drainedWeight: 'Nõrutatud kaal',
+    operatorData: 'Käitleja andmed',
+    operatorName: 'Käitleja nimi',
+    operatorAddress: 'Käitleja aadress',
+    registration: 'Registreerimine',
+    grams: 'grammi',
+    centiliters: 'sentiliitrit'
+  },
+  hu: {
+    reference: 'Hivatkozás',
+    nutritionalInfo: 'Tápértékadatok',
+    additionalDetails: 'További részletek',
+    name: 'Név',
+    eanCode: 'EAN-kód',
+    foodName: 'Élelmiszer megnevezése',
+    ingredients: 'Összetevők',
+    netQuantity: 'Nettó mennyiség',
+    alcohol: 'Alkohol',
+    energyValue: 'Energiatartalom',
+    fats: 'Zsír',
+    saturatedFats: 'Telített zsírsavak',
+    carbohydrates: 'Szénhidrát',
+    sugars: 'Cukrok',
+    proteins: 'Fehérje',
+    salt: 'Só',
+    countryOfOrigin: 'Származási ország',
+    placeOfOrigin: 'Származási hely',
+    productionVariants: 'Gyártási változatok',
+    certifications: 'Tanúsítványok',
+    instructionsForUse: 'Használati útmutató',
+    conservationConditions: 'Tárolási feltételek',
+    drainedWeight: 'Töltőtömeg',
+    operatorData: 'Üzemeltető adatai',
+    operatorName: 'Üzemeltető neve',
+    operatorAddress: 'Üzemeltető címe',
+    registration: 'Nyilvántartás',
+    grams: 'gramm',
+    centiliters: 'centiliter'
+  },
+  ga: {
+    reference: 'Tagairt',
+    nutritionalInfo: 'Faisnéis chothaitheach',
+    additionalDetails: 'Sonraí breise',
+    name: 'Ainm',
+    eanCode: 'Cód EAN',
+    foodName: 'Ainm an bhia',
+    ingredients: 'Comhábhair',
+    netQuantity: 'Glanmhéid',
+    alcohol: 'Alcól',
+    energyValue: 'Luach fuinnimh',
+    fats: 'Saillte',
+    saturatedFats: 'Saillte sáithithe',
+    carbohydrates: 'Carbaihiodráití',
+    sugars: 'Siúcraí',
+    proteins: 'Próitéiní',
+    salt: 'Salann',
+    countryOfOrigin: 'Tír thionscnaimh',
+    placeOfOrigin: 'Áit thionscnaimh',
+    productionVariants: 'Leaganacha táirgthe',
+    certifications: 'Deimhnithe',
+    instructionsForUse: 'Treoracha úsáide',
+    conservationConditions: 'Coinníollacha caomhnaithe',
+    drainedWeight: 'Meáchan draenáilte',
+    operatorData: 'Sonraí an oibreora',
+    operatorName: 'Ainm an oibreora',
+    operatorAddress: 'Seoladh an oibreora',
+    registration: 'Clárú',
+    grams: 'gram',
+    centiliters: 'ceintilítear'
+  },
+  mt: {
+    reference: 'Referenza',
+    nutritionalInfo: 'Informazzjoni dwar in-nutrizzjoni',
+    additionalDetails: 'Dettalji addizzjonali',
+    name: 'Isem',
+    eanCode: 'Kodiċi EAN',
+    foodName: 'Isem tal-ikel',
+    ingredients: 'Ingredjenti',
+    netQuantity: 'Kwantità netta',
+    alcohol: 'Alkoħol',
+    energyValue: 'Valur enerġetiku',
+    fats: 'Xaħmijiet',
+    saturatedFats: 'Xaħmijiet saturati',
+    carbohydrates: 'Karboidrati',
+    sugars: 'Zokkor',
+    proteins: 'Proteini',
+    salt: 'Melħ',
+    countryOfOrigin: 'Pajjiż tal-oriġini',
+    placeOfOrigin: 'Post tal-oriġini',
+    productionVariants: 'Varjanti tal-produzzjoni',
+    certifications: 'Ċertifikazzjonijiet',
+    instructionsForUse: 'Struzzjonijiet għall-użu',
+    conservationConditions: 'Kundizzjonijiet ta\' konservazzjoni',
+    drainedWeight: 'Piż imnixxef',
+    operatorData: 'Data tal-operatur',
+    operatorName: 'Isem l-operatur',
+    operatorAddress: 'Indirizz tal-operatur',
+    registration: 'Reġistrazzjoni',
+    grams: 'grammi',
+    centiliters: 'ċentilitri'
+  },
+  el: {
+    reference: 'Αναφορά',
+    nutritionalInfo: 'Διατροφικές πληροφορίες',
+    additionalDetails: 'Πρόσθετες λεπτομέρειες',
+    name: 'Όνομα',
+    eanCode: 'Κωδικός EAN',
+    foodName: 'Ονομασία τροφίμου',
+    ingredients: 'Συστατικά',
+    netQuantity: 'Καθαρή ποσότητα',
+    alcohol: 'Αλκοόλ',
+    energyValue: 'Ενεργειακή αξία',
+    fats: 'Λιπαρά',
+    saturatedFats: 'Κορεσμένα λιπαρά',
+    carbohydrates: 'Υδατάνθρακες',
+    sugars: 'Σάκχαρα',
+    proteins: 'Πρωτεΐνες',
+    salt: 'Αλάτι',
+    countryOfOrigin: 'Χώρα προέλευσης',
+    placeOfOrigin: 'Τόπος προέλευσης',
+    productionVariants: 'Παραλλαγές παραγωγής',
+    certifications: 'Πιστοποιήσεις',
+    instructionsForUse: 'Οδηγίες χρήσης',
+    conservationConditions: 'Συνθήκες διατήρησης',
+    drainedWeight: 'Στραγγισμένο βάρος',
+    operatorData: 'Στοιχεία υπευθύνου',
+    operatorName: 'Όνομα υπευθύνου',
+    operatorAddress: 'Διεύθυνση υπευθύνου',
+    registration: 'Καταχώριση',
+    grams: 'γραμμάρια',
+    centiliters: 'εκατοστόλιτρα'
+  },
+  eu: {
+    reference: 'Erreferentzia',
+    nutritionalInfo: 'Nutrizio informazioa',
+    additionalDetails: 'Xehetasun gehigarriak',
+    name: 'Izena',
+    eanCode: 'EAN kodea',
+    foodName: 'Elikagaiaren izena',
+    ingredients: 'Osagaiak',
+    netQuantity: 'Kantitate garbia',
+    alcohol: 'Alkohola',
+    energyValue: 'Energia balioa',
+    fats: 'Koipeak',
+    saturatedFats: 'Gantz aseak',
+    carbohydrates: 'Karbohidratoak',
+    sugars: 'Azukreak',
+    proteins: 'Proteinak',
+    salt: 'Gatza',
+    countryOfOrigin: 'Jatorrizko herrialdea',
+    placeOfOrigin: 'Jatorrizko tokia',
+    productionVariants: 'Ekoizpen aldaerak',
+    certifications: 'Ziurtagiriak',
+    instructionsForUse: 'Erabilera argibideak',
+    conservationConditions: 'Kontserbazio baldintzak',
+    drainedWeight: 'Xukaturiko pisua',
+    operatorData: 'Operadorearen datuak',
+    operatorName: 'Operadorearen izena',
+    operatorAddress: 'Operadorearen helbidea',
+    registration: 'Erregistroa',
+    grams: 'gramo',
+    centiliters: 'zentilitro'
   }
-}
-
-export async function translateWine(wine: any, targetLanguage: SupportedLanguage) {
-  if (targetLanguage === 'es') return wine;
-
-  const translatedWine = { ...wine };
-
-  // Translate basic fields except for specific ones
-  // Do not translate: name, operatorName, placeOfOrigin, operatorAddress
-  translatedWine.foodName = await translateText(wine.foodName, targetLanguage);
-  if (wine.instructionsForUse) {
-    translatedWine.instructionsForUse = await translateText(wine.instructionsForUse, targetLanguage);
-  }
-  if (wine.conservationConditions) {
-    translatedWine.conservationConditions = await translateText(wine.conservationConditions, targetLanguage);
-  }
-  translatedWine.countryOfOrigin = await translateText(wine.countryOfOrigin, targetLanguage);
-  if (wine.wineryInformation) {
-    translatedWine.wineryInformation = await translateText(wine.wineryInformation, targetLanguage);
-  }
-
-  // Translate ingredients
-  if (wine.ingredients?.length > 0) {
-    translatedWine.ingredients = await Promise.all(
-      wine.ingredients.map(async (ingredient: any) => ({
-        ...ingredient,
-        name: await translateText(ingredient.name, targetLanguage),
-      }))
-    );
-  }
-
-  // Translate production variants
-  if (wine.productionVariants?.length > 0) {
-    translatedWine.productionVariants = await Promise.all(
-      wine.productionVariants.map(async (variant: any) => ({
-        ...variant,
-        variantName: await translateText(variant.variantName, targetLanguage),
-      }))
-    );
-  }
-
-  // Translate certifications
-  if (wine.certifications?.length > 0) {
-    translatedWine.certifications = await Promise.all(
-      wine.certifications.map(async (cert: any) => ({
-        ...cert,
-        name: await translateText(cert.name, targetLanguage),
-      }))
-    );
-  }
-
-  return translatedWine;
-}
-
-export async function getUILabels(targetLanguage: SupportedLanguage): Promise<Labels> {
-  if (Object.keys(uiLabels[targetLanguage] || {}).length > 0) {
-    return uiLabels[targetLanguage] as Labels;
-  }
-
-  const spanishLabels = uiLabels.es as Labels;
-  const translatedLabels: Partial<Labels> = {};
-
-  for (const [key, value] of Object.entries(spanishLabels)) {
-    translatedLabels[key as keyof Labels] = await translateText(value, targetLanguage);
-  }
-
-  return translatedLabels as Labels;
-} 
+}; 

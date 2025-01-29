@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import { WinePublicView } from "@/components/wine-public-view";
 import { PublicNavbar } from "@/components/public-navbar";
-import { uiLabels, type Labels } from "@/lib/translate";
+import { uiLabels } from "@/lib/translate";
 import { TranslationServiceClient } from '@google-cloud/translate';
 
 // Initialize translation client
@@ -16,36 +16,6 @@ const translationClient = new TranslationServiceClient({
 
 const projectId = process.env.GOOGLE_TRANSLATE_PROJECT_ID!;
 const location = 'global';
-
-const languageOptions = {
-  es: 'Español',
-  ca: 'Català/Valencià',
-  eu: 'Euskara',
-  gl: 'Galego',
-  bg: 'Български',
-  cs: 'Čeština',
-  da: 'Dansk',
-  de: 'Deutsch',
-  el: 'Ελληνικά',
-  en: 'English',
-  et: 'Eesti keel',
-  fi: 'Suomi',
-  fr: 'Français',
-  ga: 'Gaeilge',
-  hr: 'Hrvatski',
-  it: 'Italiano',
-  lv: 'Latviešu valoda',
-  lt: 'Lietuvių kalba',
-  hu: 'Magyar',
-  mt: 'Malti',
-  nl: 'Nederlands',
-  pl: 'Polski',
-  pt: 'Português',
-  ro: 'Română',
-  sk: 'Slovenčina',
-  sl: 'Slovenščina',
-  sv: 'Svenska'
-};
 
 export type Ingredient = {
   id: string;
@@ -121,7 +91,7 @@ async function translateText(text: string, targetLanguage: string) {
   }
 }
 
-async function translateWineLocal(wine: Wine, targetLanguage: string) {
+async function translateWine(wine: Wine, targetLanguage: string) {
   if (targetLanguage === 'es') return wine;
 
   const translatedWine = { ...wine };
@@ -233,31 +203,13 @@ export default async function PublicWineViewPage({
   }
 
   const lang = searchParams.lang || 'es';
-  const translatedWine = await translateWineLocal(wine, lang);
-  const labels = (uiLabels[lang as keyof typeof uiLabels] || uiLabels.es) as Labels;
+  const translatedWine = await translateWine(wine, lang);
+  const labels = uiLabels[lang as keyof typeof uiLabels] || uiLabels.es;
 
   return (
     <div className="min-h-screen flex flex-col">
       <PublicNavbar />
       <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        <div className="mb-4">
-          <select 
-            className="block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            onChange={(e) => {
-              const newLang = e.target.value;
-              const url = new URL(window.location.href);
-              url.searchParams.set('lang', newLang);
-              window.location.href = url.toString();
-            }}
-            value={lang}
-          >
-            {Object.entries(languageOptions).map(([code, name]) => (
-              <option key={code} value={code}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </div>
         <WinePublicView wine={translatedWine} labels={labels} />
       </main>
     </div>
