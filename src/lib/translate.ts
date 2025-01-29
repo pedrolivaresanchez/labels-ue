@@ -127,7 +127,7 @@ export async function translateWine(wine: any, targetLanguage: string) {
         }
         return {
           ...cert,
-          name: await translateText(cert.name, targetLanguage),
+          certificationName: await translateText(cert.certificationName, targetLanguage),
           description: cert.description ? await translateText(cert.description, targetLanguage) : undefined
         };
       })

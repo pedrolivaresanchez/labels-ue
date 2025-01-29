@@ -360,7 +360,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       <div className="text-base sm:text-lg">
                         {wine.certifications.map((cert, index) => (
                           <span key={index}>
-                            {cert.name}
+                            {cert.certificationName}
                             {index < wine.certifications.length - 1 ? ', ' : ''}
                           </span>
                         ))}

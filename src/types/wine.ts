@@ -64,6 +64,7 @@ export interface Wine {
   }>;
   certifications: Array<{
     certificationName: string;
+    description?: string;
   }>;
   production_variants?: Array<{
     variant_name: string;

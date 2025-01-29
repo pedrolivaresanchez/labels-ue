@@ -57,7 +57,10 @@ export type Wine = {
   }[];
   productionVariants: { variantName: string }[];
   disclaimerIcons: { iconName: string }[];
-  certifications: { name: string }[];
+  certifications: Array<{
+    certificationName: string;
+    description?: string;
+  }>;
   image_url?: string;
   countryOfOrigin: string;
   placeOfOrigin: string;
@@ -135,7 +138,7 @@ async function translateWine(wine: Wine, targetLanguage: string) {
     translatedWine.certifications = await Promise.all(
       wine.certifications.map(async (cert) => ({
         ...cert,
-        name: await translateText(cert.name, targetLanguage),
+        certificationName: await translateText(cert.certificationName, targetLanguage),
       }))
     );
   }
