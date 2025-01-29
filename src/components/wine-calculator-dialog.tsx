@@ -237,31 +237,32 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
                     <h3 className="text-sm font-medium text-muted-foreground">Valores nutricionales por 100ml</h3>
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-6 w-6">
+                        <Button variant="outline" size="sm" className="h-8 gap-2">
                           <Info className="h-4 w-4" />
+                          Tolerancias UE
                         </Button>
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="sm:max-w-[600px]">
                         <DialogHeader>
                           <DialogTitle>Tolerancias en la declaración nutricional</DialogTitle>
-                          <DialogDescription className="space-y-4 pt-4 text-foreground">
-                            <p>
-                              En las directrices de etiquetado nutricional de la UE (EU 1169/2011), se puede usar `0g` para indicar 
-                              niveles insignificantes de grasas, grasas saturadas, proteínas y sal. Estas directrices se encuentran 
-                              en la sección 6, tabla 4 de los documentos de orientación de la UE sobre etiquetado nutricional.
-                            </p>
-                            <p>
-                              Usted es responsable de declarar los valores que excedan estas tolerancias, aunque cuando se trata de 
-                              vinos típicos, muchos expertos sugieren que no se necesitan pruebas adicionales si los valores están 
-                              dentro de estas tolerancias. Las tolerancias permitidas para el vino están armonizadas dentro de la UE.
-                            </p>
-                            <p>
-                              Para vinos con menos de 100 g/l de azúcar (que es el caso de la mayoría de los vinos excepto los vinos 
-                              dulces), se permite una tolerancia de 2 g/100 ml (equivalente a 20 g/l) para la declaración de azúcares 
-                              e hidratos de carbono.
-                            </p>
-                          </DialogDescription>
                         </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <p className="text-sm text-muted-foreground">
+                            En las directrices de etiquetado nutricional de la UE (EU 1169/2011), se puede usar "0g" para indicar 
+                            niveles insignificantes de grasas, grasas saturadas, proteínas y sal. Estas directrices se encuentran 
+                            en la sección 6, tabla 4 de los documentos de orientación de la UE sobre etiquetado nutricional.
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Usted es responsable de declarar los valores que excedan estas tolerancias, aunque cuando se trata de 
+                            vinos típicos, muchos expertos sugieren que no se necesitan pruebas adicionales si los valores están 
+                            dentro de estas tolerancias. Las tolerancias permitidas para el vino están armonizadas dentro de la UE.
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Para vinos con menos de 100 g/l de azúcar (que es el caso de la mayoría de los vinos excepto los vinos 
+                            dulces), se permite una tolerancia de 2 g/100 ml (equivalente a 20 g/l) para la declaración de azúcares 
+                            e hidratos de carbono.
+                          </p>
+                        </div>
                       </DialogContent>
                     </Dialog>
                   </div>
