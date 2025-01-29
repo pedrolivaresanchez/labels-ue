@@ -55,7 +55,7 @@ interface FormData {
   optionalLabelling: string;
   countryOfOrigin: string;
   placeOfOrigin: string;
-  wineryInformation: string;
+  wineryInformation?: string | null;
   instructionsForUse: string;
   conservationConditions: string;
   drainedWeightGrams: number;
@@ -746,17 +746,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                     <p className="text-sm text-muted-foreground">
                       Región específica de origen del vino (ej: Ribera del Duero, Rioja, Penedès, etc.).
                     </p>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="wineryInformation">Información de la bodega</Label>
-                    <Input 
-                      id="wineryInformation" 
-                      name="wineryInformation" 
-                      defaultValue={initialData?.winery_information}
-                      required 
-                      onChange={handleInputChange}
-                    />
                   </div>
                 </div>
               </CardContent>

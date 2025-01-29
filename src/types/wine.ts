@@ -47,7 +47,7 @@ export interface Wine {
   optional_labelling: string | null;
   country_of_origin: string;
   place_of_origin: string;
-  winery_information: string;
+  winery_information?: string | null;
   instructions_for_use: string | null;
   conservation_conditions: string | null;
   drained_weight_grams: number | null;
@@ -90,7 +90,7 @@ export interface WineFormData {
   optionalLabelling: string;
   countryOfOrigin: string;
   placeOfOrigin: string;
-  wineryInformation: string;
+  wineryInformation?: string | null;
   instructionsForUse: string;
   conservationConditions: string;
   drainedWeightGrams: number;

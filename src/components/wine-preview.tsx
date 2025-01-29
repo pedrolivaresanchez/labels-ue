@@ -91,6 +91,13 @@ export function WinePreview({ formData }: WinePreviewProps) {
     }
   }, [formData.imageUrl]);
 
+  const renderValue = (value: string | number | null | undefined) => {
+    if (value === null || value === undefined || value === 0 || value === '') {
+      return '-';
+    }
+    return value;
+  };
+
   return (
     <div className="max-h-[calc(100vh-8rem)] overflow-y-auto pr-6 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full">
       <Dialog open={showDimensionsDialog} onOpenChange={setShowDimensionsDialog}>
@@ -283,13 +290,13 @@ export function WinePreview({ formData }: WinePreviewProps) {
                 <CardContent className="space-y-4 p-6">
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">País de origen</h3>
-                    <p className="text-lg">{formData.countryOfOrigin || '-'}</p>
+                    <p className="text-lg">{renderValue(formData.countryOfOrigin)}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">Lugar de procedencia</h3>
-                    <p className="text-lg">{formData.placeOfOrigin || '-'}</p>
+                    <p className="text-lg">{renderValue(formData.placeOfOrigin)}</p>
                   </div>
-                  {formData.productionVariants.length > 0 && (
+                  {formData.productionVariants?.length > 0 && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Variantes de producción</h3>
                       {formData.productionVariants.map((variant, index) => (
@@ -297,7 +304,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
                       ))}
                     </div>
                   )}
-                  {formData.certifications.length > 0 && (
+                  {formData.certifications?.length > 0 && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Certificaciones</h3>
                       {formData.certifications.map((cert, index) => (
@@ -317,12 +324,12 @@ export function WinePreview({ formData }: WinePreviewProps) {
                       <p className="text-lg">{formData.conservationConditions}</p>
                     </div>
                   )}
-                  {formData.drainedWeightGrams && (
+                  {formData.drainedWeightGrams ? (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">Peso escurrido</h3>
                       <p className="text-lg">{formData.drainedWeightGrams} Gramos</p>
                     </div>
-                  )}
+                  ) : null}
                 </CardContent>
               </Card>
 
