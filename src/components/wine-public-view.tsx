@@ -6,7 +6,38 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Wine } from "@/app/public/wines/[id]/page";
 import Image from "next/image";
-import { uiLabels } from "@/lib/translate";
+
+type Labels = {
+  reference: string;
+  nutritionalInfo: string;
+  additionalDetails: string;
+  name: string;
+  eanCode: string;
+  foodName: string;
+  ingredients: string;
+  netQuantity: string;
+  alcohol: string;
+  energyValue: string;
+  fats: string;
+  saturatedFats: string;
+  carbohydrates: string;
+  sugars: string;
+  proteins: string;
+  salt: string;
+  countryOfOrigin: string;
+  placeOfOrigin: string;
+  productionVariants: string;
+  certifications: string;
+  instructionsForUse: string;
+  conservationConditions: string;
+  drainedWeight: string;
+  operatorData: string;
+  operatorName: string;
+  operatorAddress: string;
+  registration: string;
+  grams: string;
+  centiliters: string;
+}
 
 function NutritionalInfoSkeleton() {
   return (
@@ -121,9 +152,7 @@ function WineViewSkeleton() {
   );
 }
 
-function NutritionalInfo({ wine, lang = 'es' }: { wine: Wine; lang?: string }) {
-  const labels = uiLabels[lang as keyof typeof uiLabels] || uiLabels.es;
-
+function NutritionalInfo({ wine, labels }: { wine: Wine; labels: Labels }) {
   return (
     <Table>
       <TableBody>
@@ -164,9 +193,7 @@ function NutritionalInfo({ wine, lang = 'es' }: { wine: Wine; lang?: string }) {
   );
 }
 
-export function WinePublicView({ wine, lang = 'es' }: { wine: Wine; lang?: string }) {
-  const labels = uiLabels[lang as keyof typeof uiLabels] || uiLabels.es;
-
+export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels }) {
   return (
     <div className="max-w-3xl mx-auto px-6 sm:px-8">
       {/* Image Section - Full width on mobile */}
@@ -279,7 +306,7 @@ export function WinePublicView({ wine, lang = 'es' }: { wine: Wine; lang?: strin
               <Card>
                 <CardContent className="p-6">
                   <h3 className="text-sm font-medium text-muted-foreground mb-4">100 ml</h3>
-                  <NutritionalInfo wine={wine} lang={lang} />
+                  <NutritionalInfo wine={wine} labels={labels} />
                 </CardContent>
               </Card>
 

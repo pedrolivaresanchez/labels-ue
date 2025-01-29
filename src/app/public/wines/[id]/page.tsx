@@ -2,7 +2,6 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import { WinePublicView } from "@/components/wine-public-view";
 import { PublicNavbar } from "@/components/public-navbar";
-import { translateWine } from "@/lib/translate";
 
 export type Ingredient = {
   id: string;
@@ -103,6 +102,27 @@ async function getWine(id: string): Promise<Wine | null> {
 
 export const revalidate = 3600; // Revalidate every hour
 
+async function getTranslatedData(wine: Wine, lang: string) {
+  const baseUrl = process.env.VERCEL_URL ? 
+    `https://${process.env.VERCEL_URL}` : 
+    'http://localhost:3000';
+
+  const response = await fetch(`${baseUrl}/api/translate?lang=${lang}`, {
+    method: 'POST',
+    body: JSON.stringify(wine),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    console.error('Translation failed:', await response.text());
+    return { wine, labels: {} };
+  }
+
+  return response.json();
+}
+
 export default async function PublicWineViewPage({
   params,
   searchParams,
@@ -117,15 +137,13 @@ export default async function PublicWineViewPage({
   }
 
   const lang = searchParams.lang || 'es';
-
-  // Translate the wine data if a language is specified
-  const translatedWine = await translateWine(wine, lang);
+  const { wine: translatedWine, labels } = await getTranslatedData(wine, lang);
 
   return (
     <div className="min-h-screen flex flex-col">
       <PublicNavbar />
       <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        <WinePublicView wine={translatedWine} lang={lang} />
+        <WinePublicView wine={translatedWine} labels={labels} />
       </main>
     </div>
   );
