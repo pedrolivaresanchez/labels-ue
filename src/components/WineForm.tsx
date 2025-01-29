@@ -476,7 +476,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       onChange={handleInputChange}
                     />
                     <p className="text-sm text-muted-foreground">
-                      Si es vino tinto, indicar "Vino tinto". Si es vino blanco, "Vino blanco". Para vinos especiales, indicar su denominación específica según normativa (ej: "Vino de licor", "Vino espumoso", etc.).
+                      Indicar tipo de vino: tinto, blanco, espumoso, de licor, etc.
                     </p>
                   </div>
                 </div>

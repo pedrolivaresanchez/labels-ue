@@ -92,7 +92,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
   }, [formData.imageUrl]);
 
   return (
-    <div className="max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg border bg-card text-card-foreground shadow-sm">
+    <div className="max-h-[calc(100vh-8rem)] overflow-y-auto pr-6 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-thumb]:rounded-full">
       <Dialog open={showDimensionsDialog} onOpenChange={setShowDimensionsDialog}>
         <DialogContent>
           <DialogHeader>
