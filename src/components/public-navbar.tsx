@@ -10,41 +10,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const languages = [
-  { code: 'es', name: 'Español' },
-  { code: 'en', name: 'English' },
-  { code: 'fr', name: 'Français' },
-  { code: 'de', name: 'Deutsch' },
-  { code: 'it', name: 'Italiano' },
-  { code: 'ca', name: 'Català' },
-  { code: 'gl', name: 'Galego' },
-  { code: 'eu', name: 'Euskara' },
-  { code: 'bg', name: 'Български' },
-  { code: 'cs', name: 'Čeština' },
-  { code: 'da', name: 'Dansk' },
-  { code: 'el', name: 'Ελληνικά' },
-  { code: 'et', name: 'Eesti' },
-  { code: 'fi', name: 'Suomi' },
-  { code: 'ga', name: 'Gaeilge' },
-  { code: 'hr', name: 'Hrvatski' },
-  { code: 'hu', name: 'Magyar' },
-  { code: 'lv', name: 'Latviešu' },
-  { code: 'lt', name: 'Lietuvių' },
-  { code: 'mt', name: 'Malti' },
-  { code: 'nl', name: 'Nederlands' },
-  { code: 'pl', name: 'Polski' },
-  { code: 'pt', name: 'Português' },
-  { code: 'ro', name: 'Română' },
-  { code: 'sk', name: 'Slovenčina' },
-  { code: 'sl', name: 'Slovenščina' },
-  { code: 'sv', name: 'Svenska' }
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+  { code: 'ca', name: 'Català', flag: '🏴󠁥󠁳󠁣󠁴󠁿' },
+  { code: 'gl', name: 'Galego', flag: '🏴󠁥󠁳󠁧󠁡󠁿' },
+  { code: 'eu', name: 'Euskara', flag: '🏴󠁥󠁳󠁰󠁶󠁿' },
+  { code: 'bg', name: 'Български', flag: '🇧🇬' },
+  { code: 'cs', name: 'Čeština', flag: '🇨🇿' },
+  { code: 'da', name: 'Dansk', flag: '🇩🇰' },
+  { code: 'el', name: 'Ελληνικά', flag: '🇬🇷' },
+  { code: 'et', name: 'Eesti', flag: '🇪🇪' },
+  { code: 'fi', name: 'Suomi', flag: '🇫🇮' },
+  { code: 'ga', name: 'Gaeilge', flag: '🇮🇪' },
+  { code: 'hr', name: 'Hrvatski', flag: '🇭🇷' },
+  { code: 'hu', name: 'Magyar', flag: '🇭🇺' },
+  { code: 'lv', name: 'Latviešu', flag: '🇱🇻' },
+  { code: 'lt', name: 'Lietuvių', flag: '🇱🇹' },
+  { code: 'mt', name: 'Malti', flag: '🇲🇹' },
+  { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
+  { code: 'pl', name: 'Polski', flag: '🇵🇱' },
+  { code: 'pt', name: 'Português', flag: '🇵🇹' },
+  { code: 'ro', name: 'Română', flag: '🇷🇴' },
+  { code: 'sk', name: 'Slovenčina', flag: '🇸🇰' },
+  { code: 'sl', name: 'Slovenščina', flag: '🇸🇮' },
+  { code: 'sv', name: 'Svenska', flag: '🇸🇪' }
 ];
 
 export function PublicNavbar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentLang = searchParams.get('lang') || 'es';
+  const currentLanguage = languages.find(lang => lang.code === currentLang);
 
   const handleLanguageChange = (value: string) => {
     const url = new URL(window.location.href);
@@ -67,15 +69,29 @@ export function PublicNavbar() {
         </Link>
         
         <Select value={currentLang} onValueChange={handleLanguageChange}>
-          <SelectTrigger className="w-[140px]">
-            <SelectValue />
+          <SelectTrigger className="w-[180px]">
+            <SelectValue>
+              <span className="flex items-center gap-2">
+                <span>{currentLanguage?.flag}</span>
+                <span>{currentLanguage?.name}</span>
+              </span>
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            {languages.map((lang) => (
-              <SelectItem key={lang.code} value={lang.code}>
-                {lang.name}
-              </SelectItem>
-            ))}
+            <ScrollArea className="h-[300px]">
+              {languages.map((lang) => (
+                <SelectItem 
+                  key={lang.code} 
+                  value={lang.code}
+                  className="flex items-center gap-2"
+                >
+                  <span className="flex items-center gap-2">
+                    <span>{lang.flag}</span>
+                    <span>{lang.name}</span>
+                  </span>
+                </SelectItem>
+              ))}
+            </ScrollArea>
           </SelectContent>
         </Select>
       </div>
