@@ -6,13 +6,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calculator } from "lucide-react";
+import { Calculator, HelpCircle, Info } from "lucide-react";
 import { useState, useEffect } from "react";
-import { HelpCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -134,20 +134,17 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
                 <div className="grid gap-2">
                   <Label htmlFor="alcohol">
                     Alcohol por Volumen
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="max-w-xs">El contenido de alcohol en porcentaje por volumen.</p>
-                      </TooltipContent>
-                    </Tooltip>
                   </Label>
                   <div className="flex items-center gap-2">
                     <Input
                       id="alcohol"
                       value={alcoholByVolume}
-                      onChange={(e) => setAlcoholByVolume(e.target.value)}
+                      onChange={(e) => {
+                        setAlcoholByVolume(e.target.value);
+                        // Actualizar automáticamente el glicerol
+                        const abv = parseFloat(e.target.value) || 0;
+                        setGlycerol((abv * 0.79).toFixed(1));
+                      }}
                       placeholder="13.5"
                       className="flex-1"
                       type="number"
@@ -159,14 +156,6 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
                 <div className="grid gap-2">
                   <Label htmlFor="sugar">
                     Azúcar Residual
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="max-w-xs">La cantidad de azúcar que queda después de la fermentación.</p>
-                      </TooltipContent>
-                    </Tooltip>
                   </Label>
                   <div className="flex items-center gap-2">
                     <Input
@@ -189,7 +178,12 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
                         <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p className="max-w-xs">El contenido total de ácido del vino.</p>
+                        <p className="max-w-xs">
+                          Proporciona la acidez total para obtener un cálculo más preciso de la energía. 
+                          Puedes introducir 0 para la acidez total, lo que podría causar una variación en el resultado final. 
+                          Alternativamente, puedes usar valores generalmente aceptados según la categoría de tu producto. 
+                          Siempre recomendamos consultar con asesores legales y autoridades reguladoras para confirmación final.
+                        </p>
                       </TooltipContent>
                     </Tooltip>
                   </Label>
@@ -214,7 +208,10 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
                         <HelpCircle className="ml-1 inline h-3 w-3 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p className="max-w-xs">El contenido de glicerol producido durante la fermentación.</p>
+                        <p className="max-w-xs">
+                          Para la mayoría de los vinos, el contenido de glicerol se puede aproximar multiplicando el contenido 
+                          de alcohol por 0,79. Este campo se actualiza automáticamente basado en el alcohol introducido.
+                        </p>
                       </TooltipContent>
                     </Tooltip>
                   </Label>
@@ -236,7 +233,38 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
             <div className="space-y-4">
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-4">Valores nutricionales por 100ml</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-medium text-muted-foreground">Valores nutricionales por 100ml</h3>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-6 w-6">
+                          <Info className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Tolerancias en la declaración nutricional</DialogTitle>
+                          <DialogDescription className="space-y-4 pt-4 text-foreground">
+                            <p>
+                              En las directrices de etiquetado nutricional de la UE (EU 1169/2011), se puede usar `0g` para indicar 
+                              niveles insignificantes de grasas, grasas saturadas, proteínas y sal. Estas directrices se encuentran 
+                              en la sección 6, tabla 4 de los documentos de orientación de la UE sobre etiquetado nutricional.
+                            </p>
+                            <p>
+                              Usted es responsable de declarar los valores que excedan estas tolerancias, aunque cuando se trata de 
+                              vinos típicos, muchos expertos sugieren que no se necesitan pruebas adicionales si los valores están 
+                              dentro de estas tolerancias. Las tolerancias permitidas para el vino están armonizadas dentro de la UE.
+                            </p>
+                            <p>
+                              Para vinos con menos de 100 g/l de azúcar (que es el caso de la mayoría de los vinos excepto los vinos 
+                              dulces), se permite una tolerancia de 2 g/100 ml (equivalente a 20 g/l) para la declaración de azúcares 
+                              e hidratos de carbono.
+                            </p>
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                   <Table>
                     <TableBody>
                       <TableRow>
