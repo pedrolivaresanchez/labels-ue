@@ -59,8 +59,16 @@ export async function translateText(text: string, targetLanguage: string) {
 
     const [response] = await translationClient.translateText(request);
     return response.translations?.[0]?.translatedText || text;
-  } catch (error) {
+  } catch (error: any) {
+    // Log the error but don't show it to the user
     console.error('Translation error:', error);
+    
+    // For quota errors, we can implement a fallback or retry mechanism
+    if (error.code === 8) { // RESOURCE_EXHAUSTED
+      console.log('Translation quota exceeded, using original text');
+    }
+    
+    // Return the original text if translation fails
     return text;
   }
 }
@@ -113,10 +121,16 @@ export async function translateWine(wine: any, targetLanguage: string) {
   // Translate certifications
   if (wine.certifications?.length > 0) {
     translatedWine.certifications = await Promise.all(
-      wine.certifications.map(async (cert: any) => ({
-        ...cert,
-        name: await translateText(cert.name, targetLanguage),
-      }))
+      wine.certifications.map(async (cert: any) => {
+        if (typeof cert === 'string') {
+          return await translateText(cert, targetLanguage);
+        }
+        return {
+          ...cert,
+          name: await translateText(cert.name, targetLanguage),
+          description: cert.description ? await translateText(cert.description, targetLanguage) : undefined
+        };
+      })
     );
   }
 
