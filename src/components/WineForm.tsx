@@ -461,6 +461,9 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       required 
                       onChange={handleInputChange}
                     />
+                    <p className="text-sm text-muted-foreground">
+                      Introduce el código EAN-13 del producto (código de barras).
+                    </p>
                   </div>
 
                   <div className="grid gap-2">
@@ -472,6 +475,9 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       required 
                       onChange={handleInputChange}
                     />
+                    <p className="text-sm text-muted-foreground">
+                      Nombre legal del producto según la normativa de la UE.
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -481,19 +487,24 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
             <Card>
               <CardHeader>
                 <CardTitle>Información nutricional</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Introduce los valores nutricionales medios por 100 ml. Utiliza la calculadora para obtener los valores de energía en kJ y kcal. 
+                  Los valores se redondearán automáticamente como se muestra en la vista previa.
+                </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4">
                   <div className="flex justify-end">
                     <WineCalculatorDialog 
                       onCalculate={(values) => {
+                        const abv = parseFloat(document.getElementById('alcohol')?.getAttribute('data-abv') || '0');
                         setFormData(prev => ({
                           ...prev,
                           energyKj: values.energyKj,
                           energyKcal: values.energyKcal,
                           carbohydrate: values.carbohydrate,
                           sugars: values.sugars,
-                          // Valores por defecto para vino
+                          alcoholPercentage: abv,
                           fat: 0,
                           saturatedFat: 0,
                           protein: 0.1,
@@ -506,6 +517,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                           energyKcal: values.energyKcal,
                           carbohydrate: values.carbohydrate,
                           sugars: values.sugars,
+                          alcoholPercentage: abv,
                           fat: 0,
                           saturatedFat: 0,
                           protein: 0.1,
@@ -653,7 +665,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="alcoholPercentage">Porcentaje de alcohol</Label>
+                      <Label htmlFor="alcoholPercentage">Alcohol por Volumen % (Vol.)</Label>
                       <Input 
                         id="alcoholPercentage" 
                         name="alcoholPercentage" 
@@ -752,11 +764,14 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
             <Card>
               <CardHeader>
                 <CardTitle>Información del operador</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Datos de la bodega o empresa responsable del producto.
+                </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="operatorName">Nombre del operador</Label>
+                    <Label htmlFor="operatorName">Nombre de la bodega</Label>
                     <Input 
                       id="operatorName" 
                       name="operatorName" 
@@ -767,7 +782,7 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="operatorAddress">Dirección del operador</Label>
+                    <Label htmlFor="operatorAddress">Dirección de la bodega</Label>
                     <Input 
                       id="operatorAddress" 
                       name="operatorAddress" 
@@ -786,6 +801,9 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                       required 
                       onChange={handleInputChange}
                     />
+                    <p className="text-sm text-muted-foreground">
+                      Número de registro sanitario de la bodega.
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -841,6 +859,9 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
             <Card>
               <CardHeader>
                 <CardTitle>Ingredientes</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Lista los ingredientes en orden descendente de peso. Marca la casilla si el ingrediente es un alérgeno.
+                </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-4">
@@ -896,6 +917,9 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
             <Card>
               <CardHeader>
                 <CardTitle>Certificaciones</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Añade las certificaciones del vino (D.O., agricultura ecológica, etc.).
+                </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-4">

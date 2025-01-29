@@ -92,7 +92,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
   }, [formData.imageUrl]);
 
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="max-h-[calc(100vh-8rem)] overflow-y-auto rounded-lg border bg-card text-card-foreground shadow-sm">
       <Dialog open={showDimensionsDialog} onOpenChange={setShowDimensionsDialog}>
         <DialogContent>
           <DialogHeader>

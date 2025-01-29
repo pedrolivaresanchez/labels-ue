@@ -65,6 +65,12 @@ export function WineCalculatorDialog({ onCalculate }: WineCalculatorDialogProps)
       sugars: result.sugars,
     };
 
+    // Store the ABV value in the alcohol input for the form to use
+    const alcoholInput = document.getElementById('alcohol');
+    if (alcoholInput) {
+      alcoholInput.setAttribute('data-abv', abv.toString());
+    }
+
     setPreview(values);
     onCalculate(values);
     setOpen(false);
