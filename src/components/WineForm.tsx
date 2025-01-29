@@ -493,7 +493,31 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
                           energyKcal: values.energyKcal,
                           carbohydrate: values.carbohydrate,
                           sugars: values.sugars,
+                          // Valores por defecto para vino
+                          fat: 0,
+                          saturatedFat: 0,
+                          protein: 0.1,
+                          salt: 0,
                         }));
+
+                        // Actualizar los valores en los inputs
+                        const inputs = {
+                          energyKj: values.energyKj,
+                          energyKcal: values.energyKcal,
+                          carbohydrate: values.carbohydrate,
+                          sugars: values.sugars,
+                          fat: 0,
+                          saturatedFat: 0,
+                          protein: 0.1,
+                          salt: 0,
+                        };
+
+                        Object.entries(inputs).forEach(([key, value]) => {
+                          const input = document.getElementById(key) as HTMLInputElement;
+                          if (input) {
+                            input.value = value.toString();
+                          }
+                        });
                       }}
                     />
                   </div>
