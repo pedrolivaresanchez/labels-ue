@@ -36,6 +36,7 @@ interface FormCertification {
 interface WineFormProps {
   initialData?: Wine;
   isEditing?: boolean;
+  defaultOpen?: boolean;
 }
 
 interface FormData {
@@ -73,7 +74,7 @@ interface FormData {
   }>;
 }
 
-export function WineForm({ initialData, isEditing = false }: WineFormProps) {
+export function WineForm({ initialData, isEditing = false, defaultOpen = false }: WineFormProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
@@ -383,17 +384,16 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
   }
 
   return (
-    <>
-      <div className="grid lg:grid-cols-[1fr,400px] gap-8">
+    <div>
+      <div className="grid lg:grid-cols-[1fr,400px] gap-8 items-start">
         <form onSubmit={onSubmit} className="space-y-8">
-          <div className="space-y-8">
-            {/* Basic Information */}
+          <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Información básica</CardTitle>
+                <CardTitle>Información del producto</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid gap-4">
+                <div className="space-y-8">
                   {/* Image Upload */}
                   <div className="grid gap-4">
                     <Label>Imagen del producto</Label>
@@ -484,13 +484,12 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardContent>
             </Card>
 
-            {/* Nutritional Information */}
             <Card>
               <CardHeader>
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center justify-between">
                     <CardTitle>Información nutricional</CardTitle>
-                    <Dialog>
+                    <Dialog defaultOpen={defaultOpen}>
                       <DialogTrigger asChild>
                         <Button variant="outline" size="sm" className="gap-2">
                           <Info className="h-4 w-4" />
@@ -680,7 +679,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardContent>
             </Card>
 
-            {/* Product Details */}
             <Card>
               <CardHeader>
                 <CardTitle>Detalles del producto</CardTitle>
@@ -753,7 +751,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardContent>
             </Card>
 
-            {/* Origin Information */}
             <Card>
               <CardHeader>
                 <CardTitle>Origen y procedencia</CardTitle>
@@ -788,7 +785,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardContent>
             </Card>
 
-            {/* Operator Information */}
             <Card>
               <CardHeader>
                 <CardTitle>Información del operador</CardTitle>
@@ -837,7 +833,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardContent>
             </Card>
 
-            {/* Additional Information */}
             <Card>
               <CardHeader>
                 <CardTitle>Información adicional</CardTitle>
@@ -883,7 +878,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardContent>
             </Card>
 
-            {/* Ingredients */}
             <Card>
               <CardHeader>
                 <CardTitle>Ingredientes</CardTitle>
@@ -941,7 +935,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
               </CardContent>
             </Card>
 
-            {/* Certifications */}
             <Card>
               <CardHeader>
                 <CardTitle>Certificaciones</CardTitle>
@@ -1032,6 +1025,6 @@ export function WineForm({ initialData, isEditing = false }: WineFormProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   )
 }
