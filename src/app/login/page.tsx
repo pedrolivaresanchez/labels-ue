@@ -25,15 +25,12 @@ export default function LoginPage() {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <Image
-          src="https://images.unsplash.com/photo-1528823872057-9c018a7a7553?q=80&w=2940&auto=format&fit=crop"
-          alt="Wine cellar with bottles"
+          src="/images/vinoveo-bottle.webp"
+          alt="Botella de vino VinoVeo"
           fill
           className="object-cover dark:brightness-[0.2] dark:grayscale"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
-        <div className="absolute bottom-4 right-4 text-xs text-white/50">
-          Photo by Unsplash
-        </div>
       </div>
     </div>
   );
