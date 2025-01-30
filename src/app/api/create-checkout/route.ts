@@ -55,17 +55,7 @@ export async function POST() {
       client_reference_id: user.id,
       line_items: [
         {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: 'Suscripción Anual VinoVeo',
-              description: 'Acceso completo a todas las funcionalidades de VinoVeo durante un año',
-            },
-            unit_amount: 5000, // 50 EUR
-            recurring: {
-              interval: 'year',
-            },
-          },
+          price: 'price_1OyQPtJxJOGgPxGxGPBPPGXB', // ID del precio asociado al producto prod_RgDBXNmKuw8kuA
           quantity: 1,
         },
       ],
