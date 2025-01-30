@@ -8,6 +8,12 @@ const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SEC
   apiVersion: '2024-12-18.acacia',
 }) : null;
 
+// Asegurarnos de que tenemos el ID del precio
+const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID;
+if (!STRIPE_PRICE_ID) {
+  console.error('Missing STRIPE_PRICE_ID environment variable');
+}
+
 export async function POST() {
   try {
     if (!stripe) {
@@ -16,6 +22,14 @@ export async function POST() {
         { status: 500 }
       );
     }
+
+    if (!STRIPE_PRICE_ID) {
+      return NextResponse.json(
+        { error: 'Stripe price configuration is missing' },
+        { status: 500 }
+      );
+    }
+
     const headersList = await headers();
     const origin = headersList.get('origin') || process.env.NEXT_PUBLIC_BASE_URL;
     
@@ -55,7 +69,7 @@ export async function POST() {
       client_reference_id: user.id,
       line_items: [
         {
-          price: 'price_1OyQPtJxJOGgPxGxGPBPPGXB', // ID del precio asociado al producto prod_RgDBXNmKuw8kuA
+          price: STRIPE_PRICE_ID,
           quantity: 1,
         },
       ],
