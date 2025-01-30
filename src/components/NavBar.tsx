@@ -99,6 +99,14 @@ export default function Navbar() {
       });
 
       if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        
+        if (data.code === 'TEST_MODE_SUBSCRIPTION') {
+          alert('Tu suscripción necesita ser renovada. Te redirigiremos a la página de pago.');
+          router.push('/payment');
+          return;
+        }
+        
         throw new Error('Failed to create portal session');
       }
 

@@ -38,13 +38,35 @@ export async function POST() {
       return new NextResponse("No active subscription found", { status: 404 });
     }
 
-    // Create a Stripe Portal Session
-    const portalSession = await stripe.billingPortal.sessions.create({
-      customer: subscriptionData.stripe_customer_id,
-      return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/wines`,
-    });
+    try {
+      // Create a Stripe Portal Session
+      const portalSession = await stripe.billingPortal.sessions.create({
+        customer: subscriptionData.stripe_customer_id,
+        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/wines`,
+      });
 
-    return NextResponse.json({ url: portalSession.url });
+      return NextResponse.json({ url: portalSession.url });
+    } catch (stripeError: any) {
+      // Check if this is a test mode vs live mode error
+      if (stripeError.type === 'StripeInvalidRequestError' && 
+          stripeError.raw?.message?.includes('test mode')) {
+        // Delete the test mode subscription from the database
+        await supabase
+          .from('subscriptions')
+          .delete()
+          .eq('user_id', session.user.id);
+
+        return new NextResponse(
+          JSON.stringify({
+            error: "Your subscription needs to be renewed for the live environment",
+            code: "TEST_MODE_SUBSCRIPTION"
+          }), 
+          { status: 400 }
+        );
+      }
+      
+      throw stripeError; // Re-throw other errors to be caught by the outer catch block
+    }
   } catch (error) {
     console.error("[STRIPE_PORTAL_SESSION_ERROR]", error);
     return new NextResponse("Internal error", { status: 500 });
