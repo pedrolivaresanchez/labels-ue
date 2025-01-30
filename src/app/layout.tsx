@@ -1,12 +1,23 @@
-import "./globals.css";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Footer } from "@/components/footer";
+import "./globals.css";
+import ClientLayout from "@/components/client-layout";
+import { PublicFooter } from "@/components/public-footer";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "VinoVeo - Etiquetado de vinos conforme a la UE",
-  description: "Crea y gestiona etiquetas de vino conformes con la normativa de la UE",
+export const metadata: Metadata = {
+  title: "Vinoveo",
+  description: "Gestión de etiquetado de vinos",
+  icons: {
+    icon: [
+      {
+        url: "/icons/vinoveo.png",
+        href: "/icons/vinoveo.png",
+      }
+    ],
+  }
 };
 
 export default function RootLayout({
@@ -18,11 +29,14 @@ export default function RootLayout({
     <html lang="es">
       <body className={inter.className}>
         <div className="min-h-screen flex flex-col">
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
+          <ClientLayout>
+            <main className="flex-1">
+              {children}
+            </main>
+          </ClientLayout>
+          <PublicFooter />
         </div>
+        <Toaster />
       </body>
     </html>
   );
