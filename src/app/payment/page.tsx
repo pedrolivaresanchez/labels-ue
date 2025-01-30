@@ -4,9 +4,8 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Sparkles, Wine, QrCode, Clock, Shield, Star, HeartHandshake } from "lucide-react";
+import { Check, Sparkles, Wine, QrCode, Clock, Shield, Star, HeartHandshake, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
 import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -61,7 +60,7 @@ export default function PaymentPage() {
         <div className="pt-4">
           <div className="flex items-center justify-center mb-4">
             <span className="text-4xl font-bold">50€</span>
-            <Badge variant="secondary" className="ml-2">por año</Badge>
+            <Badge variant="secondary" className="ml-2">/año</Badge>
           </div>
           <p className="text-center text-sm text-muted-foreground mb-6">
             Menos de 5€ al mes - Facturación anual
@@ -139,13 +138,8 @@ export default function PaymentPage() {
         >
           {isLoading ? (
             <>
-              <span className="mr-2">Procesando</span>
-              <Image
-                src="/spinner.gif"
-                alt="Loading"
-                width={20}
-                height={20}
-              />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Procesando
             </>
           ) : (
             'Comenzar ahora'

@@ -28,6 +28,12 @@ export function PublicFooter() {
           >
             Términos y Condiciones
           </Link>
+          <Link 
+            href="/privacy" 
+            className="text-sm text-muted-foreground hover:underline"
+          >
+            Política de Privacidad
+          </Link>
           <Dialog>
             <DialogTrigger className="text-sm text-muted-foreground hover:underline">
               Aviso Legal
