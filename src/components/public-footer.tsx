@@ -23,7 +23,7 @@ export function PublicFooter() {
         </div>
         <div className="flex items-center gap-4">
           <Link 
-            href="/legal/terminos-y-condiciones" 
+            href="/terms" 
             className="text-sm text-muted-foreground hover:underline"
           >
             Términos y Condiciones

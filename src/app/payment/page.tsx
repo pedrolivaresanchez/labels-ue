@@ -153,7 +153,7 @@ export default function PaymentPage() {
         </Button>
 
         <p className="text-center text-sm text-muted-foreground">
-          Pago seguro con Stripe. IVA incluido.
+          Pago seguro con Stripe.
         </p>
       </Card>
     </div>
