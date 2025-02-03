@@ -79,7 +79,13 @@ async function getWine(id: string): Promise<Wine> {
 
   const { data: wine, error } = await supabase
     .from('wines')
-    .select('*')
+    .select(`
+      *,
+      certifications (
+        id,
+        certification_name
+      )
+    `)
     .eq('id', id)
     .eq('user_id', session.user.id)
     .single();

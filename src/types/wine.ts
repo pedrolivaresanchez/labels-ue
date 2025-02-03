@@ -1,5 +1,5 @@
 export interface Ingredient {
-  isAllergen: any;
+  isAllergen: boolean;
   id?: string;
   wine_id?: string;
   ingredient_name: string;
@@ -13,7 +13,6 @@ export interface ProductionVariant {
 }
 
 export interface Certification {
-  certificationName: any;
   id?: string;
   wine_id?: string;
   certification_name: string;
@@ -64,7 +63,6 @@ export interface Wine {
   }>;
   certifications: Array<{
     certificationName: string;
-    description?: string;
   }>;
   production_variants?: Array<{
     variant_name: string;
