@@ -199,7 +199,6 @@ export async function POST(req: Request) {
 
         if (certificationsError) {
           console.error("[CERTIFICATIONS_CREATE]", certificationsError);
-          throw certificationsError;
         }
       }
     }

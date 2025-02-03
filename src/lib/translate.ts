@@ -121,10 +121,16 @@ export async function translateWine(wine: any, targetLanguage: string) {
   // Translate certifications
   if (wine.certifications?.length > 0) {
     translatedWine.certifications = await Promise.all(
-      wine.certifications.map(async (cert: any) => ({
-        ...cert,
-        certification_name: await translateText(cert.certification_name, targetLanguage)
-      }))
+      wine.certifications.map(async (cert: any) => {
+        if (typeof cert === 'string') {
+          return await translateText(cert, targetLanguage);
+        }
+        return {
+          ...cert,
+          certificationName: await translateText(cert.certificationName, targetLanguage),
+          description: cert.description ? await translateText(cert.description, targetLanguage) : undefined
+        };
+      })
     );
   }
 
