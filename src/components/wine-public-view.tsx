@@ -354,7 +354,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       </div>
                     </div>
                   )}
-                  {wine.certifications && wine.certifications.length > 0 && (
+                  {wine.certifications && wine.certifications.length > 0 && wine.certifications[0].certificationName && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">{labels.certifications}</h3>
                       <div className="text-base sm:text-lg">
