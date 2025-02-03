@@ -47,12 +47,16 @@ export default function Navbar() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [loadingPortal, setLoadingPortal] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        checkSubscription(session.user.id);
+      }
     });
 
     // Listen for auth changes
@@ -60,11 +64,23 @@ export default function Navbar() {
       setUser(session?.user ?? null);
       if (!session) {
         router.push('/login');
+      } else {
+        checkSubscription(session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, [router, supabase]);
+
+  const checkSubscription = async (userId: string) => {
+    const { data: subscription } = await supabase
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+    
+    setHasActiveSubscription(!!subscription);
+  };
 
   const handleSignOut = async () => {
     try {
@@ -167,19 +183,21 @@ export default function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[200px]">
                 <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
-                <DropdownMenuItem 
-                  onClick={handleAccountSettings}
-                  disabled={loadingPortal}
-                >
-                  {loadingPortal ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Cargando...
-                    </>
-                  ) : (
-                    'Ajustes de cuenta'
-                  )}
-                </DropdownMenuItem>
+                {hasActiveSubscription && (
+                  <DropdownMenuItem 
+                    onClick={handleAccountSettings}
+                    disabled={loadingPortal}
+                  >
+                    {loadingPortal ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Cargando...
+                      </>
+                    ) : (
+                      'Ajustes de cuenta'
+                    )}
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleSignOut}
@@ -237,21 +255,23 @@ export default function Navbar() {
                 <div className="text-sm font-medium text-muted-foreground">
                   {getDisplayName(user)}
                 </div>
-                <Button
-                  onClick={handleAccountSettings}
-                  disabled={loadingPortal}
-                  variant="outline"
-                  className="w-full"
-                >
-                  {loadingPortal ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Cargando...
-                    </>
-                  ) : (
-                    'Ajustes de cuenta'
-                  )}
-                </Button>
+                {hasActiveSubscription && (
+                  <Button
+                    onClick={handleAccountSettings}
+                    disabled={loadingPortal}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    {loadingPortal ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Cargando...
+                      </>
+                    ) : (
+                      'Ajustes de cuenta'
+                    )}
+                  </Button>
+                )}
                 <Button
                   onClick={handleSignOut}
                   disabled={isLoading}
