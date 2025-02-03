@@ -226,7 +226,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
           <div className="flex justify-center items-center gap-4 pt-2">
             <div className="text-center">
               <h3 className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">{labels.netQuantity}</h3>
-              <p className="text-lg sm:text-2xl font-semibold">{wine.netQuantityCl} {labels.centiliters}</p>
+              <p className="text-lg sm:text-2xl font-semibold">{wine.netQuantityCl} {labels.centiliters}{wine.hasEstimationSign ? ' ℮' : ''}</p>
             </div>
             <div className="w-px h-8 bg-border" /> {/* Vertical divider */}
             <div className="text-center">
@@ -238,25 +238,30 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
       </Card>
 
       {/* Warning Icons - Centered on mobile */}
-      <div className="flex justify-center gap-4 mb-8">
-        <Image
-          src="/icons/cervezas_mas18.png"
-          alt="Solo mayores de 18"
-          width={50}
-          height={50}
-        />
-        <Image
-          src="/icons/cervezas_e.png"
-          alt="No conducir"
-          width={50}
-          height={50}
-        />
-        <Image
-          src="/icons/cervezas_c.png"
-          alt="No embarazadas"
-          width={50}
-          height={50}
-        />
+      <div className="flex flex-col items-center gap-4 mb-8">
+        <div className="flex justify-center gap-4">
+          <Image
+            src="/icons/cervezas_mas18.png"
+            alt="Solo mayores de 18"
+            width={50}
+            height={50}
+          />
+          <Image
+            src="/icons/cervezas_e.png"
+            alt="No conducir"
+            width={50}
+            height={50}
+          />
+          <Image
+            src="/icons/cervezas_c.png"
+            alt="No embarazadas"
+            width={50}
+            height={50}
+          />
+        </div>
+        <p className="text-sm text-center text-muted-foreground">
+          Contiene alcohol, consumir con moderación.
+        </p>
       </div>
 
       <Accordion type="multiple" defaultValue={["referencia", "informacion-nutricional", "detalles"]} className="w-full space-y-4">
@@ -300,6 +305,11 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                         </span>
                       ))}
                     </div>
+                    {wine.ingredients.some(ingredient => ingredient.isAllergen) && (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        Contiene sulfitos
+                      </p>
+                    )}
                   </div>
                 </CardContent>
               </Card>

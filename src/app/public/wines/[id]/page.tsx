@@ -51,6 +51,7 @@ export type Wine = {
   salt: number;
   netQuantityCl: number;
   alcoholPercentage: number;
+  hasEstimationSign: boolean;
   ingredients: { 
     name: string;
     isAllergen: boolean;
@@ -173,6 +174,7 @@ async function getWine(id: string): Promise<Wine | null> {
     salt: wine.salt,
     netQuantityCl: wine.net_quantity_cl,
     alcoholPercentage: wine.alcohol_percentage,
+    hasEstimationSign: wine.has_estimation_sign,
     ingredients: wine.ingredients || [],
     productionVariants: wine.production_variants || [],
     disclaimerIcons: wine.disclaimer_icons || [],
