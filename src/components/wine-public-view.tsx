@@ -259,7 +259,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
         />
       </div>
 
-      <Accordion type="single" collapsible defaultValue="referencia" className="w-full space-y-4">
+      <Accordion type="multiple" defaultValue={["referencia", "informacion-nutricional", "detalles"]} className="w-full space-y-4">
         <AccordionItem value="referencia">
           <AccordionTrigger className="text-lg sm:text-xl font-semibold">{labels.reference}</AccordionTrigger>
           <AccordionContent>
