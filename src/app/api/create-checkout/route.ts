@@ -31,7 +31,7 @@ export async function POST() {
       );
     }
 
-    const session = await stripe.checkout.sessions.create({
+    const params: Stripe.Checkout.SessionCreateParams = {
       mode: 'subscription',
       customer_email: user.email,
       line_items: [
@@ -43,7 +43,44 @@ export async function POST() {
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/payment/cancel`,
       client_reference_id: user.id,
-    });
+      billing_address_collection: 'required',
+      tax_id_collection: { enabled: true },
+      customer_update: {
+        address: 'auto',
+        name: 'auto',
+      },
+      invoice_creation: {
+        enabled: true,
+        invoice_data: {
+          description: 'Suscripción Anual VinoVeo',
+          rendering_options: {
+            amount_tax_display: 'include_inclusive_tax'
+          },
+          footer: 'VinoVeo - Etiquetado de vinos conforme a la normativa UE',
+        }
+      },
+      phone_number_collection: {
+        enabled: true
+      },
+      custom_fields: [
+        {
+          key: 'tax_id_type',
+          label: {
+            type: 'custom',
+            custom: 'Tipo de identificación fiscal'
+          },
+          type: 'dropdown',
+          dropdown: {
+            options: [
+              { label: 'NIF/CIF', value: 'nif' },
+              { label: 'NIE', value: 'nie' }
+            ]
+          }
+        }
+      ]
+    };
+
+    const session = await stripe.checkout.sessions.create(params);
 
     return NextResponse.json({ sessionId: session.id });
   } catch (error) {
