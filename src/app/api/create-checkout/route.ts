@@ -8,7 +8,7 @@ const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SEC
   apiVersion: '2024-12-18.acacia',
 }) : null;
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     if (!stripe) {
       return NextResponse.json(
@@ -44,16 +44,45 @@ export async function POST() {
       cancel_url: `${origin}/payment/cancel`,
       client_reference_id: user.id,
       billing_address_collection: 'required',
-      tax_id_collection: { enabled: true },
-      customer_update: {
-        address: 'auto',
-        name: 'auto',
+      custom_fields: [
+        {
+          key: 'tax_id',
+          label: {
+            type: 'custom',
+            custom: 'NIF/CIF',
+          },
+          type: 'text',
+        },
+        {
+          key: 'company_name',
+          label: {
+            type: 'custom',
+            custom: 'Nombre de la empresa',
+          },
+          type: 'text',
+          optional: true,
+        },
+        {
+          key: 'phone',
+          label: {
+            type: 'custom',
+            custom: 'Teléfono',
+          },
+          type: 'text',
+          optional: true,
+        }
+      ],
+      invoice_creation: {
+        enabled: true,
       },
       payment_intent_data: {
-        description: 'Suscripción Anual VinoVeo',
+        capture_method: 'automatic',
+        setup_future_usage: 'off_session',
       },
-      metadata: {
-        user_id: user.id,
+      subscription_data: {
+        metadata: {
+          requires_invoice: 'true',
+        },
       },
     });
 
