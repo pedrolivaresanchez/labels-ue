@@ -4,8 +4,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Sparkles, Wine, QrCode, Clock, Shield, Star, HeartHandshake, Loader2 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Check, Loader2 } from "lucide-react";
 import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -22,14 +21,14 @@ export default function PaymentPage() {
 
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
       });
 
-      const { sessionId, error } = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error creating checkout session');
+      }
 
-      if (error) throw new Error(error);
+      const { sessionId } = await response.json();
 
       const result = await stripe.redirectToCheckout({ sessionId });
 
@@ -48,9 +47,6 @@ export default function PaymentPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <Card className="w-full max-w-md p-8 space-y-6">
         <div className="flex flex-col items-center text-center space-y-4">
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Sparkles className="h-6 w-6 text-primary" />
-          </div>
           <h1 className="text-2xl font-semibold">Plan Premium</h1>
           <p className="text-muted-foreground">
             Gestiona tus etiquetas de vino de forma profesional
@@ -67,63 +63,49 @@ export default function PaymentPage() {
           </p>
         </div>
 
-        <Separator />
-
         <div className="space-y-4">
-          <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-              <Wine className="h-4 w-4 text-primary" />
-            </div>
+          <div className="flex items-start gap-3">
+            <Check className="h-5 w-5 mt-0.5" />
             <div>
               <span className="font-medium">Etiquetas ilimitadas</span>
               <p className="text-sm text-muted-foreground">Crea y gestiona todas las etiquetas que necesites</p>
             </div>
           </div>
           
-          <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-              <QrCode className="h-4 w-4 text-primary" />
-            </div>
+          <div className="flex items-start gap-3">
+            <Check className="h-5 w-5 mt-0.5" />
             <div>
               <span className="font-medium">Códigos QR personalizados</span>
               <p className="text-sm text-muted-foreground">Genera códigos QR únicos para cada producto</p>
             </div>
           </div>
 
-          <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-              <Clock className="h-4 w-4 text-primary" />
-            </div>
+          <div className="flex items-start gap-3">
+            <Check className="h-5 w-5 mt-0.5" />
             <div>
               <span className="font-medium">Actualizaciones en tiempo real</span>
               <p className="text-sm text-muted-foreground">Modifica la información cuando lo necesites</p>
             </div>
           </div>
 
-          <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-              <Shield className="h-4 w-4 text-primary" />
-            </div>
+          <div className="flex items-start gap-3">
+            <Check className="h-5 w-5 mt-0.5" />
             <div>
               <span className="font-medium">Cumplimiento normativo</span>
               <p className="text-sm text-muted-foreground">Etiquetas conformes con la normativa UE</p>
             </div>
           </div>
 
-          <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-              <Star className="h-4 w-4 text-primary" />
-            </div>
+          <div className="flex items-start gap-3">
+            <Check className="h-5 w-5 mt-0.5" />
             <div>
               <span className="font-medium">Soporte prioritario</span>
               <p className="text-sm text-muted-foreground">Asistencia personalizada cuando la necesites</p>
             </div>
           </div>
 
-          <div className="flex items-center">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-              <HeartHandshake className="h-4 w-4 text-primary" />
-            </div>
+          <div className="flex items-start gap-3">
+            <Check className="h-5 w-5 mt-0.5" />
             <div>
               <span className="font-medium">Sin compromiso</span>
               <p className="text-sm text-muted-foreground">Cancela en cualquier momento</p>

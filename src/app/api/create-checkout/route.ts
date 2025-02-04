@@ -44,15 +44,10 @@ export async function POST(request: Request) {
       cancel_url: `${origin}/payment/cancel`,
       client_reference_id: user.id,
       billing_address_collection: 'required',
+      tax_id_collection: {
+        enabled: true,
+      },
       custom_fields: [
-        {
-          key: 'tax_id',
-          label: {
-            type: 'custom',
-            custom: 'NIF/CIF',
-          },
-          type: 'text',
-        },
         {
           key: 'company_name',
           label: {
@@ -72,25 +67,15 @@ export async function POST(request: Request) {
           optional: true,
         }
       ],
-      invoice_creation: {
-        enabled: true,
-      },
-      payment_intent_data: {
-        capture_method: 'automatic',
-        setup_future_usage: 'off_session',
-      },
-      subscription_data: {
-        metadata: {
-          requires_invoice: 'true',
-        },
-      },
+      payment_method_types: ['card'],
+      allow_promotion_codes: true,
     });
 
     return NextResponse.json({ sessionId: session.id });
-  } catch (error) {
-    console.error('Error creating checkout session:', error);
+  } catch (error: any) {
+    console.error('Error creating checkout session:', error.message);
     return NextResponse.json(
-      { error: 'Error creating checkout session' },
+      { error: error.message || 'Error creating checkout session' },
       { status: 500 }
     );
   }
