@@ -52,15 +52,6 @@ export async function POST(request: Request) {
       },
       custom_fields: [
         {
-          key: 'company_name',
-          label: {
-            type: 'custom',
-            custom: 'Nombre de la empresa',
-          },
-          type: 'text',
-          optional: true,
-        },
-        {
           key: 'phone',
           label: {
             type: 'custom',
