@@ -40,6 +40,9 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
+      automatic_tax: {
+        enabled: true,
+      },
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/payment/cancel`,
       client_reference_id: user.id,
