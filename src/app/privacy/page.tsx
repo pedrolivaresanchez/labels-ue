@@ -7,95 +7,87 @@ export default function PrivacyPage() {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Card className="p-6 md:p-8 space-y-8">
         <div className="space-y-4">
-          <h1 className="text-3xl font-bold">Política de Privacidad</h1>
-          <p className="text-sm text-muted-foreground">Última actualización: {new Date().toLocaleDateString()}</p>
+          <h1 className="text-3xl font-bold">Política de Privacidad de VinoVeo</h1>
+          <div className="text-sm text-muted-foreground space-y-1">
+            <p>Fecha de creación: 17 de diciembre de 2024</p>
+            <p>Fecha de entrada en vigor: 6 de febrero de 2025</p>
+          </div>
         </div>
 
         <div className="space-y-8">
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">1. Introducción</h2>
-            <p>
-              En VinoVeo, nos tomamos muy en serio la privacidad de nuestros usuarios. Esta Política de Privacidad describe cómo recopilamos, 
-              utilizamos y protegemos tu información personal cuando utilizas nuestra plataforma de etiquetado de vinos.
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">2. Información que Recopilamos</h2>
+            <h2 className="text-2xl font-semibold">1. Responsable del Tratamiento de Datos</h2>
             <div className="space-y-2">
-              <p>Recopilamos la siguiente información:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Información de la cuenta (email, nombre)</li>
-                <li>Información de facturación</li>
-                <li>Datos de las etiquetas creadas</li>
-                <li>Información de uso del servicio</li>
-              </ul>
+              <p>Responsable: Pedro Olivares Sánchez</p>
+              <p>NIF: 24441859N</p>
+              <p>Dirección: Gardenia Livings, Dubái</p>
+              <p>Teléfono: +971 58 577 2569</p>
+              <p>Email de contacto: info@vinoveo.com</p>
             </div>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">3. Uso de la Información</h2>
-            <p>Utilizamos tu información para:</p>
+            <h2 className="text-2xl font-semibold">2. Datos que Recopilamos</h2>
+            <p>VinoVeo recopila datos personales limitados cuando los usuarios se suscriben a nuestro servicio. Los datos recopilados pueden incluir:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Proporcionar y mantener nuestro servicio</li>
-              <li>Procesar tus pagos</li>
-              <li>Enviarte información importante sobre el servicio</li>
-              <li>Mejorar y personalizar tu experiencia</li>
-              <li>Cumplir con obligaciones legales</li>
+              <li><strong>Datos de suscripción:</strong> nombre, correo electrónico, información de facturación y detalles de pago.</li>
+              <li><strong>Datos de uso:</strong> número de etiquetas generadas, interacciones con la plataforma.</li>
+              <li><strong>Datos técnicos:</strong> tipo de navegador, sistema operativo, dirección IP (anonimizada cuando sea posible).</li>
             </ul>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">4. Protección de Datos</h2>
-            <p>
-              Implementamos medidas de seguridad técnicas y organizativas apropiadas para proteger tus datos personales contra el 
-              acceso no autorizado, la modificación, divulgación o destrucción no autorizada.
-            </p>
+            <h2 className="text-2xl font-semibold">3. Finalidad del Tratamiento</h2>
+            <p>Los datos recopilados se utilizan para:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Gestionar la suscripción y los pagos de los usuarios.</li>
+              <li>Proporcionar y mejorar la funcionalidad de la plataforma.</li>
+              <li>Analizar el rendimiento del sistema.</li>
+              <li>Garantizar la seguridad del servicio.</li>
+            </ul>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">5. Tus Derechos</h2>
+            <h2 className="text-2xl font-semibold">4. Base Legal para el Tratamiento</h2>
+            <ul className="list-disc pl-6 space-y-2">
+              <li><strong>Ejecución de un contrato:</strong> para gestionar suscripciones y procesar pagos.</li>
+              <li><strong>Interés legítimo:</strong> para mejorar el servicio y la seguridad de la plataforma.</li>
+              <li><strong>Cumplimiento legal:</strong> en casos de obligaciones fiscales o regulatorias.</li>
+            </ul>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold">5. Compartición de Datos</h2>
+            <p>Para procesar pagos, utilizamos el servicio de <strong>Stripe, Inc.</strong> Stripe actúa como <strong>encargado del tratamiento</strong> de los datos de pago en nuestro nombre. Sin embargo, también puede actuar como <strong>responsable independiente</strong> para ciertos datos necesarios para cumplir con sus propias obligaciones legales (por ejemplo, en la prevención del fraude).</p>
+            <p>Puedes consultar la política de privacidad de Stripe aquí: <a href="https://stripe.com/privacy" className="text-blue-600 hover:underline">https://stripe.com/privacy</a></p>
+            <p>No compartimos datos personales con otros terceros, salvo que sea necesario para el cumplimiento legal o con tu consentimiento explícito.</p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold">6. Seguridad de la Información</h2>
+            <p>Implementamos medidas técnicas y organizativas para proteger la información personal contra accesos no autorizados, pérdidas o alteraciones.</p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold">7. Derechos de los Usuarios</h2>
             <p>Como usuario, tienes derecho a:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Acceder a tus datos personales</li>
-              <li>Rectificar datos inexactos</li>
-              <li>Solicitar la eliminación de tus datos</li>
-              <li>Oponerte al procesamiento de tus datos</li>
-              <li>Solicitar la portabilidad de tus datos</li>
-              <li>Retirar tu consentimiento en cualquier momento</li>
+              <li>Acceder a tus datos personales.</li>
+              <li>Solicitar la rectificación o supresión de tus datos.</li>
+              <li>Oponerte al tratamiento o solicitar la limitación del mismo.</li>
+              <li>Solicitar la portabilidad de tus datos.</li>
             </ul>
+            <p>Puedes ejercer estos derechos contactándonos a través del correo electrónico: info@vinoveo.com.</p>
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">6. Cookies y Tecnologías Similares</h2>
-            <p>
-              Utilizamos cookies y tecnologías similares para mejorar tu experiencia, analizar el tráfico y personalizar el contenido. 
-              Puedes controlar el uso de cookies a través de la configuración de tu navegador.
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">7. Compartir Información</h2>
-            <p>
-              No vendemos ni alquilamos tu información personal a terceros. Solo compartimos tu información con proveedores de 
-              servicios que necesitan acceder a ella para proporcionar servicios en nuestro nombre (como procesamiento de pagos).
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-2xl font-semibold">8. Cambios en esta Política</h2>
-            <p>
-              Podemos actualizar esta política de privacidad ocasionalmente. Te notificaremos cualquier cambio material 
-              publicando la nueva política de privacidad y actualizando la fecha de "última actualización".
-            </p>
+            <h2 className="text-2xl font-semibold">8. Cambios en la Política de Privacidad</h2>
+            <p>Nos reservamos el derecho de modificar esta política para adaptarla a nuevas regulaciones o mejoras en el servicio. Cualquier cambio será notificado a través de nuestra web.</p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold">9. Contacto</h2>
-            <p>
-              Si tienes preguntas sobre esta Política de Privacidad o sobre cómo manejamos tus datos personales, 
-              por favor contáctanos a través de nuestro soporte.
-            </p>
+            <p>Para cualquier duda o consulta relacionada con esta política, puedes escribirnos a: info@vinoveo.com.</p>
           </section>
         </div>
       </Card>
