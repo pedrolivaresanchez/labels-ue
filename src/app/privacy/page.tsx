@@ -8,10 +8,7 @@ export default function PrivacyPage() {
       <Card className="p-6 md:p-8 space-y-8">
         <div className="space-y-4">
           <h1 className="text-3xl font-bold">Política de Privacidad de VinoVeo</h1>
-          <div className="text-sm text-muted-foreground space-y-1">
-            <p>Fecha de creación: 17 de diciembre de 2024</p>
-            <p>Fecha de entrada en vigor: 6 de febrero de 2025</p>
-          </div>
+          <p className="text-sm text-muted-foreground">Fecha de creación: 17 de diciembre de 2024</p>
         </div>
 
         <div className="space-y-8">
@@ -24,6 +21,14 @@ export default function PrivacyPage() {
               <p>Teléfono: +971 58 577 2569</p>
               <p>Email de contacto: info@vinoveo.com</p>
             </div>
+            <p className="mt-4">
+              Pedro Olivares Sánchez es el <strong>responsable del tratamiento de datos</strong> de VinoVeo, 
+              ya que gestiona directamente la recopilación, uso y protección de los datos personales de los usuarios. 
+              La empresa <strong>CVPO SL</strong> actúa exclusivamente como <strong>intermediario de facturación</strong>, 
+              sin acceso directo ni control sobre la gestión de datos personales de los usuarios. En caso de que CVPO SL 
+              tenga algún acceso limitado a información de facturación, actuará conforme a los acuerdos de confidencialidad 
+              y protección de datos aplicables.
+            </p>
           </section>
 
           <section className="space-y-4">
@@ -58,14 +63,30 @@ export default function PrivacyPage() {
 
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold">5. Compartición de Datos</h2>
-            <p>Para procesar pagos, utilizamos el servicio de <strong>Stripe, Inc.</strong> Stripe actúa como <strong>encargado del tratamiento</strong> de los datos de pago en nuestro nombre. Sin embargo, también puede actuar como <strong>responsable independiente</strong> para ciertos datos necesarios para cumplir con sus propias obligaciones legales (por ejemplo, en la prevención del fraude).</p>
-            <p>Puedes consultar la política de privacidad de Stripe aquí: <a href="https://stripe.com/privacy" className="text-blue-600 hover:underline">https://stripe.com/privacy</a></p>
-            <p>No compartimos datos personales con otros terceros, salvo que sea necesario para el cumplimiento legal o con tu consentimiento explícito.</p>
+            <p>
+              Para procesar pagos, utilizamos el servicio de <strong>Stripe, Inc.</strong> Stripe actúa como 
+              <strong>encargado del tratamiento</strong> de los datos de pago en nuestro nombre. Sin embargo, 
+              también puede actuar como <strong>responsable independiente</strong> para ciertos datos necesarios 
+              para cumplir con sus propias obligaciones legales (por ejemplo, en la prevención del fraude).
+            </p>
+            <p>
+              Puedes consultar la política de privacidad de Stripe aquí: 
+              <a href="https://stripe.com/privacy" className="text-blue-600 hover:underline ml-1">
+                https://stripe.com/privacy
+              </a>
+            </p>
+            <p>
+              No compartimos datos personales con otros terceros, salvo que sea necesario para el cumplimiento 
+              legal o con tu consentimiento explícito.
+            </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold">6. Seguridad de la Información</h2>
-            <p>Implementamos medidas técnicas y organizativas para proteger la información personal contra accesos no autorizados, pérdidas o alteraciones.</p>
+            <p>
+              Implementamos medidas técnicas y organizativas para proteger la información personal contra 
+              accesos no autorizados, pérdidas o alteraciones.
+            </p>
           </section>
 
           <section className="space-y-4">
@@ -77,17 +98,31 @@ export default function PrivacyPage() {
               <li>Oponerte al tratamiento o solicitar la limitación del mismo.</li>
               <li>Solicitar la portabilidad de tus datos.</li>
             </ul>
-            <p>Puedes ejercer estos derechos contactándonos a través del correo electrónico: info@vinoveo.com.</p>
+            <p>
+              Puedes ejercer estos derechos contactándonos a través del correo electrónico: info@vinoveo.com.
+            </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold">8. Cambios en la Política de Privacidad</h2>
-            <p>Nos reservamos el derecho de modificar esta política para adaptarla a nuevas regulaciones o mejoras en el servicio. Cualquier cambio será notificado a través de nuestra web.</p>
+            <p>
+              Nos reservamos el derecho de modificar esta política para adaptarla a nuevas regulaciones o mejoras 
+              en el servicio. Cualquier cambio será notificado a través de nuestra web.
+            </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold">9. Contacto</h2>
-            <p>Para cualquier duda o consulta relacionada con esta política, puedes escribirnos a: info@vinoveo.com.</p>
+            <p>
+              Para cualquier duda o consulta relacionada con esta política, puedes escribirnos a: info@vinoveo.com.
+            </p>
+          </section>
+
+          <section className="mt-8 pt-8 border-t">
+            <p className="text-sm text-muted-foreground">
+              Esta política está diseñada para ofrecer transparencia sobre el tratamiento de datos en VinoVeo, 
+              cumpliendo con la normativa de protección de datos aplicable en la UE y otros territorios relevantes.
+            </p>
           </section>
         </div>
       </Card>
