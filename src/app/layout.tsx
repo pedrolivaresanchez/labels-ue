@@ -4,6 +4,7 @@ import "./globals.css";
 import ClientLayout from "@/components/client-layout";
 import { PublicFooter } from "@/components/public-footer";
 import { Toaster } from "@/components/ui/toaster";
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +38,7 @@ export default function RootLayout({
           <PublicFooter />
         </div>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
