@@ -459,11 +459,11 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
                       id="eanCode" 
                       name="eanCode" 
                       defaultValue={initialData?.ean_code}
-                      required 
+                      placeholder="Opcional"
                       onChange={handleInputChange}
                     />
                     <p className="text-sm text-muted-foreground">
-                      Introduce el código EAN-13 del producto (código de barras).
+                      Introduce el código EAN-13 del producto (código de barras) si lo tienes.
                     </p>
                   </div>
 

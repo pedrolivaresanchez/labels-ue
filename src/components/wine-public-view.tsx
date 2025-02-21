@@ -274,10 +274,12 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                   <h3 className="text-sm font-medium text-muted-foreground">{labels.name}</h3>
                   <p className="text-base sm:text-lg">{wine.name}</p>
                 </div>
-                <div>
-                  <h3 className="text-sm font-medium text-muted-foreground">{labels.eanCode}</h3>
-                  <p className="text-base sm:text-lg">{wine.eanCode}</p>
-                </div>
+                {wine.eanCode && (
+                  <div className="flex flex-col gap-1">
+                    <dt className="text-sm font-medium text-muted-foreground">{labels.eanCode}</dt>
+                    <dd className="text-sm">{wine.eanCode}</dd>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </AccordionContent>
