@@ -47,6 +47,7 @@ type Labels = {
   blueContainer: string;
   corkStopper: string;
   brownContainer: string;
+  recyclingNote: string;
 }
 
 function NutritionalInfoSkeleton() {
@@ -420,6 +421,9 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                 <Card>
                   <CardContent className="space-y-4 p-6">
                     <h3 className="text-lg font-semibold mb-4">{labels.recyclableComponents}</h3>
+                    <p className="text-sm text-muted-foreground mb-6">
+                      {labels.recyclingNote}
+                    </p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       {wine.has_glass_bottle && (
                         <div className="flex flex-col items-center text-center p-2">

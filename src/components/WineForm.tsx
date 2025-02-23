@@ -933,7 +933,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex items-center space-x-4 border rounded-lg p-4">
                     <Image
-                      src="/icons/reciclaje/gl70.png"
+                      src="/icons/reciclado/Verde.webp"
                       alt="GL 70"
                       width={40}
                       height={40}
@@ -958,7 +958,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
                   <div className="flex items-center space-x-4 border rounded-lg p-4">
                     <Image
-                      src="/icons/reciclaje/alu41.png"
+                      src="/icons/reciclado/Amarillo.webp"
                       alt="ALU 41"
                       width={40}
                       height={40}
@@ -983,7 +983,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
                   <div className="flex items-center space-x-4 border rounded-lg p-4">
                     <Image
-                      src="/icons/reciclaje/pap20.png"
+                      src="/icons/reciclado/Azul.webp"
                       alt="PAP 20"
                       width={40}
                       height={40}
@@ -1008,7 +1008,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
                   <div className="flex items-center space-x-4 border rounded-lg p-4">
                     <Image
-                      src="/icons/reciclaje/for50.png"
+                      src="/icons/reciclado/Marron.webp"
                       alt="FOR 50"
                       width={40}
                       height={40}

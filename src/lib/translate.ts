@@ -53,6 +53,7 @@ export type Labels = {
   yellowContainer: string;
   blueContainer: string;
   brownContainer: string;
+  recyclingNote: string;
 }
 
 export async function translateText(text: string, targetLanguage: string) {
@@ -190,7 +191,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'contenedor de vidrio',
     yellowContainer: 'contenedor amarillo',
     blueContainer: 'contenedor azul',
-    brownContainer: 'contenedor marrón'
+    brownContainer: 'contenedor marrón',
+    recyclingNote: 'De acuerdo con el Reglamento (UE) 2023/1556 y la Directiva 94/62/CE sobre envases y residuos de envases, se proporciona información clara sobre los componentes reciclables del producto y su correcta separación para el reciclaje. Los símbolos y códigos utilizados cumplen con la Decisión 97/129/CE.'
   },
   en: {
     reference: 'Reference',
@@ -233,7 +235,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'glass container',
     yellowContainer: 'yellow container',
     blueContainer: 'blue container',
-    brownContainer: 'brown container'
+    brownContainer: 'brown container',
+    recyclingNote: 'In accordance with Regulation (EU) 2023/1556 and Directive 94/62/EC on packaging and packaging waste, clear information is provided on the product\'s recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC.'
   },
   fr: {
     reference: 'Référence',
@@ -276,7 +279,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'conteneur à verre',
     yellowContainer: 'conteneur jaune',
     blueContainer: 'conteneur bleu',
-    brownContainer: 'conteneur marron'
+    brownContainer: 'conteneur marron',
+    recyclingNote: 'Conformément au règlement (UE) 2023/1556 et à la directive 94/62/CE relative aux emballages et aux déchets d\'emballages, des informations claires sont fournies sur les composants recyclables du produit et leur séparation appropriée pour le recyclage. Les symboles et codes utilisés sont conformes à la décision 97/129/CE.'
   },
   de: {
     reference: 'Referenz',
@@ -319,7 +323,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Glasbehälter',
     yellowContainer: 'Gelber Container',
     blueContainer: 'Blauer Container',
-    brownContainer: 'Brauner Container'
+    brownContainer: 'Brauner Container',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts und deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole und Codes entsprechen der Entscheidung 97/129/EG.'
   },
   it: {
     reference: 'Riferimento',
@@ -362,7 +367,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Contenitore di vetro',
     yellowContainer: 'Contenitore giallo',
     blueContainer: 'Contenitore blu',
-    brownContainer: 'Contenitore marrone'
+    brownContainer: 'Contenitore marrone',
+    recyclingNote: 'In conformità al regolamento (UE) 2023/1556 e alla direttiva 94/62/CE sugli imballaggi e i rifiuti di imballaggio, vengono fornite informazioni chiare sui componenti riciclabili del prodotto e sulla loro corretta separazione per il riciclaggio. I simboli e i codici utilizzati sono conformi alla decisione 97/129/CE.'
   },
   ca: {
     reference: 'Referència',
@@ -396,7 +402,7 @@ export const uiLabels: Record<string, Labels> = {
     registration: 'Registre',
     grams: 'grams',
     centiliters: 'centilitres',
-    optionalLabelling: 'Mencions obligatòries o facultatives',
+    optionalLabelling: 'Mencions obligatòries o facultativas',
     recyclableComponents: 'Components Recyclables',
     glassBottle: 'Ampolla de vidre',
     aluminumCap: 'Tapa',
@@ -405,7 +411,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Recipiente de vidre',
     yellowContainer: 'Recipiente groc',
     blueContainer: 'Recipiente blau',
-    brownContainer: 'Recipiente marró'
+    brownContainer: 'Recipiente marró',
+    recyclingNote: 'D\'acord amb el Reglament (UE) 2023/1556 i la Directiva 94/62/CE sobre envasos i residus d\'envasos, es proporciona informació clara sobre els components reciclables del producte i la seva correcta separació per al reciclatge. Els símbols i codis utilitzats compleixen amb la Decisió 97/129/CE.'
   },
   gl: {
     reference: 'Referencia',
@@ -448,7 +455,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Recipiente de vidro',
     yellowContainer: 'Recipiente amarelo',
     blueContainer: 'Recipiente azul',
-    brownContainer: 'Recipiente marron'
+    brownContainer: 'Recipiente marron',
+    recyclingNote: 'In accordance with Regulation (EU) 2023/1556 and Directive 94/62/EC on packaging and packaging waste, clear information is provided on the product\'s recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC.'
   },
   pt: {
     reference: 'Referência',
@@ -491,7 +499,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Recipiente de vidro',
     yellowContainer: 'Recipiente amarelo',
     blueContainer: 'Recipiente azul',
-    brownContainer: 'Recipiente marrom'
+    brownContainer: 'Recipiente marrom',
+    recyclingNote: 'In accordance with Regulation (EU) 2023/1556 and Directive 94/62/EC on packaging and packaging waste, clear information is provided on the product\'s recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC.'
   },
   ro: {
     reference: 'Referință',
@@ -534,7 +543,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Recipient de sticlă',
     yellowContainer: 'Recipient galben',
     blueContainer: 'Recipient albastru',
-    brownContainer: 'Recipient maron'
+    brownContainer: 'Recipient maron',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   nl: {
     reference: 'Referentie',
@@ -570,14 +580,15 @@ export const uiLabels: Record<string, Labels> = {
     centiliters: 'centiliter',
     optionalLabelling: 'Verplichte of optionele vermeldingen',
     recyclableComponents: 'Recyclable Components',
-    glassBottle: 'Glasfles',
+    glassBottle: 'Glasflasche',
     aluminumCap: 'Kork',
     cardboardBox: 'Karton',
     corkStopper: 'Kork',
     glassContainer: 'Glascontainer',
     yellowContainer: 'Gele container',
     blueContainer: 'Blauwe container',
-    brownContainer: 'Bruine container'
+    brownContainer: 'Bruine container',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   sv: {
     reference: 'Referens',
@@ -620,7 +631,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Glasbehållare',
     yellowContainer: 'Gul behållare',
     blueContainer: 'Blå behållare',
-    brownContainer: 'Brun behållare'
+    brownContainer: 'Brun behållare',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   da: {
     reference: 'Reference',
@@ -663,7 +675,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Glasbeholder',
     yellowContainer: 'Gul beholder',
     blueContainer: 'Blå beholder',
-    brownContainer: 'Brun beholder'
+    brownContainer: 'Brun beholder',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   bg: {
     reference: 'Референция',
@@ -706,7 +719,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Стъклен съд',
     yellowContainer: 'Жълт контейнер',
     blueContainer: 'Бял контейнер',
-    brownContainer: 'Мортов контейнер'
+    brownContainer: 'Мортов контейнер',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   cs: {
     reference: 'Reference',
@@ -749,7 +763,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Skleněný obal',
     yellowContainer: 'Žlutý obal',
     blueContainer: 'Modrý obal',
-    brownContainer: 'Hnědý obal'
+    brownContainer: 'Hnědý obal',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   sk: {
     reference: 'Referencia',
@@ -792,7 +807,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Sklenený obal',
     yellowContainer: 'Žltý obal',
     blueContainer: 'Modrý obal',
-    brownContainer: 'Hnědý obal'
+    brownContainer: 'Hnědý obal',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   sl: {
     reference: 'Referenca',
@@ -835,7 +851,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Stakleni sprejemnik',
     yellowContainer: 'Rumeni sprejemnik',
     blueContainer: 'Modri sprejemnik',
-    brownContainer: 'Rjavi sprejemnik'
+    brownContainer: 'Rjavi sprejemnik',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   hr: {
     reference: 'Referenca',
@@ -878,7 +895,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Stakleni sprejemnik',
     yellowContainer: 'Rumeni sprejemnik',
     blueContainer: 'Modri sprejemnik',
-    brownContainer: 'Rjavi sprejemnik'
+    brownContainer: 'Rjavi sprejemnik',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   lv: {
     reference: 'Atsauce',
@@ -921,7 +939,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Stakleni sprejemnis',
     yellowContainer: 'Dzeltenais sprejemnis',
     blueContainer: 'Zilāis sprejemnis',
-    brownContainer: 'Brūnais sprejemnis'
+    brownContainer: 'Brūnais sprejemnis',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   lt: {
     reference: 'Nuoroda',
@@ -964,7 +983,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Staklinė indėlis',
     yellowContainer: 'Džiovinė indėlis',
     blueContainer: 'Mėlynė indėlis',
-    brownContainer: 'Raudonė indėlis'
+    brownContainer: 'Raudonė indėlis',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/EG über Verpackungen und Verpackungsabfälle werden klare Informationen über die recycelbaren Komponenten des Produkts och deren ordnungsgemäße Trennung für das Recycling bereitgestellt. Die verwendeten Symbole och Codes entsprechen der Entscheidung 97/129/EG.'
   },
   fi: {
     reference: 'Viite',
@@ -1007,7 +1027,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Lasikontti',
     yellowContainer: 'Keltaiset kontit',
     blueContainer: 'Vihreät kontit',
-    brownContainer: 'Ruskea kontti'
+    brownContainer: 'Ruskea kontti',
+    recyclingNote: 'Gemäß der Verordnung (EU) 2023/1556 und der Richtlinie 94/62/CE on packaging and packaging waste, clear information is provided on the products recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC.'
   },
   et: {
     reference: 'Viide',
@@ -1050,7 +1071,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Klaasikast',
     yellowContainer: 'Kollane kast',
     blueContainer: 'Sinine kast',
-    brownContainer: 'Punane kast'
+    brownContainer: 'Punane kast',
+    recyclingNote: "In accordance with Regulation (EU) 2023/1556 and Directive 94/62/CE on packaging and packaging waste, clear information is provided on the product's recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC."
   },
   hu: {
     reference: 'Hivatkozás',
@@ -1093,7 +1115,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Üvegtartály',
     yellowContainer: 'Sárga tartály',
     blueContainer: 'Kék tartály',
-    brownContainer: 'Rózsaszín tartály'
+    brownContainer: 'Rózsaszín tartály',
+    recyclingNote: "In accordance with Regulation (EU) 2023/1556 and Directive 94/62/CE on packaging and packaging waste, clear information is provided on the product's recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC."
   },
   ga: {
     reference: 'Tagairt',
@@ -1136,7 +1159,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Glasbeholder',
     yellowContainer: 'Gelb',
     blueContainer: 'Blá',
-    brownContainer: 'Brú'
+    brownContainer: 'Brú',
+    recyclingNote: "In accordance with Regulation (EU) 2023/1556 and Directive 94/62/CE on packaging and packaging waste, clear information is provided on the product's recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC."
   },
   mt: {
     reference: 'Referenza',
@@ -1179,7 +1203,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Glasbeholder',
     yellowContainer: 'Gelb',
     blueContainer: 'Blá',
-    brownContainer: 'Brú'
+    brownContainer: 'Brú',
+    recyclingNote: "In accordance with Regulation (EU) 2023/1556 and Directive 94/62/CE on packaging and packaging waste, clear information is provided on the product's recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC."
   },
   el: {
     reference: 'Αναφορά',
@@ -1222,7 +1247,8 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Ποτήρι',
     yellowContainer: 'Κίτρινο ποτήρι',
     blueContainer: 'Μπλε ποτήρι',
-    brownContainer: 'Καφέ ποτήρι'
+    brownContainer: 'Καφέ ποτήρι',
+    recyclingNote: "In accordance with Regulation (EU) 2023/1556 and Directive 94/62/CE on packaging and packaging waste, clear information is provided on the product's recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC."
   },
   eu: {
     reference: 'Erreferentzia',
@@ -1265,6 +1291,7 @@ export const uiLabels: Record<string, Labels> = {
     glassContainer: 'Glasbeholder',
     yellowContainer: 'Gelb',
     blueContainer: 'Blá',
-    brownContainer: 'Brú'
+    brownContainer: 'Brú',
+    recyclingNote: "In accordance with Regulation (EU) 2023/1556 and Directive 94/62/CE on packaging and packaging waste, clear information is provided on the product's recyclable components and their proper separation for recycling. The symbols and codes used comply with Decision 97/129/EC."
   }
 }; 
