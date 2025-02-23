@@ -44,6 +44,7 @@ export type Labels = {
   grams: string;
   centiliters: string;
   optionalLabelling: string;
+  recyclableComponents: string;
 }
 
 export async function translateText(text: string, targetLanguage: string) {
@@ -173,6 +174,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramos',
     centiliters: 'centilitros',
     optionalLabelling: 'Menciones obligatorias o facultativas',
+    recyclableComponents: 'Componentes reciclables'
   },
   en: {
     reference: 'Reference',
@@ -207,6 +209,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grams',
     centiliters: 'centiliters',
     optionalLabelling: 'Mandatory or optional mentions',
+    recyclableComponents: 'Recyclable Components'
   },
   fr: {
     reference: 'Référence',
@@ -241,6 +244,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammes',
     centiliters: 'centilitres',
     optionalLabelling: 'Mention obligatoire ou facultative',
+    recyclableComponents: 'Composants Recyclables'
   },
   de: {
     reference: 'Referenz',
@@ -275,6 +279,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'Gramm',
     centiliters: 'Zentiliter',
     optionalLabelling: 'Pflicht- oder Optionalangaben',
+    recyclableComponents: 'Recyclingfähige Komponenten'
   },
   it: {
     reference: 'Riferimento',
@@ -309,6 +314,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammi',
     centiliters: 'centilitri',
     optionalLabelling: 'Mentioni obbligatorie o facoltativi',
+    recyclableComponents: 'Componenti Recyclable'
   },
   ca: {
     reference: 'Referència',
@@ -343,6 +349,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grams',
     centiliters: 'centilitres',
     optionalLabelling: 'Mencions obligatòries o facultatives',
+    recyclableComponents: 'Components Recyclables'
   },
   gl: {
     reference: 'Referencia',
@@ -377,6 +384,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramos',
     centiliters: 'centilitros',
     optionalLabelling: 'Menciones obligatorias ou facultativas',
+    recyclableComponents: 'Componentes Recyclables'
   },
   pt: {
     reference: 'Referência',
@@ -411,6 +419,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramas',
     centiliters: 'centilitros',
     optionalLabelling: 'Menciones obrigatórias ou facultativas',
+    recyclableComponents: 'Componentes Recyclables'
   },
   ro: {
     reference: 'Referință',
@@ -445,6 +454,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grame',
     centiliters: 'centilitri',
     optionalLabelling: 'Mentionări obligatorii sau facultative',
+    recyclableComponents: 'Componente Recyclable'
   },
   nl: {
     reference: 'Referentie',
@@ -479,6 +489,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gram',
     centiliters: 'centiliter',
     optionalLabelling: 'Verplichte of optionele vermeldingen',
+    recyclableComponents: 'Recyclable Components'
   },
   sv: {
     reference: 'Referens',
@@ -513,6 +524,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gram',
     centiliters: 'centiliter',
     optionalLabelling: 'Obligatoriska eller valfria anteckningar',
+    recyclableComponents: 'Recyclable Components'
   },
   da: {
     reference: 'Reference',
@@ -547,6 +559,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gram',
     centiliters: 'centiliter',
     optionalLabelling: 'Obligatoriske eller valgfrie bemærkninger',
+    recyclableComponents: 'Recyclable Components'
   },
   bg: {
     reference: 'Референция',
@@ -581,6 +594,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'грама',
     centiliters: 'сантилитра',
     optionalLabelling: 'Обязателни или факултативните споменавания',
+    recyclableComponents: 'Recyclable Components'
   },
   cs: {
     reference: 'Reference',
@@ -615,6 +629,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramů',
     centiliters: 'centilitrů',
     optionalLabelling: 'Povinné nebo volitelné zmínky',
+    recyclableComponents: 'Recyclable Components'
   },
   sk: {
     reference: 'Referencia',
@@ -649,6 +664,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramov',
     centiliters: 'centilitrov',
     optionalLabelling: 'Povinné alebo voliteľné poznámky',
+    recyclableComponents: 'Recyclable Components'
   },
   sl: {
     reference: 'Referenca',
@@ -683,6 +699,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramov',
     centiliters: 'centilitrov',
     optionalLabelling: 'Povinjanje ali nepovpisanje',
+    recyclableComponents: 'Recyclable Components'
   },
   hr: {
     reference: 'Referenca',
@@ -717,6 +734,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grama',
     centiliters: 'centilitara',
     optionalLabelling: 'Obvezne oznake ali izbiranje',
+    recyclableComponents: 'Recyclable Components'
   },
   lv: {
     reference: 'Atsauce',
@@ -751,6 +769,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grami',
     centiliters: 'centilitri',
     optionalLabelling: 'Obligātie vai izvēlētie apzīmējumi',
+    recyclableComponents: 'Recyclable Components'
   },
   lt: {
     reference: 'Nuoroda',
@@ -785,6 +804,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramai',
     centiliters: 'centilitrai',
     optionalLabelling: 'Obligatinės arba pasirinktinės žymėjimai',
+    recyclableComponents: 'Recyclable Components'
   },
   fi: {
     reference: 'Viite',
@@ -819,6 +839,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammaa',
     centiliters: 'senttilitraa',
     optionalLabelling: 'Pakolliset tai valinnaiset merkinnät',
+    recyclableComponents: 'Recyclable Components'
   },
   et: {
     reference: 'Viide',
@@ -853,6 +874,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammi',
     centiliters: 'sentiliitrit',
     optionalLabelling: 'Nõutavad või valikulised märkused',
+    recyclableComponents: 'Recyclable Components'
   },
   hu: {
     reference: 'Hivatkozás',
@@ -887,6 +909,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramm',
     centiliters: 'centiliter',
     optionalLabelling: 'Kötelező vagy opcionális megjegyzések',
+    recyclableComponents: 'Recyclable Components'
   },
   ga: {
     reference: 'Tagairt',
@@ -921,6 +944,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gram',
     centiliters: 'ceintilítear',
     optionalLabelling: 'Mentiones obrigatórias ou facultativas',
+    recyclableComponents: 'Recyclable Components'
   },
   mt: {
     reference: 'Referenza',
@@ -955,6 +979,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammi',
     centiliters: 'ċentilitri',
     optionalLabelling: 'Mentionijiet obbligatori jew opzionali',
+    recyclableComponents: 'Recyclable Components'
   },
   el: {
     reference: 'Αναφορά',
@@ -989,6 +1014,7 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'γραμμάρια',
     centiliters: 'εκατοστόλιτρα',
     optionalLabelling: 'Προαιρετικές ή υποχρεωτικές αναφορές',
+    recyclableComponents: 'Recyclable Components'
   },
   eu: {
     reference: 'Erreferentzia',
@@ -1023,5 +1049,6 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramo',
     centiliters: 'zentilitro',
     optionalLabelling: 'Mentiones obligatorias ou facultativas',
+    recyclableComponents: 'Recyclable Components'
   }
 }; 

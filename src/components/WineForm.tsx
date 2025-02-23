@@ -72,6 +72,10 @@ interface FormData {
   certifications: Array<{
     certificationName: string;
   }>;
+  hasGlassBottle: boolean;
+  hasAluminumCap: boolean;
+  hasCardboardBox: boolean;
+  hasCorkStopper: boolean;
 }
 
 export function WineForm({ initialData, isEditing = false, defaultOpen = false }: WineFormProps) {
@@ -110,7 +114,11 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
     registrationNumber: '',
     imageUrl: null,
     ingredients: [],
-    certifications: []
+    certifications: [],
+    hasGlassBottle: false,
+    hasAluminumCap: false,
+    hasCardboardBox: false,
+    hasCorkStopper: false
   })
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image_url || null);
@@ -160,7 +168,11 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         registrationNumber: initialData.registration_number,
         imageUrl: initialData.image_url ?? null,
         ingredients: mappedIngredients,
-        certifications: mappedCertifications
+        certifications: mappedCertifications,
+        hasGlassBottle: initialData.has_glass_bottle ?? false,
+        hasAluminumCap: initialData.has_aluminum_cap ?? false,
+        hasCardboardBox: initialData.has_cardboard_box ?? false,
+        hasCorkStopper: initialData.has_cork_stopper ?? false
       });
 
       if (initialData.image_url) {
@@ -873,6 +885,118 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
                       placeholder="Opcional"
                       onChange={handleInputChange}
                     />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Materiales reciclables</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Selecciona los materiales reciclables presentes en el producto.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center space-x-4 border rounded-lg p-4">
+                    <Image
+                      src="/icons/reciclaje/gl70.png"
+                      alt="GL 70"
+                      width={40}
+                      height={40}
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="hasGlassBottle"
+                          checked={formData.hasGlassBottle}
+                          onCheckedChange={(checked) => {
+                            setFormData(prev => ({
+                              ...prev,
+                              hasGlassBottle: checked as boolean
+                            }))
+                          }}
+                        />
+                        <Label htmlFor="hasGlassBottle">GL 70</Label>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">Botella de vidrio transparente</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4 border rounded-lg p-4">
+                    <Image
+                      src="/icons/reciclaje/alu41.png"
+                      alt="ALU 41"
+                      width={40}
+                      height={40}
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="hasAluminumCap"
+                          checked={formData.hasAluminumCap}
+                          onCheckedChange={(checked) => {
+                            setFormData(prev => ({
+                              ...prev,
+                              hasAluminumCap: checked as boolean
+                            }))
+                          }}
+                        />
+                        <Label htmlFor="hasAluminumCap">ALU 41</Label>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">Cápsula de aluminio</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4 border rounded-lg p-4">
+                    <Image
+                      src="/icons/reciclaje/pap20.png"
+                      alt="PAP 20"
+                      width={40}
+                      height={40}
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="hasCardboardBox"
+                          checked={formData.hasCardboardBox}
+                          onCheckedChange={(checked) => {
+                            setFormData(prev => ({
+                              ...prev,
+                              hasCardboardBox: checked as boolean
+                            }))
+                          }}
+                        />
+                        <Label htmlFor="hasCardboardBox">PAP 20</Label>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">Caja de cartón</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4 border rounded-lg p-4">
+                    <Image
+                      src="/icons/reciclaje/for50.png"
+                      alt="FOR 50"
+                      width={40}
+                      height={40}
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="hasCorkStopper"
+                          checked={formData.hasCorkStopper}
+                          onCheckedChange={(checked) => {
+                            setFormData(prev => ({
+                              ...prev,
+                              hasCorkStopper: checked as boolean
+                            }))
+                          }}
+                        />
+                        <Label htmlFor="hasCorkStopper">FOR 50</Label>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">Tapón de corcho natural</p>
+                    </div>
                   </div>
                 </div>
               </CardContent>

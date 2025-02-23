@@ -70,6 +70,10 @@ export interface Wine {
     variant_name: string;
   }>;
   disclaimer_icons?: Array<{ icon_name: string }>;
+  has_glass_bottle: boolean;
+  has_aluminum_cap: boolean;
+  has_cardboard_box: boolean;
+  has_cork_stopper: boolean;
 }
 
 export interface WineFormData {
@@ -108,4 +112,8 @@ export interface WineFormData {
   certifications: Array<{
     certificationName: string;
   }>;
+  hasGlassBottle: boolean;
+  hasAluminumCap: boolean;
+  hasCardboardBox: boolean;
+  hasCorkStopper: boolean;
 }

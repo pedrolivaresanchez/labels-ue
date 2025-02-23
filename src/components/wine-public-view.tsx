@@ -38,6 +38,7 @@ type Labels = {
   grams: string;
   centiliters: string;
   optionalLabelling: string;
+  recyclableComponents: string;
 }
 
 function NutritionalInfoSkeleton() {
@@ -406,6 +407,60 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                   )}
                 </CardContent>
               </Card>
+
+              {(wine.has_glass_bottle || wine.has_aluminum_cap || wine.has_cardboard_box || wine.has_cork_stopper) && (
+                <Card>
+                  <CardContent className="space-y-4 p-6">
+                    <h3 className="text-lg font-semibold mb-4">{labels.recyclableComponents}</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      {wine.has_glass_bottle && (
+                        <div className="flex flex-col items-center gap-2 p-2">
+                          <Image
+                            src="/icons/reciclaje/gl70.png"
+                            alt="GL 70"
+                            width={50}
+                            height={50}
+                          />
+                          <p className="text-sm font-medium text-center">GL 70</p>
+                        </div>
+                      )}
+                      {wine.has_aluminum_cap && (
+                        <div className="flex flex-col items-center gap-2 p-2">
+                          <Image
+                            src="/icons/reciclaje/alu41.png"
+                            alt="ALU 41"
+                            width={50}
+                            height={50}
+                          />
+                          <p className="text-sm font-medium text-center">ALU 41</p>
+                        </div>
+                      )}
+                      {wine.has_cardboard_box && (
+                        <div className="flex flex-col items-center gap-2 p-2">
+                          <Image
+                            src="/icons/reciclaje/pap20.png"
+                            alt="PAP 20"
+                            width={50}
+                            height={50}
+                          />
+                          <p className="text-sm font-medium text-center">PAP 20</p>
+                        </div>
+                      )}
+                      {wine.has_cork_stopper && (
+                        <div className="flex flex-col items-center gap-2 p-2">
+                          <Image
+                            src="/icons/reciclaje/for50.png"
+                            alt="FOR 50"
+                            width={50}
+                            height={50}
+                          />
+                          <p className="text-sm font-medium text-center">FOR 50</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               <Card>
                 <CardContent className="space-y-4 p-6">

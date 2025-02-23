@@ -73,6 +73,10 @@ export type Wine = {
   operatorAddress: string;
   registrationNumber: string;
   optional_labelling: string | null;
+  has_glass_bottle: boolean;
+  has_aluminum_cap: boolean;
+  has_cardboard_box: boolean;
+  has_cork_stopper: boolean;
 };
 
 async function translateText(text: string, targetLanguage: string) {
@@ -191,6 +195,10 @@ async function getWine(id: string): Promise<Wine | null> {
     operatorAddress: wine.operator_address,
     registrationNumber: wine.registration_number,
     optional_labelling: wine.optional_labelling,
+    has_glass_bottle: wine.has_glass_bottle || false,
+    has_aluminum_cap: wine.has_aluminum_cap || false,
+    has_cardboard_box: wine.has_cardboard_box || false,
+    has_cork_stopper: wine.has_cork_stopper || false
   };
 }
 
