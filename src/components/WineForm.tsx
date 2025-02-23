@@ -325,7 +325,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
       // Convert form data to snake_case for the API
       const apiData = {
         name: formData.name,
-        ean_code: formData.eanCode,
+        ean_code: formData.eanCode || '',
         food_name: formData.foodName,
         energy_kj: formData.energyKj,
         energy_kcal: formData.energyKcal,
