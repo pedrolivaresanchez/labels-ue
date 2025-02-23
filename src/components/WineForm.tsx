@@ -89,7 +89,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
   const [newCertification, setNewCertification] = useState("");
   const [formData, setFormData] = useState<FormData>({
     name: '',
-    eanCode: '',
+    eanCode: 'N/A',
     foodName: '',
     energyKj: 0,
     energyKcal: 0,
