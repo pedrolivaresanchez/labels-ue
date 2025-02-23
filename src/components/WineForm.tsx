@@ -283,12 +283,13 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         img.src = URL.createObjectURL(file);
       });
 
-      if (image.width < 400 || image.height < 400) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "La imagen debe tener al menos 400x400 píxeles",
-        });
+      if (image.width <= 300 || image.height <= 300) {
+        setShowDimensionsDialog(true);
+        // Clear the input
+        e.target.value = '';
+        // Clear the preview and file state
+        setImagePreview(null);
+        setImageFile(null);
         return;
       }
 
@@ -1180,9 +1181,9 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
       <Dialog open={showDimensionsDialog} onOpenChange={setShowDimensionsDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Dimensiones de imagen no válidas</DialogTitle>
+            <DialogTitle>Imagen demasiado pequeña</DialogTitle>
             <DialogDescription>
-              La imagen debe tener un tamaño mínimo de 400x400 píxeles. Por favor, selecciona una imagen más grande.
+              La imagen debe tener un tamaño mínimo de 300x300 píxeles. Por favor, selecciona una imagen más grande.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
