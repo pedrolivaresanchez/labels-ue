@@ -72,6 +72,7 @@ export type Wine = {
   operatorName: string;
   operatorAddress: string;
   registrationNumber: string;
+  optional_labelling: string | null;
 };
 
 async function translateText(text: string, targetLanguage: string) {
@@ -188,7 +189,8 @@ async function getWine(id: string): Promise<Wine | null> {
     drainedWeightGrams: wine.drained_weight_grams,
     operatorName: wine.operator_name,
     operatorAddress: wine.operator_address,
-    registrationNumber: wine.registration_number
+    registrationNumber: wine.registration_number,
+    optional_labelling: wine.optional_labelling,
   };
 }
 

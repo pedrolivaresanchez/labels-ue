@@ -43,6 +43,7 @@ export type Labels = {
   registration: string;
   grams: string;
   centiliters: string;
+  optionalLabelling: string;
 }
 
 export async function translateText(text: string, targetLanguage: string) {
@@ -170,7 +171,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Dirección del operador',
     registration: 'Registro',
     grams: 'gramos',
-    centiliters: 'centilitros'
+    centiliters: 'centilitros',
+    optionalLabelling: 'Menciones obligatorias o facultativas',
   },
   en: {
     reference: 'Reference',
@@ -203,7 +205,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Operator Address',
     registration: 'Registration',
     grams: 'grams',
-    centiliters: 'centiliters'
+    centiliters: 'centiliters',
+    optionalLabelling: 'Mandatory or optional mentions',
   },
   fr: {
     reference: 'Référence',
@@ -236,7 +239,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Adresse de l\'opérateur',
     registration: 'Enregistrement',
     grams: 'grammes',
-    centiliters: 'centilitres'
+    centiliters: 'centilitres',
+    optionalLabelling: 'Mention obligatoire ou facultative',
   },
   de: {
     reference: 'Referenz',
@@ -269,7 +273,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Adresse des Betreibers',
     registration: 'Registrierung',
     grams: 'Gramm',
-    centiliters: 'Zentiliter'
+    centiliters: 'Zentiliter',
+    optionalLabelling: 'Pflicht- oder Optionalangaben',
   },
   it: {
     reference: 'Riferimento',
@@ -302,7 +307,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Indirizzo dell\'operatore',
     registration: 'Registrazione',
     grams: 'grammi',
-    centiliters: 'centilitri'
+    centiliters: 'centilitri',
+    optionalLabelling: 'Mentioni obbligatorie o facoltativi',
   },
   ca: {
     reference: 'Referència',
@@ -335,7 +341,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Adreça de l\'operador',
     registration: 'Registre',
     grams: 'grams',
-    centiliters: 'centilitres'
+    centiliters: 'centilitres',
+    optionalLabelling: 'Mencions obligatòries o facultatives',
   },
   gl: {
     reference: 'Referencia',
@@ -368,7 +375,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Enderezo do operador',
     registration: 'Rexistro',
     grams: 'gramos',
-    centiliters: 'centilitros'
+    centiliters: 'centilitros',
+    optionalLabelling: 'Menciones obligatorias ou facultativas',
   },
   pt: {
     reference: 'Referência',
@@ -401,7 +409,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Endereço do operador',
     registration: 'Registo',
     grams: 'gramas',
-    centiliters: 'centilitros'
+    centiliters: 'centilitros',
+    optionalLabelling: 'Menciones obrigatórias ou facultativas',
   },
   ro: {
     reference: 'Referință',
@@ -434,7 +443,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Adresa operatorului',
     registration: 'Înregistrare',
     grams: 'grame',
-    centiliters: 'centilitri'
+    centiliters: 'centilitri',
+    optionalLabelling: 'Mentionări obligatorii sau facultative',
   },
   nl: {
     reference: 'Referentie',
@@ -467,7 +477,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Adres exploitant',
     registration: 'Registratie',
     grams: 'gram',
-    centiliters: 'centiliter'
+    centiliters: 'centiliter',
+    optionalLabelling: 'Verplichte of optionele vermeldingen',
   },
   sv: {
     reference: 'Referens',
@@ -500,7 +511,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Operatörens adress',
     registration: 'Registrering',
     grams: 'gram',
-    centiliters: 'centiliter'
+    centiliters: 'centiliter',
+    optionalLabelling: 'Obligatoriska eller valfria anteckningar',
   },
   da: {
     reference: 'Reference',
@@ -533,7 +545,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Operatørens adresse',
     registration: 'Registrering',
     grams: 'gram',
-    centiliters: 'centiliter'
+    centiliters: 'centiliter',
+    optionalLabelling: 'Obligatoriske eller valgfrie bemærkninger',
   },
   bg: {
     reference: 'Референция',
@@ -566,7 +579,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Адрес на оператора',
     registration: 'Регистрация',
     grams: 'грама',
-    centiliters: 'сантилитра'
+    centiliters: 'сантилитра',
+    optionalLabelling: 'Обязателни или факултативните споменавания',
   },
   cs: {
     reference: 'Reference',
@@ -599,7 +613,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Adresa provozovatele',
     registration: 'Registrace',
     grams: 'gramů',
-    centiliters: 'centilitrů'
+    centiliters: 'centilitrů',
+    optionalLabelling: 'Povinné nebo volitelné zmínky',
   },
   sk: {
     reference: 'Referencia',
@@ -632,7 +647,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Adresa prevádzkovateľa',
     registration: 'Registrácia',
     grams: 'gramov',
-    centiliters: 'centilitrov'
+    centiliters: 'centilitrov',
+    optionalLabelling: 'Povinné alebo voliteľné poznámky',
   },
   sl: {
     reference: 'Referenca',
@@ -665,7 +681,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Naslov nosilca',
     registration: 'Registracija',
     grams: 'gramov',
-    centiliters: 'centilitrov'
+    centiliters: 'centilitrov',
+    optionalLabelling: 'Povinjanje ali nepovpisanje',
   },
   hr: {
     reference: 'Referenca',
@@ -698,7 +715,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Adresa subjekta',
     registration: 'Registracija',
     grams: 'grama',
-    centiliters: 'centilitara'
+    centiliters: 'centilitara',
+    optionalLabelling: 'Obvezne oznake ali izbiranje',
   },
   lv: {
     reference: 'Atsauce',
@@ -731,7 +749,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Operatora adrese',
     registration: 'Reģistrācija',
     grams: 'grami',
-    centiliters: 'centilitri'
+    centiliters: 'centilitri',
+    optionalLabelling: 'Obligātie vai izvēlētie apzīmējumi',
   },
   lt: {
     reference: 'Nuoroda',
@@ -764,7 +783,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Operatoriaus adresas',
     registration: 'Registracija',
     grams: 'gramai',
-    centiliters: 'centilitrai'
+    centiliters: 'centilitrai',
+    optionalLabelling: 'Obligatinės arba pasirinktinės žymėjimai',
   },
   fi: {
     reference: 'Viite',
@@ -797,7 +817,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Toimijan osoite',
     registration: 'Rekisteröinti',
     grams: 'grammaa',
-    centiliters: 'senttilitraa'
+    centiliters: 'senttilitraa',
+    optionalLabelling: 'Pakolliset tai valinnaiset merkinnät',
   },
   et: {
     reference: 'Viide',
@@ -830,7 +851,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Käitleja aadress',
     registration: 'Registreerimine',
     grams: 'grammi',
-    centiliters: 'sentiliitrit'
+    centiliters: 'sentiliitrit',
+    optionalLabelling: 'Nõutavad või valikulised märkused',
   },
   hu: {
     reference: 'Hivatkozás',
@@ -863,7 +885,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Üzemeltető címe',
     registration: 'Nyilvántartás',
     grams: 'gramm',
-    centiliters: 'centiliter'
+    centiliters: 'centiliter',
+    optionalLabelling: 'Kötelező vagy opcionális megjegyzések',
   },
   ga: {
     reference: 'Tagairt',
@@ -896,7 +919,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Seoladh an oibreora',
     registration: 'Clárú',
     grams: 'gram',
-    centiliters: 'ceintilítear'
+    centiliters: 'ceintilítear',
+    optionalLabelling: 'Mentiones obrigatórias ou facultativas',
   },
   mt: {
     reference: 'Referenza',
@@ -929,7 +953,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Indirizz tal-operatur',
     registration: 'Reġistrazzjoni',
     grams: 'grammi',
-    centiliters: 'ċentilitri'
+    centiliters: 'ċentilitri',
+    optionalLabelling: 'Mentionijiet obbligatori jew opzionali',
   },
   el: {
     reference: 'Αναφορά',
@@ -962,7 +987,8 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Διεύθυνση υπευθύνου',
     registration: 'Καταχώριση',
     grams: 'γραμμάρια',
-    centiliters: 'εκατοστόλιτρα'
+    centiliters: 'εκατοστόλιτρα',
+    optionalLabelling: 'Προαιρετικές ή υποχρεωτικές αναφορές',
   },
   eu: {
     reference: 'Erreferentzia',
@@ -995,6 +1021,7 @@ export const uiLabels: Record<string, Labels> = {
     operatorAddress: 'Operadorearen helbidea',
     registration: 'Erregistroa',
     grams: 'gramo',
-    centiliters: 'zentilitro'
+    centiliters: 'zentilitro',
+    optionalLabelling: 'Mentiones obligatorias ou facultativas',
   }
 }; 

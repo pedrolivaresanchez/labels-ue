@@ -37,6 +37,7 @@ type Labels = {
   registration: string;
   grams: string;
   centiliters: string;
+  optionalLabelling: string;
 }
 
 function NutritionalInfoSkeleton() {
@@ -353,6 +354,12 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                     <h3 className="text-sm font-medium text-muted-foreground">{labels.placeOfOrigin}</h3>
                     <p className="text-base sm:text-lg">{wine.placeOfOrigin}</p>
                   </div>
+                  {wine.optional_labelling && (
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">{labels.optionalLabelling}</h3>
+                      <p className="text-base sm:text-lg">{wine.optional_labelling}</p>
+                    </div>
+                  )}
                   {wine.productionVariants && wine.productionVariants.length > 0 && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">{labels.productionVariants}</h3>
