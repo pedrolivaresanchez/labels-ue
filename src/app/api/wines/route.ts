@@ -57,29 +57,34 @@ type Wine = {
 
 type WineFormData = {
   name: string;
-  eanCode: string;
-  foodName: string;
-  energyKj: number;
-  energyKcal: number;
+  ean_code: string;
+  food_name: string;
+  energy_kj: number;
+  energy_kcal: number;
   fat: number;
-  saturatedFat: number;
+  saturated_fat: number;
   carbohydrate: number;
   sugars: number;
   protein: number;
   salt: number;
-  netQuantityCl: number;
-  hasEstimationSign: boolean;
-  alcoholPercentage: number;
-  optionalLabelling: string | null;
-  countryOfOrigin: string;
-  placeOfOrigin: string;
-  wineryInformation: string;
-  instructionsForUse: string | null;
-  conservationConditions: string | null;
-  drainedWeightGrams: number | null;
-  operatorName: string;
-  operatorAddress: string;
-  registrationNumber: string;
+  net_quantity_cl: number;
+  has_estimation_sign: boolean;
+  alcohol_percentage: number;
+  optional_labelling: string | null;
+  country_of_origin: string;
+  place_of_origin: string;
+  winery_information: string;
+  instructions_for_use: string | null;
+  conservation_conditions: string | null;
+  drained_weight_grams: number | null;
+  operator_name: string;
+  operator_address: string;
+  registration_number: string;
+  has_glass_bottle: boolean;
+  has_aluminum_cap: boolean;
+  has_cardboard_box: boolean;
+  has_cork_stopper: boolean;
+  image_url: string | null;
   ingredients: { ingredientName: string; isAllergen: boolean }[];
   productionVariants: { variantName: string }[];
   certifications: { certificationName: string }[];
@@ -105,29 +110,34 @@ export async function POST(req: Request) {
     const wineData = {
       user_id: session.user.id,
       name: body.name,
-      ean_code: body.eanCode,
-      food_name: body.foodName,
-      energy_kj: body.energyKj,
-      energy_kcal: body.energyKcal,
+      ean_code: body.ean_code,
+      food_name: body.food_name,
+      energy_kj: body.energy_kj,
+      energy_kcal: body.energy_kcal,
       fat: body.fat,
-      saturated_fat: body.saturatedFat,
+      saturated_fat: body.saturated_fat,
       carbohydrate: body.carbohydrate,
       sugars: body.sugars,
       protein: body.protein,
       salt: body.salt,
-      net_quantity_cl: body.netQuantityCl,
-      has_estimation_sign: body.hasEstimationSign,
-      alcohol_percentage: body.alcoholPercentage,
-      optional_labelling: body.optionalLabelling,
-      country_of_origin: body.countryOfOrigin,
-      place_of_origin: body.placeOfOrigin,
-      winery_information: body.wineryInformation,
-      instructions_for_use: body.instructionsForUse,
-      conservation_conditions: body.conservationConditions,
-      drained_weight_grams: body.drainedWeightGrams,
-      operator_name: body.operatorName,
-      operator_address: body.operatorAddress,
-      registration_number: body.registrationNumber
+      net_quantity_cl: body.net_quantity_cl,
+      has_estimation_sign: body.has_estimation_sign,
+      alcohol_percentage: body.alcohol_percentage,
+      optional_labelling: body.optional_labelling,
+      country_of_origin: body.country_of_origin,
+      place_of_origin: body.place_of_origin,
+      winery_information: body.winery_information,
+      instructions_for_use: body.instructions_for_use,
+      conservation_conditions: body.conservation_conditions,
+      drained_weight_grams: body.drained_weight_grams,
+      operator_name: body.operator_name,
+      operator_address: body.operator_address,
+      registration_number: body.registration_number,
+      has_glass_bottle: body.has_glass_bottle,
+      has_aluminum_cap: body.has_aluminum_cap,
+      has_cardboard_box: body.has_cardboard_box,
+      has_cork_stopper: body.has_cork_stopper,
+      image_url: body.image_url
     };
 
     // Insert the wine

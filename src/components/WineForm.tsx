@@ -349,8 +349,13 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         operator_address: formData.operatorAddress || '',
         registration_number: formData.registrationNumber || '',
         image_url: imageFile ? null : initialData?.image_url,
-        ingredients: formData.ingredients || [],
-        certifications: formData.certifications || [],
+        ingredients: formData.ingredients.map(i => ({
+          ingredient_name: i.name,
+          is_allergen: i.isAllergen
+        })) || [],
+        certifications: formData.certifications.map(c => ({
+          certification_name: c.certificationName
+        })) || [],
         has_glass_bottle: formData.hasGlassBottle || false,
         has_aluminum_cap: formData.hasAluminumCap || false,
         has_cardboard_box: formData.hasCardboardBox || false,
