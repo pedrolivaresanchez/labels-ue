@@ -324,38 +324,41 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
       // Convert form data to snake_case for the API
       const apiData = {
-        name: formData.name,
+        name: formData.name || '',
         ean_code: formData.eanCode || '',
-        food_name: formData.foodName,
-        energy_kj: formData.energyKj,
-        energy_kcal: formData.energyKcal,
-        fat: formData.fat,
-        saturated_fat: formData.saturatedFat,
-        carbohydrate: formData.carbohydrate,
-        sugars: formData.sugars,
-        protein: formData.protein,
-        salt: formData.salt,
-        net_quantity_cl: formData.netQuantityCl,
-        has_estimation_sign: formData.hasEstimationSign,
-        alcohol_percentage: formData.alcoholPercentage,
-        optional_labelling: formData.optionalLabelling,
-        country_of_origin: formData.countryOfOrigin,
-        place_of_origin: formData.placeOfOrigin,
-        winery_information: formData.wineryInformation,
-        instructions_for_use: formData.instructionsForUse,
-        conservation_conditions: formData.conservationConditions,
-        drained_weight_grams: formData.drainedWeightGrams,
-        operator_name: formData.operatorName,
-        operator_address: formData.operatorAddress,
-        registration_number: formData.registrationNumber,
+        food_name: formData.foodName || '',
+        energy_kj: formData.energyKj || 0,
+        energy_kcal: formData.energyKcal || 0,
+        fat: formData.fat || 0,
+        saturated_fat: formData.saturatedFat || 0,
+        carbohydrate: formData.carbohydrate || 0,
+        sugars: formData.sugars || 0,
+        protein: formData.protein || 0,
+        salt: formData.salt || 0,
+        net_quantity_cl: formData.netQuantityCl || 0,
+        has_estimation_sign: formData.hasEstimationSign || false,
+        alcohol_percentage: formData.alcoholPercentage || 0,
+        optional_labelling: formData.optionalLabelling || '',
+        country_of_origin: formData.countryOfOrigin || '',
+        place_of_origin: formData.placeOfOrigin || '',
+        winery_information: formData.wineryInformation || '',
+        instructions_for_use: formData.instructionsForUse || '',
+        conservation_conditions: formData.conservationConditions || '',
+        drained_weight_grams: formData.drainedWeightGrams || 0,
+        operator_name: formData.operatorName || '',
+        operator_address: formData.operatorAddress || '',
+        registration_number: formData.registrationNumber || '',
         image_url: imageFile ? null : initialData?.image_url,
-        ingredients: formData.ingredients,
-        certifications: formData.certifications,
-        has_glass_bottle: formData.hasGlassBottle,
-        has_aluminum_cap: formData.hasAluminumCap,
-        has_cardboard_box: formData.hasCardboardBox,
-        has_cork_stopper: formData.hasCorkStopper
+        ingredients: formData.ingredients || [],
+        certifications: formData.certifications || [],
+        has_glass_bottle: formData.hasGlassBottle || false,
+        has_aluminum_cap: formData.hasAluminumCap || false,
+        has_cardboard_box: formData.hasCardboardBox || false,
+        has_cork_stopper: formData.hasCorkStopper || false
       }
+
+      console.log('Form Data:', formData);
+      console.log('API Data being sent:', apiData);
 
       const response = await fetch(endpoint, {
         method,
@@ -518,7 +521,10 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
                       name="foodName" 
                       defaultValue={initialData?.food_name}
                       required 
-                      onChange={handleInputChange}
+                      onChange={(e) => {
+                        handleInputChange(e);
+                        console.log('Food Name changed:', e.target.value);
+                      }}
                     />
                     <p className="text-sm text-muted-foreground">
                       Indicar tipo de vino: tinto, blanco, espumoso, de licor, etc.
