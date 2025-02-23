@@ -45,6 +45,14 @@ export type Labels = {
   centiliters: string;
   optionalLabelling: string;
   recyclableComponents: string;
+  glassBottle: string;
+  aluminumCap: string;
+  cardboardBox: string;
+  corkStopper: string;
+  glassContainer: string;
+  yellowContainer: string;
+  blueContainer: string;
+  brownContainer: string;
 }
 
 export async function translateText(text: string, targetLanguage: string) {
@@ -174,7 +182,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramos',
     centiliters: 'centilitros',
     optionalLabelling: 'Menciones obligatorias o facultativas',
-    recyclableComponents: 'Componentes reciclables'
+    recyclableComponents: 'Componentes reciclables',
+    glassBottle: 'Botella: vidrio',
+    aluminumCap: 'Tapón: aluminio',
+    cardboardBox: 'Caja: cartón',
+    corkStopper: 'Tapón: corcho',
+    glassContainer: 'contenedor de vidrio',
+    yellowContainer: 'contenedor amarillo',
+    blueContainer: 'contenedor azul',
+    brownContainer: 'contenedor marrón'
   },
   en: {
     reference: 'Reference',
@@ -209,7 +225,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grams',
     centiliters: 'centiliters',
     optionalLabelling: 'Mandatory or optional mentions',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Bottle: glass',
+    aluminumCap: 'Cap: aluminum',
+    cardboardBox: 'Box: cardboard',
+    corkStopper: 'Stopper: cork',
+    glassContainer: 'glass container',
+    yellowContainer: 'yellow container',
+    blueContainer: 'blue container',
+    brownContainer: 'brown container'
   },
   fr: {
     reference: 'Référence',
@@ -244,7 +268,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammes',
     centiliters: 'centilitres',
     optionalLabelling: 'Mention obligatoire ou facultative',
-    recyclableComponents: 'Composants Recyclables'
+    recyclableComponents: 'Composants Recyclables',
+    glassBottle: 'Bouteille: verre',
+    aluminumCap: 'Bouchon: aluminium',
+    cardboardBox: 'Boîte: carton',
+    corkStopper: 'Bouchon: liège',
+    glassContainer: 'conteneur à verre',
+    yellowContainer: 'conteneur jaune',
+    blueContainer: 'conteneur bleu',
+    brownContainer: 'conteneur marron'
   },
   de: {
     reference: 'Referenz',
@@ -279,7 +311,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'Gramm',
     centiliters: 'Zentiliter',
     optionalLabelling: 'Pflicht- oder Optionalangaben',
-    recyclableComponents: 'Recyclingfähige Komponenten'
+    recyclableComponents: 'Recyclingfähige Komponenten',
+    glassBottle: 'Glasflasche',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Karton',
+    corkStopper: 'Kork',
+    glassContainer: 'Glasbehälter',
+    yellowContainer: 'Gelber Container',
+    blueContainer: 'Blauer Container',
+    brownContainer: 'Brauner Container'
   },
   it: {
     reference: 'Riferimento',
@@ -314,7 +354,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammi',
     centiliters: 'centilitri',
     optionalLabelling: 'Mentioni obbligatorie o facoltativi',
-    recyclableComponents: 'Componenti Recyclable'
+    recyclableComponents: 'Componenti Recyclable',
+    glassBottle: 'Bottiglia di vetro',
+    aluminumCap: 'Tappo',
+    cardboardBox: 'Scatola di cartone',
+    corkStopper: 'Tappo',
+    glassContainer: 'Contenitore di vetro',
+    yellowContainer: 'Contenitore giallo',
+    blueContainer: 'Contenitore blu',
+    brownContainer: 'Contenitore marrone'
   },
   ca: {
     reference: 'Referència',
@@ -349,7 +397,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grams',
     centiliters: 'centilitres',
     optionalLabelling: 'Mencions obligatòries o facultatives',
-    recyclableComponents: 'Components Recyclables'
+    recyclableComponents: 'Components Recyclables',
+    glassBottle: 'Ampolla de vidre',
+    aluminumCap: 'Tapa',
+    cardboardBox: 'Caixa de cartó',
+    corkStopper: 'Tapa',
+    glassContainer: 'Recipiente de vidre',
+    yellowContainer: 'Recipiente groc',
+    blueContainer: 'Recipiente blau',
+    brownContainer: 'Recipiente marró'
   },
   gl: {
     reference: 'Referencia',
@@ -384,7 +440,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramos',
     centiliters: 'centilitros',
     optionalLabelling: 'Menciones obligatorias ou facultativas',
-    recyclableComponents: 'Componentes Recyclables'
+    recyclableComponents: 'Componentes Recyclables',
+    glassBottle: 'Garrafa de vidro',
+    aluminumCap: 'Capa',
+    cardboardBox: 'Caixa de cartón',
+    corkStopper: 'Capa',
+    glassContainer: 'Recipiente de vidro',
+    yellowContainer: 'Recipiente amarelo',
+    blueContainer: 'Recipiente azul',
+    brownContainer: 'Recipiente marron'
   },
   pt: {
     reference: 'Referência',
@@ -419,7 +483,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramas',
     centiliters: 'centilitros',
     optionalLabelling: 'Menciones obrigatórias ou facultativas',
-    recyclableComponents: 'Componentes Recyclables'
+    recyclableComponents: 'Componentes Recyclables',
+    glassBottle: 'Garrafa de vidro',
+    aluminumCap: 'Tampa',
+    cardboardBox: 'Caixa de cartão',
+    corkStopper: 'Tampa',
+    glassContainer: 'Recipiente de vidro',
+    yellowContainer: 'Recipiente amarelo',
+    blueContainer: 'Recipiente azul',
+    brownContainer: 'Recipiente marrom'
   },
   ro: {
     reference: 'Referință',
@@ -454,7 +526,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grame',
     centiliters: 'centilitri',
     optionalLabelling: 'Mentionări obligatorii sau facultative',
-    recyclableComponents: 'Componente Recyclable'
+    recyclableComponents: 'Componente Recyclable',
+    glassBottle: 'Sticlă',
+    aluminumCap: 'Tampon',
+    cardboardBox: 'Cutie',
+    corkStopper: 'Tampon',
+    glassContainer: 'Recipient de sticlă',
+    yellowContainer: 'Recipient galben',
+    blueContainer: 'Recipient albastru',
+    brownContainer: 'Recipient maron'
   },
   nl: {
     reference: 'Referentie',
@@ -489,7 +569,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gram',
     centiliters: 'centiliter',
     optionalLabelling: 'Verplichte of optionele vermeldingen',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Glasfles',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Karton',
+    corkStopper: 'Kork',
+    glassContainer: 'Glascontainer',
+    yellowContainer: 'Gele container',
+    blueContainer: 'Blauwe container',
+    brownContainer: 'Bruine container'
   },
   sv: {
     reference: 'Referens',
@@ -524,7 +612,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gram',
     centiliters: 'centiliter',
     optionalLabelling: 'Obligatoriska eller valfria anteckningar',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Glasflaska',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartong',
+    corkStopper: 'Kork',
+    glassContainer: 'Glasbehållare',
+    yellowContainer: 'Gul behållare',
+    blueContainer: 'Blå behållare',
+    brownContainer: 'Brun behållare'
   },
   da: {
     reference: 'Reference',
@@ -559,7 +655,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gram',
     centiliters: 'centiliter',
     optionalLabelling: 'Obligatoriske eller valgfrie bemærkninger',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Glasflaske',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Karton',
+    corkStopper: 'Kork',
+    glassContainer: 'Glasbeholder',
+    yellowContainer: 'Gul beholder',
+    blueContainer: 'Blå beholder',
+    brownContainer: 'Brun beholder'
   },
   bg: {
     reference: 'Референция',
@@ -594,7 +698,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'грама',
     centiliters: 'сантилитра',
     optionalLabelling: 'Обязателни или факултативните споменавания',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Стъклена бутилка',
+    aluminumCap: 'Корк',
+    cardboardBox: 'Картонна кутия',
+    corkStopper: 'Корк',
+    glassContainer: 'Стъклен съд',
+    yellowContainer: 'Жълт контейнер',
+    blueContainer: 'Бял контейнер',
+    brownContainer: 'Мортов контейнер'
   },
   cs: {
     reference: 'Reference',
@@ -629,7 +741,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramů',
     centiliters: 'centilitrů',
     optionalLabelling: 'Povinné nebo volitelné zmínky',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Skleněná lahev',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonová krabice',
+    corkStopper: 'Kork',
+    glassContainer: 'Skleněný obal',
+    yellowContainer: 'Žlutý obal',
+    blueContainer: 'Modrý obal',
+    brownContainer: 'Hnědý obal'
   },
   sk: {
     reference: 'Referencia',
@@ -664,7 +784,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramov',
     centiliters: 'centilitrov',
     optionalLabelling: 'Povinné alebo voliteľné poznámky',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Sklenená lahev',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonová krabica',
+    corkStopper: 'Kork',
+    glassContainer: 'Sklenený obal',
+    yellowContainer: 'Žltý obal',
+    blueContainer: 'Modrý obal',
+    brownContainer: 'Hnědý obal'
   },
   sl: {
     reference: 'Referenca',
@@ -699,7 +827,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramov',
     centiliters: 'centilitrov',
     optionalLabelling: 'Povinjanje ali nepovpisanje',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Stakleni kozarec',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonasta kutija',
+    corkStopper: 'Kork',
+    glassContainer: 'Stakleni sprejemnik',
+    yellowContainer: 'Rumeni sprejemnik',
+    blueContainer: 'Modri sprejemnik',
+    brownContainer: 'Rjavi sprejemnik'
   },
   hr: {
     reference: 'Referenca',
@@ -734,7 +870,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grama',
     centiliters: 'centilitara',
     optionalLabelling: 'Obvezne oznake ali izbiranje',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Stakleni čaša',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonasta kutija',
+    corkStopper: 'Kork',
+    glassContainer: 'Stakleni sprejemnik',
+    yellowContainer: 'Rumeni sprejemnik',
+    blueContainer: 'Modri sprejemnik',
+    brownContainer: 'Rjavi sprejemnik'
   },
   lv: {
     reference: 'Atsauce',
@@ -769,7 +913,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grami',
     centiliters: 'centilitri',
     optionalLabelling: 'Obligātie vai izvēlētie apzīmējumi',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Stakleni kozarec',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonāta kaste',
+    corkStopper: 'Kork',
+    glassContainer: 'Stakleni sprejemnis',
+    yellowContainer: 'Dzeltenais sprejemnis',
+    blueContainer: 'Zilāis sprejemnis',
+    brownContainer: 'Brūnais sprejemnis'
   },
   lt: {
     reference: 'Nuoroda',
@@ -804,7 +956,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramai',
     centiliters: 'centilitrai',
     optionalLabelling: 'Obligatinės arba pasirinktinės žymėjimai',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Stakleni kozarec',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartoninė kibica',
+    corkStopper: 'Kork',
+    glassContainer: 'Staklinė indėlis',
+    yellowContainer: 'Džiovinė indėlis',
+    blueContainer: 'Mėlynė indėlis',
+    brownContainer: 'Raudonė indėlis'
   },
   fi: {
     reference: 'Viite',
@@ -839,7 +999,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammaa',
     centiliters: 'senttilitraa',
     optionalLabelling: 'Pakolliset tai valinnaiset merkinnät',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Lasikuppi',
+    aluminumCap: 'Korkki',
+    cardboardBox: 'Kartonkuppi',
+    corkStopper: 'Korkki',
+    glassContainer: 'Lasikontti',
+    yellowContainer: 'Keltaiset kontit',
+    blueContainer: 'Vihreät kontit',
+    brownContainer: 'Ruskea kontti'
   },
   et: {
     reference: 'Viide',
@@ -874,7 +1042,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammi',
     centiliters: 'sentiliitrit',
     optionalLabelling: 'Nõutavad või valikulised märkused',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Klaasikott',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonekott',
+    corkStopper: 'Kork',
+    glassContainer: 'Klaasikast',
+    yellowContainer: 'Kollane kast',
+    blueContainer: 'Sinine kast',
+    brownContainer: 'Punane kast'
   },
   hu: {
     reference: 'Hivatkozás',
@@ -909,7 +1085,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramm',
     centiliters: 'centiliter',
     optionalLabelling: 'Kötelező vagy opcionális megjegyzések',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Üvegpalack',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonkés',
+    corkStopper: 'Kork',
+    glassContainer: 'Üvegtartály',
+    yellowContainer: 'Sárga tartály',
+    blueContainer: 'Kék tartály',
+    brownContainer: 'Rózsaszín tartály'
   },
   ga: {
     reference: 'Tagairt',
@@ -944,7 +1128,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gram',
     centiliters: 'ceintilítear',
     optionalLabelling: 'Mentiones obrigatórias ou facultativas',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Glasflaska',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonkuppi',
+    corkStopper: 'Kork',
+    glassContainer: 'Glasbeholder',
+    yellowContainer: 'Gelb',
+    blueContainer: 'Blá',
+    brownContainer: 'Brú'
   },
   mt: {
     reference: 'Referenza',
@@ -979,7 +1171,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'grammi',
     centiliters: 'ċentilitri',
     optionalLabelling: 'Mentionijiet obbligatori jew opzionali',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Glasflaska',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonkés',
+    corkStopper: 'Kork',
+    glassContainer: 'Glasbeholder',
+    yellowContainer: 'Gelb',
+    blueContainer: 'Blá',
+    brownContainer: 'Brú'
   },
   el: {
     reference: 'Αναφορά',
@@ -1014,7 +1214,15 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'γραμμάρια',
     centiliters: 'εκατοστόλιτρα',
     optionalLabelling: 'Προαιρετικές ή υποχρεωτικές αναφορές',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Ποτήρι',
+    aluminumCap: 'Καπάκι',
+    cardboardBox: 'Καρτόνιο',
+    corkStopper: 'Καπάκι',
+    glassContainer: 'Ποτήρι',
+    yellowContainer: 'Κίτρινο ποτήρι',
+    blueContainer: 'Μπλε ποτήρι',
+    brownContainer: 'Καφέ ποτήρι'
   },
   eu: {
     reference: 'Erreferentzia',
@@ -1049,6 +1257,14 @@ export const uiLabels: Record<string, Labels> = {
     grams: 'gramo',
     centiliters: 'zentilitro',
     optionalLabelling: 'Mentiones obligatorias ou facultativas',
-    recyclableComponents: 'Recyclable Components'
+    recyclableComponents: 'Recyclable Components',
+    glassBottle: 'Glasflaska',
+    aluminumCap: 'Kork',
+    cardboardBox: 'Kartonkés',
+    corkStopper: 'Kork',
+    glassContainer: 'Glasbeholder',
+    yellowContainer: 'Gelb',
+    blueContainer: 'Blá',
+    brownContainer: 'Brú'
   }
 }; 

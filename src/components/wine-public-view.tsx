@@ -39,6 +39,14 @@ type Labels = {
   centiliters: string;
   optionalLabelling: string;
   recyclableComponents: string;
+  glassBottle: string;
+  glassContainer: string;
+  aluminumCap: string;
+  yellowContainer: string;
+  cardboardBox: string;
+  blueContainer: string;
+  corkStopper: string;
+  brownContainer: string;
 }
 
 function NutritionalInfoSkeleton() {
@@ -414,47 +422,63 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                     <h3 className="text-lg font-semibold mb-4">{labels.recyclableComponents}</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       {wine.has_glass_bottle && (
-                        <div className="flex flex-col items-center gap-2 p-2">
+                        <div className="flex flex-col items-center text-center p-2">
                           <Image
-                            src="/icons/reciclaje/gl70.png"
+                            src="/icons/reciclado/Verde.webp"
                             alt="GL 70"
                             width={50}
                             height={50}
+                            className="mb-2"
                           />
-                          <p className="text-sm font-medium text-center">GL 70</p>
+                          <p className="font-medium">GL 70</p>
+                          <p className="text-sm text-muted-foreground">
+                            ({labels.glassBottle} – {labels.glassContainer})
+                          </p>
                         </div>
                       )}
                       {wine.has_aluminum_cap && (
-                        <div className="flex flex-col items-center gap-2 p-2">
+                        <div className="flex flex-col items-center text-center p-2">
                           <Image
-                            src="/icons/reciclaje/alu41.png"
+                            src="/icons/reciclado/Amarillo.webp"
                             alt="ALU 41"
                             width={50}
                             height={50}
+                            className="mb-2"
                           />
-                          <p className="text-sm font-medium text-center">ALU 41</p>
+                          <p className="font-medium">ALU 41</p>
+                          <p className="text-sm text-muted-foreground">
+                            ({labels.aluminumCap} – {labels.yellowContainer})
+                          </p>
                         </div>
                       )}
                       {wine.has_cardboard_box && (
-                        <div className="flex flex-col items-center gap-2 p-2">
+                        <div className="flex flex-col items-center text-center p-2">
                           <Image
-                            src="/icons/reciclaje/pap20.png"
+                            src="/icons/reciclado/Azul.webp"
                             alt="PAP 20"
                             width={50}
                             height={50}
+                            className="mb-2"
                           />
-                          <p className="text-sm font-medium text-center">PAP 20</p>
+                          <p className="font-medium">PAP 20</p>
+                          <p className="text-sm text-muted-foreground">
+                            ({labels.cardboardBox} – {labels.blueContainer})
+                          </p>
                         </div>
                       )}
                       {wine.has_cork_stopper && (
-                        <div className="flex flex-col items-center gap-2 p-2">
+                        <div className="flex flex-col items-center text-center p-2">
                           <Image
-                            src="/icons/reciclaje/for50.png"
+                            src="/icons/reciclado/Marron.webp"
                             alt="FOR 50"
                             width={50}
                             height={50}
+                            className="mb-2"
                           />
-                          <p className="text-sm font-medium text-center">FOR 50</p>
+                          <p className="font-medium">FOR 50</p>
+                          <p className="text-sm text-muted-foreground">
+                            ({labels.corkStopper} – {labels.brownContainer})
+                          </p>
                         </div>
                       )}
                     </div>
