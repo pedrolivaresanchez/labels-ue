@@ -322,15 +322,47 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
       const endpoint = isEditing ? `/api/wines/${initialData?.id}` : '/api/wines'
       const method = isEditing ? 'PUT' : 'POST'
 
+      // Convert form data to snake_case for the API
+      const apiData = {
+        name: formData.name,
+        ean_code: formData.eanCode,
+        food_name: formData.foodName,
+        energy_kj: formData.energyKj,
+        energy_kcal: formData.energyKcal,
+        fat: formData.fat,
+        saturated_fat: formData.saturatedFat,
+        carbohydrate: formData.carbohydrate,
+        sugars: formData.sugars,
+        protein: formData.protein,
+        salt: formData.salt,
+        net_quantity_cl: formData.netQuantityCl,
+        has_estimation_sign: formData.hasEstimationSign,
+        alcohol_percentage: formData.alcoholPercentage,
+        optional_labelling: formData.optionalLabelling,
+        country_of_origin: formData.countryOfOrigin,
+        place_of_origin: formData.placeOfOrigin,
+        winery_information: formData.wineryInformation,
+        instructions_for_use: formData.instructionsForUse,
+        conservation_conditions: formData.conservationConditions,
+        drained_weight_grams: formData.drainedWeightGrams,
+        operator_name: formData.operatorName,
+        operator_address: formData.operatorAddress,
+        registration_number: formData.registrationNumber,
+        image_url: imageFile ? null : initialData?.image_url,
+        ingredients: formData.ingredients,
+        certifications: formData.certifications,
+        has_glass_bottle: formData.hasGlassBottle,
+        has_aluminum_cap: formData.hasAluminumCap,
+        has_cardboard_box: formData.hasCardboardBox,
+        has_cork_stopper: formData.hasCorkStopper
+      }
+
       const response = await fetch(endpoint, {
         method,
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          ...formData,
-          imageUrl: imageFile ? null : initialData?.image_url // Preserve existing image if no new image
-        })
+        body: JSON.stringify(apiData)
       })
 
       if (!response.ok) {
@@ -357,8 +389,8 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              ...formData,
-              imageUrl
+              ...apiData,
+              image_url: imageUrl
             })
           })
 

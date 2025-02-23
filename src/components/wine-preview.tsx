@@ -202,6 +202,71 @@ export function WinePreview({ formData }: WinePreviewProps) {
             </p>
           </div>
         )}
+
+        {/* Recycling Icons */}
+        {(formData.hasGlassBottle || formData.hasAluminumCap || formData.hasCardboardBox || formData.hasCorkStopper) && (
+          <div className="border rounded-lg p-4">
+            <h3 className="text-lg font-semibold mb-4">Componentes reciclables</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {formData.hasGlassBottle && (
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/icons/reciclaje/gl70.png"
+                    alt="GL 70"
+                    width={40}
+                    height={40}
+                  />
+                  <div>
+                    <p className="font-medium">GL 70</p>
+                    <p className="text-sm text-muted-foreground">Botella de vidrio transparente</p>
+                  </div>
+                </div>
+              )}
+              {formData.hasAluminumCap && (
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/icons/reciclaje/alu41.png"
+                    alt="ALU 41"
+                    width={40}
+                    height={40}
+                  />
+                  <div>
+                    <p className="font-medium">ALU 41</p>
+                    <p className="text-sm text-muted-foreground">Cápsula de aluminio</p>
+                  </div>
+                </div>
+              )}
+              {formData.hasCardboardBox && (
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/icons/reciclaje/pap20.png"
+                    alt="PAP 20"
+                    width={40}
+                    height={40}
+                  />
+                  <div>
+                    <p className="font-medium">PAP 20</p>
+                    <p className="text-sm text-muted-foreground">Caja de cartón</p>
+                  </div>
+                </div>
+              )}
+              {formData.hasCorkStopper && (
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/icons/reciclaje/for50.png"
+                    alt="FOR 50"
+                    width={40}
+                    height={40}
+                  />
+                  <div>
+                    <p className="font-medium">FOR 50</p>
+                    <p className="text-sm text-muted-foreground">Tapón de corcho natural</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       <Accordion type="single" collapsible defaultValue="referencia" className="w-full space-y-4">
