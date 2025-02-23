@@ -89,7 +89,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
   const [newCertification, setNewCertification] = useState("");
   const [formData, setFormData] = useState<FormData>({
     name: '',
-    eanCode: 'N/A',
+    eanCode: '',
     foodName: '',
     energyKj: 0,
     energyKcal: 0,
@@ -283,9 +283,12 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         img.src = URL.createObjectURL(file);
       });
 
-      if (image.width < 300 || image.height < 300) {
-        setShowDimensionsDialog(true);
-        e.target.value = ''; // Clear the input
+      if (image.width < 400 || image.height < 400) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "La imagen debe tener al menos 400x400 píxeles",
+        });
         return;
       }
 
@@ -1168,7 +1171,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
           <DialogHeader>
             <DialogTitle>Dimensiones de imagen no válidas</DialogTitle>
             <DialogDescription>
-              La imagen debe tener un tamaño mínimo de 300x300 píxeles. Por favor, selecciona una imagen más grande.
+              La imagen debe tener un tamaño mínimo de 400x400 píxeles. Por favor, selecciona una imagen más grande.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
