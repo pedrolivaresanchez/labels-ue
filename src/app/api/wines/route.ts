@@ -105,7 +105,7 @@ export async function POST(req: Request) {
     const wineData = {
       user_id: session.user.id,
       name: body.name,
-      ean_code: body.eanCode,
+      ean_code: body.eanCode || '',
       food_name: body.foodName,
       energy_kj: body.energyKj,
       energy_kcal: body.energyKcal,
