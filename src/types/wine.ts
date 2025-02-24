@@ -74,12 +74,6 @@ export interface Wine {
   has_aluminum_cap: boolean;
   has_cardboard_box: boolean;
   has_cork_stopper: boolean;
-  has_paper_label: boolean;
-  has_plastic_label: boolean;
-  has_pvc_cap: boolean;
-  has_polystyrene_cap: boolean;
-  has_plastic_cork: boolean;
-  has_plastic_wrapper: boolean;
 }
 
 export interface WineFormData {
@@ -122,10 +116,4 @@ export interface WineFormData {
   hasAluminumCap: boolean;
   hasCardboardBox: boolean;
   hasCorkStopper: boolean;
-  hasPaperLabel: boolean;
-  hasPlasticLabel: boolean;
-  hasPvcCap: boolean;
-  hasPolystyreneCap: boolean;
-  hasPlasticCork: boolean;
-  hasPlasticWrapper: boolean;
 }

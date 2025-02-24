@@ -86,27 +86,14 @@ export async function PUT(
       operator_name: body.operator_name,
       operator_address: body.operator_address,
       registration_number: body.registration_number,
+      image_url: body.image_url,
+      ingredients: body.ingredients,
+      production_variants: body.production_variants,
+      certifications: body.certifications,
       has_glass_bottle: body.has_glass_bottle,
       has_aluminum_cap: body.has_aluminum_cap,
       has_cardboard_box: body.has_cardboard_box,
-      has_cork_stopper: body.has_cork_stopper,
-      has_paper_label: body.has_paper_label,
-      has_plastic_label: body.has_plastic_label,
-      has_pvc_cap: body.has_pvc_cap,
-      has_polystyrene_cap: body.has_polystyrene_cap,
-      has_plastic_cork: body.has_plastic_cork,
-      has_plastic_wrapper: body.has_plastic_wrapper,
-      image_url: body.image_url,
-      ingredients: body.ingredients?.map((i: { name: string; isAllergen: boolean }) => ({
-        name: i.name,
-        isAllergen: i.isAllergen
-      })),
-      production_variants: body.productionVariants?.map((v: { variantName: string }) => ({
-        variant_name: v.variantName
-      })),
-      certifications: body.certifications?.map((c: { certificationName: string }) => ({
-        certification_name: c.certificationName
-      }))
+      has_cork_stopper: body.has_cork_stopper
     };
 
     // Update the wine
