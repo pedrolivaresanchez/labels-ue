@@ -76,6 +76,12 @@ interface FormData {
   hasAluminumCap: boolean;
   hasCardboardBox: boolean;
   hasCorkStopper: boolean;
+  hasPaperLabel: boolean;
+  hasPlasticLabel: boolean;
+  hasPvcCap: boolean;
+  hasPolystyreneCap: boolean;
+  hasPlasticCork: boolean;
+  hasPlasticWrapper: boolean;
 }
 
 export function WineForm({ initialData, isEditing = false, defaultOpen = false }: WineFormProps) {
@@ -118,7 +124,13 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
     hasGlassBottle: false,
     hasAluminumCap: false,
     hasCardboardBox: false,
-    hasCorkStopper: false
+    hasCorkStopper: false,
+    hasPaperLabel: false,
+    hasPlasticLabel: false,
+    hasPvcCap: false,
+    hasPolystyreneCap: false,
+    hasPlasticCork: false,
+    hasPlasticWrapper: false
   })
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image_url || null);
@@ -172,7 +184,13 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         hasGlassBottle: initialData.has_glass_bottle ?? false,
         hasAluminumCap: initialData.has_aluminum_cap ?? false,
         hasCardboardBox: initialData.has_cardboard_box ?? false,
-        hasCorkStopper: initialData.has_cork_stopper ?? false
+        hasCorkStopper: initialData.has_cork_stopper ?? false,
+        hasPaperLabel: initialData.has_paper_label ?? false,
+        hasPlasticLabel: initialData.has_plastic_label ?? false,
+        hasPvcCap: initialData.has_pvc_cap ?? false,
+        hasPolystyreneCap: initialData.has_polystyrene_cap ?? false,
+        hasPlasticCork: initialData.has_plastic_cork ?? false,
+        hasPlasticWrapper: initialData.has_plastic_wrapper ?? false
       });
 
       if (initialData.image_url) {
@@ -360,7 +378,13 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         has_glass_bottle: formData.hasGlassBottle || false,
         has_aluminum_cap: formData.hasAluminumCap || false,
         has_cardboard_box: formData.hasCardboardBox || false,
-        has_cork_stopper: formData.hasCorkStopper || false
+        has_cork_stopper: formData.hasCorkStopper || false,
+        has_paper_label: formData.hasPaperLabel || false,
+        has_plastic_label: formData.hasPlasticLabel || false,
+        has_pvc_cap: formData.hasPvcCap || false,
+        has_polystyrene_cap: formData.hasPolystyreneCap || false,
+        has_plastic_cork: formData.hasPlasticCork || false,
+        has_plastic_wrapper: formData.hasPlasticWrapper || false
       }
 
       console.log('Form Data:', formData);
@@ -443,55 +467,51 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Información del producto</CardTitle>
+                <CardTitle>Información básica</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-8">
-                  {/* Image Upload */}
+                <div className="grid gap-4">
                   <div className="grid gap-4">
-                    <Label>Imagen del producto</Label>
-                    <div className="flex flex-col gap-4">
-                      {imagePreview ? (
-                        <div className="relative w-40 h-40 mx-auto">
-                          <Image
-                            src={imagePreview}
-                            alt="Preview"
-                            fill
-                            className="object-cover rounded-lg"
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="absolute -top-2 -right-2 bg-background"
-                            onClick={() => {
-                              setImagePreview(null);
-                              setImageFile(null);
-                            }}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed rounded-lg mx-auto hover:bg-accent/50 transition-colors cursor-pointer"
-                             onClick={() => document.getElementById('image-upload')?.click()}>
-                          <ImageIcon className="w-8 h-8 text-muted-foreground mb-2" />
-                          <p className="text-sm text-muted-foreground">Click para subir</p>
-                        </div>
-                      )}
-                      <div className="space-y-2">
-                        <Input
-                          id="image-upload"
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp"
-                          onChange={handleImageChange}
-                          className="cursor-pointer"
+                    {imagePreview ? (
+                      <div className="relative w-40 h-40 mx-auto">
+                        <Image
+                          src={imagePreview}
+                          alt="Vista previa"
+                          fill
+                          className="object-contain"
                         />
-                        <p className="text-sm text-muted-foreground text-center">
-                          JPG, PNG o WebP. Máximo 2MB.<br/>
-                          Dimensiones recomendadas: 1200×1200px
-                        </p>
+                        <button
+                          onClick={() => {
+                            setImagePreview(null);
+                            setImageFile(null);
+                            if (initialData?.image_url) {
+                              deleteWineImage(initialData.image_url);
+                            }
+                          }}
+                          className="absolute -top-2 -right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed rounded-lg mx-auto hover:bg-accent/50 transition-colors cursor-pointer"
+                           onClick={() => document.getElementById('image-upload')?.click()}>
+                        <ImageIcon className="w-8 h-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground">Click para subir</p>
+                      </div>
+                    )}
+                    <div className="space-y-2">
+                      <Input
+                        id="image-upload"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        onChange={handleImageChange}
+                        className="cursor-pointer"
+                      />
+                      <p className="text-sm text-muted-foreground text-center">
+                        JPG, PNG o WebP. Máximo 2MB.<br/>
+                        Dimensiones recomendadas: 1200×1200px
+                      </p>
                     </div>
                   </div>
 
@@ -527,10 +547,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
                       name="foodName" 
                       defaultValue={initialData?.food_name}
                       required 
-                      onChange={(e) => {
-                        handleInputChange(e);
-                        console.log('Food Name changed:', e.target.value);
-                      }}
+                      onChange={handleInputChange}
                     />
                     <p className="text-sm text-muted-foreground">
                       Indicar tipo de vino: tinto, blanco, espumoso, de licor, etc.
@@ -542,108 +559,93 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
             <Card>
               <CardHeader>
-                <div className="flex flex-col space-y-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle>Información nutricional</CardTitle>
-                    <Dialog defaultOpen={defaultOpen}>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm" className="gap-2">
-                          <Info className="h-4 w-4" />
-                          Tolerancias UE
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[600px]">
-                        <DialogHeader>
-                          <DialogTitle>Tolerancias en la declaración nutricional</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                          <p className="text-sm text-muted-foreground">
-                            En las directrices de etiquetado nutricional de la UE (EU 1169/2011), se puede usar "0g" para indicar 
-                            niveles insignificantes de grasas, grasas saturadas, proteínas y sal. Estas directrices se encuentran 
-                            en la sección 6, tabla 4 de los documentos de orientación de la UE sobre etiquetado nutricional.
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Usted es responsable de declarar los valores que excedan estas tolerancias, aunque cuando se trata de 
-                            vinos típicos, muchos expertos sugieren que no se necesitan pruebas adicionales si los valores están 
-                            dentro de estas tolerancias. Las tolerancias permitidas para el vino están armonizadas dentro de la UE.
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Para vinos con menos de 100 g/l de azúcar (que es el caso de la mayoría de los vinos excepto los vinos 
-                            dulces), se permite una tolerancia de 2 g/100 ml (equivalente a 20 g/l) para la declaración de azúcares 
-                            e hidratos de carbono.
-                          </p>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <p className="text-sm text-muted-foreground">
-                      Introduce los valores nutricionales medios por 100 ml. Utiliza la calculadora para obtener los valores de energía en kJ y kcal.
-                    </p>
-                    <div className="shrink-0">
-                      <WineCalculatorDialog 
-                        onCalculate={(values) => {
-                          const abv = parseFloat(document.getElementById('alcohol')?.getAttribute('data-abv') || '0');
-                          setFormData(prev => ({
-                            ...prev,
-                            energyKj: values.energyKj,
-                            energyKcal: values.energyKcal,
-                            carbohydrate: values.carbohydrate,
-                            sugars: values.sugars,
-                            alcoholPercentage: abv,
-                            fat: 0,
-                            saturatedFat: 0,
-                            protein: 0.1,
-                            salt: 0,
-                          }));
-
-                          // Actualizar los valores en los inputs
-                          const inputs = {
-                            energyKj: values.energyKj,
-                            energyKcal: values.energyKcal,
-                            carbohydrate: values.carbohydrate,
-                            sugars: values.sugars,
-                            alcoholPercentage: abv,
-                            fat: 0,
-                            saturatedFat: 0,
-                            protein: 0.1,
-                            salt: 0,
-                          };
-
-                          Object.entries(inputs).forEach(([key, value]) => {
-                            const input = document.getElementById(key) as HTMLInputElement;
-                            if (input) {
-                              input.value = value.toString();
-                            }
-                          });
+                <CardTitle>Ingredientes</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid gap-4">
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <Input
+                        placeholder="Añadir ingrediente"
+                        value={newIngredient}
+                        onChange={(e) => setNewIngredient(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            addIngredient();
+                          }
                         }}
                       />
                     </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="isAllergen"
+                        checked={isAllergen}
+                        onCheckedChange={(checked) => setIsAllergen(checked as boolean)}
+                      />
+                      <Label htmlFor="isAllergen" className="text-sm">Alérgeno</Label>
+                    </div>
+                    <Button type="button" onClick={addIngredient}>Añadir</Button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {ingredients.map((ingredient, index) => (
+                      <div key={index} className="flex items-center gap-2 bg-accent/50 p-2 rounded-md">
+                        <span className={ingredient.isAllergen ? "font-bold" : ""}>
+                          {ingredient.name}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="ml-auto h-8 w-8"
+                          onClick={() => removeIngredient(index)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Información nutricional</CardTitle>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-muted-foreground">
+                    Por cada 100ml de producto
+                  </p>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Info className="h-4 w-4" />
+                    </Button>
+                  </DialogTrigger>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4 pt-0">
+              <CardContent className="space-y-4">
                 <div className="grid gap-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor="energyKj">Energía (kJ)</Label>
+                      <Label htmlFor="energyKj">Valor energético (kJ)</Label>
                       <Input 
                         id="energyKj" 
                         name="energyKj" 
                         type="number" 
-                        step="1"
+                        step="0.1"
                         defaultValue={initialData?.energy_kj}
                         required 
                         onChange={handleInputChange}
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="energyKcal">Energía (kcal)</Label>
+                      <Label htmlFor="energyKcal">Valor energético (kcal)</Label>
                       <Input 
                         id="energyKcal" 
                         name="energyKcal" 
                         type="number" 
-                        step="1"
+                        step="0.1"
                         defaultValue={initialData?.energy_kcal}
                         required 
                         onChange={handleInputChange}
@@ -941,163 +943,278 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
                   Selecciona los materiales reciclables presentes en el producto.
                 </p>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="flex items-center space-x-4 border rounded-lg p-4">
-                    <Image
-                      src="/icons/reciclado/Verde.webp"
-                      alt="GL 70"
-                      width={40}
-                      height={40}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="hasGlassBottle"
-                          checked={formData.hasGlassBottle}
-                          onCheckedChange={(checked) => {
-                            setFormData(prev => ({
-                              ...prev,
-                              hasGlassBottle: checked as boolean
-                            }))
-                          }}
-                        />
-                        <Label htmlFor="hasGlassBottle">GL 70</Label>
+              <CardContent className="space-y-8">
+                {/* Contenedor Verde */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4">Contenedor Verde</h3>
+                  <div className="grid gap-4">
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Verde.webp"
+                        alt="GL 70"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasGlassBottle"
+                            checked={formData.hasGlassBottle}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasGlassBottle: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasGlassBottle">GL 70</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Botella de vidrio</p>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">Botella de vidrio transparente</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4 border rounded-lg p-4">
-                    <Image
-                      src="/icons/reciclado/Amarillo.webp"
-                      alt="ALU 41"
-                      width={40}
-                      height={40}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="hasAluminumCap"
-                          checked={formData.hasAluminumCap}
-                          onCheckedChange={(checked) => {
-                            setFormData(prev => ({
-                              ...prev,
-                              hasAluminumCap: checked as boolean
-                            }))
-                          }}
-                        />
-                        <Label htmlFor="hasAluminumCap">ALU 41</Label>
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-1">Cápsula de aluminio</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4 border rounded-lg p-4">
-                    <Image
-                      src="/icons/reciclado/Azul.webp"
-                      alt="PAP 20"
-                      width={40}
-                      height={40}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="hasCardboardBox"
-                          checked={formData.hasCardboardBox}
-                          onCheckedChange={(checked) => {
-                            setFormData(prev => ({
-                              ...prev,
-                              hasCardboardBox: checked as boolean
-                            }))
-                          }}
-                        />
-                        <Label htmlFor="hasCardboardBox">PAP 20</Label>
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-1">Caja de cartón</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4 border rounded-lg p-4">
-                    <Image
-                      src="/icons/reciclado/Marron.webp"
-                      alt="FOR 50"
-                      width={40}
-                      height={40}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="hasCorkStopper"
-                          checked={formData.hasCorkStopper}
-                          onCheckedChange={(checked) => {
-                            setFormData(prev => ({
-                              ...prev,
-                              hasCorkStopper: checked as boolean
-                            }))
-                          }}
-                        />
-                        <Label htmlFor="hasCorkStopper">FOR 50</Label>
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-1">Tapón de corcho natural</p>
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Ingredientes</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Lista los ingredientes en orden descendente de peso. Marca la casilla si el ingrediente es un alérgeno.
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Input
-                      value={newIngredient}
-                      onChange={(e) => setNewIngredient(e.target.value)}
-                      placeholder="Añadir ingrediente"
-                      className="flex-1"
-                    />
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="isAllergen"
-                        checked={isAllergen}
-                        onCheckedChange={(checked) => setIsAllergen(checked as boolean)}
+                {/* Contenedor Amarillo */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4">Contenedor Amarillo</h3>
+                  <div className="grid gap-4">
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="ALU 41"
+                        width={40}
+                        height={40}
                       />
-                      <Label htmlFor="isAllergen" className="text-sm">Alérgeno</Label>
-                    </div>
-                    <Button 
-                      type="button"
-                      onClick={addIngredient}
-                      disabled={!newIngredient.trim()}
-                      className="w-full sm:w-auto whitespace-nowrap"
-                    >
-                      Añadir
-                    </Button>
-                  </div>
-                  <div className="space-y-2">
-                    {ingredients.map((ingredient, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 border rounded">
-                        <div className="flex items-center gap-2">
-                          <span>{ingredient.name}</span>
-                          {ingredient.isAllergen && (
-                            <span className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded">Alérgeno</span>
-                          )}
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasAluminumCap"
+                            checked={formData.hasAluminumCap}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasAluminumCap: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasAluminumCap">ALU 41</Label>
                         </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeIngredient(index)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
+                        <p className="text-sm text-muted-foreground mt-1">Cápsula de aluminio</p>
                       </div>
-                    ))}
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="PP 05"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPlasticLabel"
+                            checked={formData.hasPlasticLabel}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPlasticLabel: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPlasticLabel">PP 05</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Etiqueta de plástico</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="PVC 03"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPvcCap"
+                            checked={formData.hasPvcCap}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPvcCap: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPvcCap">PVC 03</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Cápsula de PVC</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="PS 06"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPolystyreneCap"
+                            checked={formData.hasPolystyreneCap}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPolystyreneCap: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPolystyreneCap">PS 06</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Cápsula de poliestireno</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="PE 02"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPlasticCork"
+                            checked={formData.hasPlasticCork}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPlasticCork: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPlasticCork">PE 02</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Tapón de polietileno</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="LDPE 04"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPlasticWrapper"
+                            checked={formData.hasPlasticWrapper}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPlasticWrapper: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPlasticWrapper">LDPE 04</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Film de plástico</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contenedor Azul */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4">Contenedor Azul</h3>
+                  <div className="grid gap-4">
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Azul.webp"
+                        alt="PAP 20"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasCardboardBox"
+                            checked={formData.hasCardboardBox}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasCardboardBox: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasCardboardBox">PAP 20</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Caja de cartón</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Azul.webp"
+                        alt="PAP 22"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPaperLabel"
+                            checked={formData.hasPaperLabel}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPaperLabel: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPaperLabel">PAP 22</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Etiqueta de papel</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contenedor Marrón */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4">Contenedor Marrón</h3>
+                  <div className="grid gap-4">
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Marron.webp"
+                        alt="FOR 50"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasCorkStopper"
+                            checked={formData.hasCorkStopper}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasCorkStopper: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasCorkStopper">FOR 50</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Tapón de corcho natural</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
