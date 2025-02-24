@@ -74,9 +74,17 @@ export type Wine = {
   registrationNumber: string;
   optional_labelling: string | null;
   has_glass_bottle: boolean;
+  has_brown_glass_bottle: boolean;
+  has_green_glass_bottle: boolean;
+  has_paper_label: boolean;
+  has_plastic_label: boolean;
   has_aluminum_cap: boolean;
-  has_cardboard_box: boolean;
+  has_pvc_cap: boolean;
+  has_polystyrene_cap: boolean;
   has_cork_stopper: boolean;
+  has_plastic_cork: boolean;
+  has_cardboard_box: boolean;
+  has_plastic_wrapper: boolean;
 };
 
 async function translateText(text: string, targetLanguage: string) {
@@ -196,9 +204,17 @@ async function getWine(id: string): Promise<Wine | null> {
     registrationNumber: wine.registration_number,
     optional_labelling: wine.optional_labelling,
     has_glass_bottle: wine.has_glass_bottle || false,
+    has_brown_glass_bottle: wine.has_brown_glass_bottle || false,
+    has_green_glass_bottle: wine.has_green_glass_bottle || false,
+    has_paper_label: wine.has_paper_label || false,
+    has_plastic_label: wine.has_plastic_label || false,
     has_aluminum_cap: wine.has_aluminum_cap || false,
+    has_pvc_cap: wine.has_pvc_cap || false,
+    has_polystyrene_cap: wine.has_polystyrene_cap || false,
+    has_cork_stopper: wine.has_cork_stopper || false,
+    has_plastic_cork: wine.has_plastic_cork || false,
     has_cardboard_box: wine.has_cardboard_box || false,
-    has_cork_stopper: wine.has_cork_stopper || false
+    has_plastic_wrapper: wine.has_plastic_wrapper || false
   };
 }
 

@@ -81,14 +81,21 @@ type WineFormData = {
   operator_address: string;
   registration_number: string;
   has_glass_bottle: boolean;
+  has_brown_glass_bottle: boolean;
+  has_green_glass_bottle: boolean;
+  has_paper_label: boolean;
+  has_plastic_label: boolean;
   has_aluminum_cap: boolean;
-  has_cardboard_box: boolean;
+  has_pvc_cap: boolean;
+  has_polystyrene_cap: boolean;
   has_cork_stopper: boolean;
+  has_plastic_cork: boolean;
+  has_cardboard_box: boolean;
+  has_plastic_wrapper: boolean;
   image_url: string | null;
   ingredients: { ingredientName: string; isAllergen: boolean }[];
   productionVariants: { variantName: string }[];
   certifications: { certificationName: string }[];
-  disclaimerIcons: { iconName: string }[];
 };
 
 export async function POST(req: Request) {
@@ -134,9 +141,17 @@ export async function POST(req: Request) {
       operator_address: body.operator_address,
       registration_number: body.registration_number,
       has_glass_bottle: body.has_glass_bottle,
+      has_brown_glass_bottle: body.has_brown_glass_bottle,
+      has_green_glass_bottle: body.has_green_glass_bottle,
+      has_paper_label: body.has_paper_label,
+      has_plastic_label: body.has_plastic_label,
       has_aluminum_cap: body.has_aluminum_cap,
-      has_cardboard_box: body.has_cardboard_box,
+      has_pvc_cap: body.has_pvc_cap,
+      has_polystyrene_cap: body.has_polystyrene_cap,
       has_cork_stopper: body.has_cork_stopper,
+      has_plastic_cork: body.has_plastic_cork,
+      has_cardboard_box: body.has_cardboard_box,
+      has_plastic_wrapper: body.has_plastic_wrapper,
       image_url: body.image_url
     };
 
@@ -209,26 +224,6 @@ export async function POST(req: Request) {
 
         if (certificationsError) {
           console.error("[CERTIFICATIONS_CREATE]", certificationsError);
-        }
-      }
-    }
-
-    // Handle disclaimer icons
-    if (body.disclaimerIcons?.length > 0) {
-      const icons = body.disclaimerIcons
-        .filter(d => d?.iconName && typeof d.iconName === 'string')
-        .map(d => ({
-          wine_id: wine.id,
-          icon_name: d.iconName
-        }));
-
-      if (icons.length > 0) {
-        const { error: iconsError } = await supabase
-          .from('disclaimer_icons')
-          .insert(icons);
-
-        if (iconsError) {
-          console.error("[ICONS_CREATE]", iconsError);
         }
       }
     }

@@ -73,9 +73,17 @@ interface FormData {
     certificationName: string;
   }>;
   hasGlassBottle: boolean;
+  hasBrownGlassBottle: boolean;
+  hasGreenGlassBottle: boolean;
+  hasPaperLabel: boolean;
+  hasPlasticLabel: boolean;
   hasAluminumCap: boolean;
-  hasCardboardBox: boolean;
+  hasPvcCap: boolean;
+  hasPolystyreneCap: boolean;
   hasCorkStopper: boolean;
+  hasPlasticCork: boolean;
+  hasCardboardBox: boolean;
+  hasPlasticWrapper: boolean;
 }
 
 export function WineForm({ initialData, isEditing = false, defaultOpen = false }: WineFormProps) {
@@ -116,9 +124,17 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
     ingredients: [],
     certifications: [],
     hasGlassBottle: false,
+    hasBrownGlassBottle: false,
+    hasGreenGlassBottle: false,
+    hasPaperLabel: false,
+    hasPlasticLabel: false,
     hasAluminumCap: false,
+    hasPvcCap: false,
+    hasPolystyreneCap: false,
+    hasCorkStopper: false,
+    hasPlasticCork: false,
     hasCardboardBox: false,
-    hasCorkStopper: false
+    hasPlasticWrapper: false
   })
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image_url || null);
@@ -170,9 +186,17 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         ingredients: mappedIngredients,
         certifications: mappedCertifications,
         hasGlassBottle: initialData.has_glass_bottle ?? false,
+        hasBrownGlassBottle: initialData.has_brown_glass_bottle ?? false,
+        hasGreenGlassBottle: initialData.has_green_glass_bottle ?? false,
+        hasPaperLabel: initialData.has_paper_label ?? false,
+        hasPlasticLabel: initialData.has_plastic_label ?? false,
         hasAluminumCap: initialData.has_aluminum_cap ?? false,
+        hasPvcCap: initialData.has_pvc_cap ?? false,
+        hasPolystyreneCap: initialData.has_polystyrene_cap ?? false,
+        hasCorkStopper: initialData.has_cork_stopper ?? false,
+        hasPlasticCork: initialData.has_plastic_cork ?? false,
         hasCardboardBox: initialData.has_cardboard_box ?? false,
-        hasCorkStopper: initialData.has_cork_stopper ?? false
+        hasPlasticWrapper: initialData.has_plastic_wrapper ?? false
       });
 
       if (initialData.image_url) {
@@ -358,9 +382,17 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
           certification_name: c.certificationName
         })) || [],
         has_glass_bottle: formData.hasGlassBottle || false,
+        has_brown_glass_bottle: formData.hasBrownGlassBottle || false,
+        has_green_glass_bottle: formData.hasGreenGlassBottle || false,
+        has_paper_label: formData.hasPaperLabel || false,
+        has_plastic_label: formData.hasPlasticLabel || false,
         has_aluminum_cap: formData.hasAluminumCap || false,
+        has_pvc_cap: formData.hasPvcCap || false,
+        has_polystyrene_cap: formData.hasPolystyreneCap || false,
+        has_cork_stopper: formData.hasCorkStopper || false,
+        has_plastic_cork: formData.hasPlasticCork || false,
         has_cardboard_box: formData.hasCardboardBox || false,
-        has_cork_stopper: formData.hasCorkStopper || false
+        has_plastic_wrapper: formData.hasPlasticWrapper || false
       }
 
       console.log('Form Data:', formData);
@@ -941,105 +973,333 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
                   Selecciona los materiales reciclables presentes en el producto.
                 </p>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="flex items-center space-x-4 border rounded-lg p-4">
-                    <Image
-                      src="/icons/reciclado/Verde.webp"
-                      alt="GL 70"
-                      width={40}
-                      height={40}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="hasGlassBottle"
-                          checked={formData.hasGlassBottle}
-                          onCheckedChange={(checked) => {
-                            setFormData(prev => ({
-                              ...prev,
-                              hasGlassBottle: checked as boolean
-                            }))
-                          }}
-                        />
-                        <Label htmlFor="hasGlassBottle">GL 70</Label>
+              <CardContent className="space-y-8">
+                {/* Botella */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4">Botella</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Verde.webp"
+                        alt="GL 70"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasGlassBottle"
+                            checked={formData.hasGlassBottle}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasGlassBottle: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasGlassBottle">GL 70</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Botella de vidrio transparente</p>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">Botella de vidrio transparente</p>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Verde.webp"
+                        alt="GL 71"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasBrownGlassBottle"
+                            checked={formData.hasBrownGlassBottle}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasBrownGlassBottle: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasBrownGlassBottle">GL 71</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Botella de vidrio marrón</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Verde.webp"
+                        alt="GL 72"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasGreenGlassBottle"
+                            checked={formData.hasGreenGlassBottle}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasGreenGlassBottle: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasGreenGlassBottle">GL 72</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Botella de vidrio verde</p>
+                      </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex items-center space-x-4 border rounded-lg p-4">
-                    <Image
-                      src="/icons/reciclado/Amarillo.webp"
-                      alt="ALU 41"
-                      width={40}
-                      height={40}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="hasAluminumCap"
-                          checked={formData.hasAluminumCap}
-                          onCheckedChange={(checked) => {
-                            setFormData(prev => ({
-                              ...prev,
-                              hasAluminumCap: checked as boolean
-                            }))
-                          }}
-                        />
-                        <Label htmlFor="hasAluminumCap">ALU 41</Label>
+                {/* Etiqueta */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4">Etiqueta</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Azul.webp"
+                        alt="PAP 22"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPaperLabel"
+                            checked={formData.hasPaperLabel}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPaperLabel: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPaperLabel">PAP 22</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Etiqueta de papel</p>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">Cápsula de aluminio</p>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="PP 05"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPlasticLabel"
+                            checked={formData.hasPlasticLabel}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPlasticLabel: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPlasticLabel">PP 05</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Etiqueta de plástico</p>
+                      </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex items-center space-x-4 border rounded-lg p-4">
-                    <Image
-                      src="/icons/reciclado/Azul.webp"
-                      alt="PAP 20"
-                      width={40}
-                      height={40}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="hasCardboardBox"
-                          checked={formData.hasCardboardBox}
-                          onCheckedChange={(checked) => {
-                            setFormData(prev => ({
-                              ...prev,
-                              hasCardboardBox: checked as boolean
-                            }))
-                          }}
-                        />
-                        <Label htmlFor="hasCardboardBox">PAP 20</Label>
+                {/* Cápsula */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4">Cápsula</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="ALU 41"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasAluminumCap"
+                            checked={formData.hasAluminumCap}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasAluminumCap: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasAluminumCap">ALU 41</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Cápsula de aluminio</p>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">Caja de cartón</p>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="PVC 03"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPvcCap"
+                            checked={formData.hasPvcCap}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPvcCap: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPvcCap">PVC 03</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Cápsula de PVC</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="PS 06"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPolystyreneCap"
+                            checked={formData.hasPolystyreneCap}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPolystyreneCap: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPolystyreneCap">PS 06</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Cápsula de poliestireno</p>
+                      </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex items-center space-x-4 border rounded-lg p-4">
-                    <Image
-                      src="/icons/reciclado/Marron.webp"
-                      alt="FOR 50"
-                      width={40}
-                      height={40}
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="hasCorkStopper"
-                          checked={formData.hasCorkStopper}
-                          onCheckedChange={(checked) => {
-                            setFormData(prev => ({
-                              ...prev,
-                              hasCorkStopper: checked as boolean
-                            }))
-                          }}
-                        />
-                        <Label htmlFor="hasCorkStopper">FOR 50</Label>
+                {/* Tapón */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4">Tapón</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Marron.webp"
+                        alt="FOR 50"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasCorkStopper"
+                            checked={formData.hasCorkStopper}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasCorkStopper: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasCorkStopper">FOR 50</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Tapón de corcho natural</p>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">Tapón de corcho natural</p>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="PE 02"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPlasticCork"
+                            checked={formData.hasPlasticCork}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPlasticCork: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPlasticCork">PE 02</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Tapón de polietileno sintético</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Caja y Film */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4">Caja y Film</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Azul.webp"
+                        alt="PAP 20"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasCardboardBox"
+                            checked={formData.hasCardboardBox}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasCardboardBox: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasCardboardBox">PAP 20</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Caja de cartón</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-4 border rounded-lg p-4">
+                      <Image
+                        src="/icons/reciclado/Amarillo.webp"
+                        alt="LDPE 04"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="hasPlasticWrapper"
+                            checked={formData.hasPlasticWrapper}
+                            onCheckedChange={(checked) => {
+                              setFormData(prev => ({
+                                ...prev,
+                                hasPlasticWrapper: checked as boolean
+                              }))
+                            }}
+                          />
+                          <Label htmlFor="hasPlasticWrapper">LDPE 04</Label>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">Film de plástico</p>
+                      </div>
                     </div>
                   </div>
                 </div>

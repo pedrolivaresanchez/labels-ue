@@ -60,8 +60,7 @@ export async function PUT(
 
     const body = await req.json();
 
-    // Transform camelCase to snake_case
-    const transformedData = {
+    const wineData = {
       name: body.name,
       ean_code: body.ean_code,
       food_name: body.food_name,
@@ -86,20 +85,25 @@ export async function PUT(
       operator_name: body.operator_name,
       operator_address: body.operator_address,
       registration_number: body.registration_number,
-      image_url: body.image_url,
-      ingredients: body.ingredients,
-      production_variants: body.production_variants,
-      certifications: body.certifications,
       has_glass_bottle: body.has_glass_bottle,
+      has_brown_glass_bottle: body.has_brown_glass_bottle,
+      has_green_glass_bottle: body.has_green_glass_bottle,
+      has_paper_label: body.has_paper_label,
+      has_plastic_label: body.has_plastic_label,
       has_aluminum_cap: body.has_aluminum_cap,
+      has_pvc_cap: body.has_pvc_cap,
+      has_polystyrene_cap: body.has_polystyrene_cap,
+      has_cork_stopper: body.has_cork_stopper,
+      has_plastic_cork: body.has_plastic_cork,
       has_cardboard_box: body.has_cardboard_box,
-      has_cork_stopper: body.has_cork_stopper
+      has_plastic_wrapper: body.has_plastic_wrapper,
+      image_url: body.image_url
     };
 
     // Update the wine
     const { data: wine, error } = await supabase
       .from('wines')
-      .update(transformedData)
+      .update(wineData)
       .eq('id', id)
       .eq('user_id', session.user.id)
       .select()

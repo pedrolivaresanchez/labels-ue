@@ -71,9 +71,17 @@ export interface Wine {
   }>;
   disclaimer_icons?: Array<{ icon_name: string }>;
   has_glass_bottle: boolean;
+  has_brown_glass_bottle: boolean;
+  has_green_glass_bottle: boolean;
+  has_paper_label: boolean;
+  has_plastic_label: boolean;
   has_aluminum_cap: boolean;
-  has_cardboard_box: boolean;
+  has_pvc_cap: boolean;
+  has_polystyrene_cap: boolean;
   has_cork_stopper: boolean;
+  has_plastic_cork: boolean;
+  has_cardboard_box: boolean;
+  has_plastic_wrapper: boolean;
 }
 
 export interface WineFormData {
@@ -113,7 +121,15 @@ export interface WineFormData {
     certificationName: string;
   }>;
   hasGlassBottle: boolean;
+  hasBrownGlassBottle: boolean;
+  hasGreenGlassBottle: boolean;
+  hasPaperLabel: boolean;
+  hasPlasticLabel: boolean;
   hasAluminumCap: boolean;
-  hasCardboardBox: boolean;
+  hasPvcCap: boolean;
+  hasPolystyreneCap: boolean;
   hasCorkStopper: boolean;
+  hasPlasticCork: boolean;
+  hasCardboardBox: boolean;
+  hasPlasticWrapper: boolean;
 }
