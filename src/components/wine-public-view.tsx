@@ -417,6 +417,24 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                 </CardContent>
               </Card>
 
+              <Card>
+                <CardContent className="space-y-4 p-6">
+                  <h3 className="text-lg font-semibold mb-4">{labels.operatorData}</h3>
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.operatorName}</h3>
+                    <p className="text-base sm:text-lg">{wine.operatorName}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.operatorAddress}</h3>
+                    <p className="text-base sm:text-lg">{wine.operatorAddress}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.registration}</h3>
+                    <p className="text-base sm:text-lg">{wine.registrationNumber}</p>
+                  </div>
+                </CardContent>
+              </Card>
+
               {(wine.has_glass_bottle || wine.has_brown_glass_bottle || wine.has_green_glass_bottle || 
                 wine.has_paper_label || wine.has_plastic_label || 
                 wine.has_aluminum_cap || wine.has_pvc_cap || wine.has_polystyrene_cap || 
@@ -598,24 +616,6 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                   </CardContent>
                 </Card>
               )}
-
-              <Card>
-                <CardContent className="space-y-4 p-6">
-                  <h3 className="text-lg font-semibold mb-4">{labels.operatorData}</h3>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">{labels.operatorName}</h3>
-                    <p className="text-base sm:text-lg">{wine.operatorName}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">{labels.operatorAddress}</h3>
-                    <p className="text-base sm:text-lg">{wine.operatorAddress}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">{labels.registration}</h3>
-                    <p className="text-base sm:text-lg">{wine.registrationNumber}</p>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </AccordionContent>
         </AccordionItem>
