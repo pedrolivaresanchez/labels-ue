@@ -357,19 +357,38 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
               <Card>
                 <CardContent className="space-y-4 p-6">
                   <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">{labels.countryOfOrigin}</h3>
-                    <p className="text-base sm:text-lg">{wine.countryOfOrigin}</p>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.ingredients}</h3>
+                    <div className="text-base sm:text-lg space-x-1">
+                      {wine.ingredients.map((ingredient, index) => (
+                        <span key={index}>
+                          <span className={ingredient.isAllergen ? "font-bold" : ""}>
+                            {ingredient.name}
+                          </span>
+                          {index < wine.ingredients.length - 1 ? ', ' : ''}
+                        </span>
+                      ))}
+                    </div>
+                    {wine.ingredients.some(ingredient => ingredient.isAllergen) && (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        Contiene sulfitos
+                      </p>
+                    )}
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">{labels.placeOfOrigin}</h3>
-                    <p className="text-base sm:text-lg">{wine.placeOfOrigin}</p>
-                  </div>
-                  {wine.optional_labelling && (
+
+                  {wine.certifications && wine.certifications.length > 0 && (
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">{labels.optionalLabelling}</h3>
-                      <p className="text-base sm:text-lg">{wine.optional_labelling}</p>
+                      <h3 className="text-sm font-medium text-muted-foreground">{labels.certifications}</h3>
+                      <div className="text-base sm:text-lg">
+                        {wine.certifications.map((cert, index) => (
+                          <span key={index}>
+                            {cert.certificationName}
+                            {index < wine.certifications.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   )}
+
                   {wine.productionVariants && wine.productionVariants.length > 0 && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">{labels.productionVariants}</h3>
@@ -383,17 +402,23 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       </div>
                     </div>
                   )}
-                  {wine.certifications && wine.certifications.length > 0 && (
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="space-y-4 p-6">
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.countryOfOrigin}</h3>
+                    <p className="text-base sm:text-lg">{wine.countryOfOrigin}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">{labels.placeOfOrigin}</h3>
+                    <p className="text-base sm:text-lg">{wine.placeOfOrigin}</p>
+                  </div>
+                  {wine.optional_labelling && (
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground">{labels.certifications}</h3>
-                      <div className="text-base sm:text-lg">
-                        {wine.certifications.map((cert, index) => (
-                          <span key={index}>
-                            {cert.certificationName}
-                            {index < wine.certifications.length - 1 ? ', ' : ''}
-                          </span>
-                        ))}
-                      </div>
+                      <h3 className="text-sm font-medium text-muted-foreground">{labels.optionalLabelling}</h3>
+                      <p className="text-base sm:text-lg">{wine.optional_labelling}</p>
                     </div>
                   )}
                   {wine.instructionsForUse && (
