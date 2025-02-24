@@ -61,22 +61,7 @@ export async function PUT(
     // First check if the wine exists
     const { data: existingWine, error: existingWineError } = await supabase
       .from('wines')
-      .select(`
-        *,
-        ingredients (
-          id,
-          ingredient_name,
-          is_allergen
-        ),
-        production_variants (
-          id,
-          variant_name
-        ),
-        certifications (
-          id,
-          certification_name
-        )
-      `)
+      .select('*')
       .eq('id', id)
       .eq('user_id', session.user.id)
       .single();
@@ -134,22 +119,7 @@ export async function PUT(
       .update(wineData)
       .eq('id', id)
       .eq('user_id', session.user.id)
-      .select(`
-        *,
-        ingredients (
-          id,
-          ingredient_name,
-          is_allergen
-        ),
-        production_variants (
-          id,
-          variant_name
-        ),
-        certifications (
-          id,
-          certification_name
-        )
-      `)
+      .select('*')
       .single();
 
     if (wineError) {
@@ -234,31 +204,27 @@ export async function PUT(
     }
 
     // Get the final wine with all relationships
-    const { data: finalWine, error: finalError } = await supabase
-      .from('wines')
-      .select(`
-        *,
-        ingredients (
-          id,
-          ingredient_name,
-          is_allergen
-        ),
-        production_variants (
-          id,
-          variant_name
-        ),
-        certifications (
-          id,
-          certification_name
-        )
-      `)
-      .eq('id', id)
-      .single();
+    const { data: ingredients } = await supabase
+      .from('ingredients')
+      .select('*')
+      .eq('wine_id', id);
 
-    if (finalError) {
-      console.error("[WINE_GET_FINAL]", finalError);
-      return new NextResponse("Error getting updated wine", { status: 400 });
-    }
+    const { data: variants } = await supabase
+      .from('production_variants')
+      .select('*')
+      .eq('wine_id', id);
+
+    const { data: certifications } = await supabase
+      .from('certifications')
+      .select('*')
+      .eq('wine_id', id);
+
+    const finalWine = {
+      ...wine,
+      ingredients: ingredients || [],
+      production_variants: variants || [],
+      certifications: certifications || []
+    };
 
     return NextResponse.json(finalWine);
   } catch (error) {
