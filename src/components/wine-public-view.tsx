@@ -471,20 +471,21 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                     <p className="text-sm text-muted-foreground mb-6">
                       {labels.recyclingNote}
                     </p>
-                    <div className="space-y-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       {/* Botella */}
                       {(wine.has_glass_bottle || wine.has_brown_glass_bottle || wine.has_green_glass_bottle) && (
-                        <div className="flex items-center gap-4">
-                          <div className="flex-1">
-                            <h4 className="text-xl font-semibold mb-2">Botella</h4>
-                          </div>
-                          <div className="flex-1 flex justify-end">
+                        <div className="border rounded-md p-3">
+                          <h4 className="text-base font-medium mb-3">Botella</h4>
+                          <div className="flex items-center gap-3">
                             <Image
                               src="/icons/reciclado/Verde.webp"
                               alt="Recicla al Verde"
-                              width={100}
-                              height={100}
+                              width={50}
+                              height={50}
                             />
+                            <div>
+                              <p className="text-sm text-muted-foreground">Contenedor verde</p>
+                            </div>
                           </div>
                         </div>
                       )}
@@ -492,51 +493,54 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       {/* Corcho y cápsula */}
                       {(wine.has_aluminum_cap || wine.has_pvc_cap || wine.has_polystyrene_cap || 
                         wine.has_cork_stopper || wine.has_plastic_cork) && (
-                        <div className="flex items-center gap-4">
-                          <div className="flex-1">
-                            <h4 className="text-xl font-semibold mb-2">Corcho y cápsula</h4>
-                          </div>
-                          <div className="flex-1 flex justify-end">
+                        <div className="border rounded-md p-3">
+                          <h4 className="text-base font-medium mb-3">Corcho y cápsula</h4>
+                          <div className="flex items-center gap-3">
                             <Image
                               src="/icons/reciclado/Amarillo.webp"
                               alt="Recicla al Amarillo"
-                              width={100}
-                              height={100}
+                              width={50}
+                              height={50}
                             />
+                            <div>
+                              <p className="text-sm text-muted-foreground">Contenedor amarillo</p>
+                            </div>
                           </div>
                         </div>
                       )}
 
                       {/* Caja */}
                       {(wine.has_cardboard_box || wine.has_paper_label) && (
-                        <div className="flex items-center gap-4">
-                          <div className="flex-1">
-                            <h4 className="text-xl font-semibold mb-2">Caja</h4>
-                          </div>
-                          <div className="flex-1 flex justify-end">
+                        <div className="border rounded-md p-3">
+                          <h4 className="text-base font-medium mb-3">Caja</h4>
+                          <div className="flex items-center gap-3">
                             <Image
                               src="/icons/reciclado/Azul.webp"
                               alt="Recicla al Azul"
-                              width={100}
-                              height={100}
+                              width={50}
+                              height={50}
                             />
+                            <div>
+                              <p className="text-sm text-muted-foreground">Contenedor azul</p>
+                            </div>
                           </div>
                         </div>
                       )}
 
                       {/* Film plástico y etiquetas de plástico */}
                       {(wine.has_plastic_wrapper || wine.has_plastic_label) && (
-                        <div className="flex items-center gap-4">
-                          <div className="flex-1">
-                            <h4 className="text-xl font-semibold mb-2">Film y etiquetas plásticas</h4>
-                          </div>
-                          <div className="flex-1 flex justify-end">
+                        <div className="border rounded-md p-3">
+                          <h4 className="text-base font-medium mb-3">Film y etiquetas plásticas</h4>
+                          <div className="flex items-center gap-3">
                             <Image
                               src="/icons/reciclado/Amarillo.webp"
                               alt="Recicla al Amarillo"
-                              width={100}
-                              height={100}
+                              width={50}
+                              height={50}
                             />
+                            <div>
+                              <p className="text-sm text-muted-foreground">Contenedor amarillo</p>
+                            </div>
                           </div>
                         </div>
                       )}

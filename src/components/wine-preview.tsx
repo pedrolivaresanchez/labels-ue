@@ -211,20 +211,21 @@ export function WinePreview({ formData }: WinePreviewProps) {
           formData.hasCardboardBox || formData.hasPlasticWrapper) && (
           <div className="border rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-4">Componentes reciclables</h3>
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Botella */}
               {(formData.hasGlassBottle || formData.hasBrownGlassBottle || formData.hasGreenGlassBottle) && (
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold">Botella</h4>
-                  </div>
+                <div className="border rounded-md p-3">
+                  <h4 className="text-base font-medium mb-2">Botella</h4>
                   <div className="flex items-center gap-2">
                     <Image
                       src="/icons/reciclado/Verde.webp"
                       alt="Recicla al Verde"
-                      width={60}
-                      height={60}
+                      width={40}
+                      height={40}
                     />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Contenedor verde</p>
+                    </div>
                   </div>
                 </div>
               )}
@@ -232,51 +233,54 @@ export function WinePreview({ formData }: WinePreviewProps) {
               {/* Corcho y cápsula */}
               {(formData.hasAluminumCap || formData.hasPvcCap || formData.hasPolystyreneCap || 
                 formData.hasCorkStopper || formData.hasPlasticCork) && (
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold">Corcho y cápsula</h4>
-                  </div>
+                <div className="border rounded-md p-3">
+                  <h4 className="text-base font-medium mb-2">Corcho y cápsula</h4>
                   <div className="flex items-center gap-2">
                     <Image
                       src="/icons/reciclado/Amarillo.webp"
                       alt="Recicla al Amarillo"
-                      width={60}
-                      height={60}
+                      width={40}
+                      height={40}
                     />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Contenedor amarillo</p>
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* Caja */}
               {(formData.hasCardboardBox || formData.hasPaperLabel) && (
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold">Caja</h4>
-                  </div>
+                <div className="border rounded-md p-3">
+                  <h4 className="text-base font-medium mb-2">Caja</h4>
                   <div className="flex items-center gap-2">
                     <Image
                       src="/icons/reciclado/Azul.webp"
                       alt="Recicla al Azul"
-                      width={60}
-                      height={60}
+                      width={40}
+                      height={40}
                     />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Contenedor azul</p>
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* Film plástico y etiquetas de plástico */}
               {(formData.hasPlasticWrapper || formData.hasPlasticLabel) && (
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold">Film y etiquetas plásticas</h4>
-                  </div>
+                <div className="border rounded-md p-3">
+                  <h4 className="text-base font-medium mb-2">Film y etiquetas plásticas</h4>
                   <div className="flex items-center gap-2">
                     <Image
                       src="/icons/reciclado/Amarillo.webp"
                       alt="Recicla al Amarillo"
-                      width={60}
-                      height={60}
+                      width={40}
+                      height={40}
                     />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Contenedor amarillo</p>
+                    </div>
                   </div>
                 </div>
               )}
