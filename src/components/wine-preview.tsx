@@ -211,181 +211,72 @@ export function WinePreview({ formData }: WinePreviewProps) {
           formData.hasCardboardBox || formData.hasPlasticWrapper) && (
           <div className="border rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-4">Componentes reciclables</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {/* Botellas */}
-              {formData.hasGlassBottle && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Verde.webp"
-                    alt="GL 70"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">GL 70</p>
-                    <p className="text-sm text-muted-foreground">Botella de vidrio transparente</p>
+            <div className="space-y-4">
+              {/* Botella */}
+              {(formData.hasGlassBottle || formData.hasBrownGlassBottle || formData.hasGreenGlassBottle) && (
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold">Botella</h4>
                   </div>
-                </div>
-              )}
-              {formData.hasBrownGlassBottle && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Verde.webp"
-                    alt="GL 71"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">GL 71</p>
-                    <p className="text-sm text-muted-foreground">Botella de vidrio marrón</p>
-                  </div>
-                </div>
-              )}
-              {formData.hasGreenGlassBottle && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Verde.webp"
-                    alt="GL 72"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">GL 72</p>
-                    <p className="text-sm text-muted-foreground">Botella de vidrio verde</p>
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src="/icons/reciclado/Verde.webp"
+                      alt="Recicla al Verde"
+                      width={60}
+                      height={60}
+                    />
                   </div>
                 </div>
               )}
 
-              {/* Etiquetas */}
-              {formData.hasPaperLabel && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Azul.webp"
-                    alt="PAP 22"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">PAP 22</p>
-                    <p className="text-sm text-muted-foreground">Etiqueta de papel</p>
+              {/* Corcho y cápsula */}
+              {(formData.hasAluminumCap || formData.hasPvcCap || formData.hasPolystyreneCap || 
+                formData.hasCorkStopper || formData.hasPlasticCork) && (
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold">Corcho y cápsula</h4>
                   </div>
-                </div>
-              )}
-              {formData.hasPlasticLabel && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Amarillo.webp"
-                    alt="PP 05"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">PP 05</p>
-                    <p className="text-sm text-muted-foreground">Etiqueta de plástico</p>
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src="/icons/reciclado/Amarillo.webp"
+                      alt="Recicla al Amarillo"
+                      width={60}
+                      height={60}
+                    />
                   </div>
                 </div>
               )}
 
-              {/* Cápsulas */}
-              {formData.hasAluminumCap && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Amarillo.webp"
-                    alt="ALU 41"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">ALU 41</p>
-                    <p className="text-sm text-muted-foreground">Cápsula de aluminio</p>
+              {/* Caja */}
+              {(formData.hasCardboardBox || formData.hasPaperLabel) && (
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold">Caja</h4>
                   </div>
-                </div>
-              )}
-              {formData.hasPvcCap && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Amarillo.webp"
-                    alt="PVC 03"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">PVC 03</p>
-                    <p className="text-sm text-muted-foreground">Cápsula de PVC</p>
-                  </div>
-                </div>
-              )}
-              {formData.hasPolystyreneCap && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Amarillo.webp"
-                    alt="PS 06"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">PS 06</p>
-                    <p className="text-sm text-muted-foreground">Cápsula de poliestireno</p>
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src="/icons/reciclado/Azul.webp"
+                      alt="Recicla al Azul"
+                      width={60}
+                      height={60}
+                    />
                   </div>
                 </div>
               )}
 
-              {/* Tapones */}
-              {formData.hasCorkStopper && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Marron.webp"
-                    alt="FOR 50"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">FOR 50</p>
-                    <p className="text-sm text-muted-foreground">Tapón de corcho natural</p>
+              {/* Film plástico y etiquetas de plástico */}
+              {(formData.hasPlasticWrapper || formData.hasPlasticLabel) && (
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold">Film y etiquetas plásticas</h4>
                   </div>
-                </div>
-              )}
-              {formData.hasPlasticCork && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Amarillo.webp"
-                    alt="PE 02"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">PE 02</p>
-                    <p className="text-sm text-muted-foreground">Tapón de polietileno sintético</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Caja y Film */}
-              {formData.hasCardboardBox && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Azul.webp"
-                    alt="PAP 20"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">PAP 20</p>
-                    <p className="text-sm text-muted-foreground">Caja de cartón</p>
-                  </div>
-                </div>
-              )}
-              {formData.hasPlasticWrapper && (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/icons/reciclado/Amarillo.webp"
-                    alt="LDPE 04"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="font-medium">LDPE 04</p>
-                    <p className="text-sm text-muted-foreground">Film de plástico</p>
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src="/icons/reciclado/Amarillo.webp"
+                      alt="Recicla al Amarillo"
+                      width={60}
+                      height={60}
+                    />
                   </div>
                 </div>
               )}
