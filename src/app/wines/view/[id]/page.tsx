@@ -79,13 +79,7 @@ async function getWine(id: string): Promise<Wine> {
 
   const { data: wine, error } = await supabase
     .from('wines')
-    .select(`
-      *,
-      ingredients (*),
-      production_variants (*),
-      certifications (*),
-      disclaimer_icons (*)
-    `)
+    .select('*')
     .eq('id', id)
     .eq('user_id', session.user.id)
     .single();
@@ -93,6 +87,46 @@ async function getWine(id: string): Promise<Wine> {
   if (error || !wine) {
     console.error("[WINE_GET] Error:", error);
     notFound();
+  }
+
+  // Get ingredients separately
+  const { data: ingredients, error: ingredientsError } = await supabase
+    .from('ingredients')
+    .select('*')
+    .eq('wine_id', id);
+
+  if (ingredientsError) {
+    console.error("[WINE_GET_INGREDIENTS] Error:", ingredientsError);
+  }
+
+  // Get production variants separately
+  const { data: productionVariants, error: variantsError } = await supabase
+    .from('production_variants')
+    .select('*')
+    .eq('wine_id', id);
+
+  if (variantsError) {
+    console.error("[WINE_GET_VARIANTS] Error:", variantsError);
+  }
+
+  // Get certifications separately
+  const { data: certifications, error: certsError } = await supabase
+    .from('certifications')
+    .select('*')
+    .eq('wine_id', id);
+
+  if (certsError) {
+    console.error("[WINE_GET_CERTIFICATIONS] Error:", certsError);
+  }
+
+  // Get disclaimer icons separately
+  const { data: disclaimerIcons, error: iconsError } = await supabase
+    .from('disclaimer_icons')
+    .select('*')
+    .eq('wine_id', id);
+
+  if (iconsError) {
+    console.error("[WINE_GET_DISCLAIMER_ICONS] Error:", iconsError);
   }
 
   // Transform the data to match the expected format
@@ -122,23 +156,23 @@ async function getWine(id: string): Promise<Wine> {
     operatorName: wine.operator_name,
     operatorAddress: wine.operator_address,
     registrationNumber: wine.registration_number,
-    ingredients: wine.ingredients 
-      ? wine.ingredients.map((i: any) => ({
+    ingredients: ingredients 
+      ? ingredients.map((i: any) => ({
           name: i.ingredient_name,
           isAllergen: i.is_allergen
         })) 
       : [],
-    certifications: wine.certifications 
-      ? wine.certifications.map((c: any) => ({
+    certifications: certifications 
+      ? certifications.map((c: any) => ({
           certificationName: c.certification_name
         })) 
       : [],
-    productionVariants: wine.production_variants 
-      ? wine.production_variants.map((v: any) => ({
+    productionVariants: productionVariants 
+      ? productionVariants.map((v: any) => ({
           variantName: v.variant_name
         })) 
       : [],
-    disclaimerIcons: wine.disclaimer_icons || [],
+    disclaimerIcons: disclaimerIcons || [],
     image_url: wine.image_url
   };
 }

@@ -163,19 +163,53 @@ async function translateWine(wine: Wine, targetLanguage: string) {
 async function getWine(id: string): Promise<Wine | null> {
   const { data: wine, error } = await supabase
     .from('wines')
-    .select(`
-      *,
-      ingredients (*),
-      production_variants (*),
-      certifications (*),
-      disclaimer_icons (*)
-    `)
+    .select('*')
     .eq('id', id)
     .single();
 
   if (error || !wine) {
     console.error("[PUBLIC_WINE_GET]", error);
     return null;
+  }
+
+  // Get ingredients separately
+  const { data: ingredients, error: ingredientsError } = await supabase
+    .from('ingredients')
+    .select('*')
+    .eq('wine_id', id);
+
+  if (ingredientsError) {
+    console.error("[PUBLIC_WINE_GET_INGREDIENTS]", ingredientsError);
+  }
+
+  // Get production variants separately
+  const { data: productionVariants, error: variantsError } = await supabase
+    .from('production_variants')
+    .select('*')
+    .eq('wine_id', id);
+
+  if (variantsError) {
+    console.error("[PUBLIC_WINE_GET_VARIANTS]", variantsError);
+  }
+
+  // Get certifications separately
+  const { data: certifications, error: certsError } = await supabase
+    .from('certifications')
+    .select('*')
+    .eq('wine_id', id);
+
+  if (certsError) {
+    console.error("[PUBLIC_WINE_GET_CERTIFICATIONS]", certsError);
+  }
+
+  // Get disclaimer icons separately
+  const { data: disclaimerIcons, error: iconsError } = await supabase
+    .from('disclaimer_icons')
+    .select('*')
+    .eq('wine_id', id);
+
+  if (iconsError) {
+    console.error("[PUBLIC_WINE_GET_DISCLAIMER_ICONS]", iconsError);
   }
 
   return {
@@ -194,24 +228,24 @@ async function getWine(id: string): Promise<Wine | null> {
     netQuantityCl: wine.net_quantity_cl,
     alcoholPercentage: wine.alcohol_percentage,
     hasEstimationSign: wine.has_estimation_sign,
-    ingredients: wine.ingredients 
-      ? wine.ingredients.map((i: any) => ({
+    ingredients: ingredients 
+      ? ingredients.map((i: any) => ({
           name: i.ingredient_name,
           isAllergen: i.is_allergen
         })) 
       : [],
-    productionVariants: wine.production_variants 
-      ? wine.production_variants.map((v: any) => ({
+    productionVariants: productionVariants 
+      ? productionVariants.map((v: any) => ({
           variantName: v.variant_name
         })) 
       : [],
-    certifications: wine.certifications 
-      ? wine.certifications.map((c: any) => ({
+    certifications: certifications 
+      ? certifications.map((c: any) => ({
           certificationName: c.certification_name
         })) 
       : [],
-    disclaimerIcons: wine.disclaimer_icons 
-      ? wine.disclaimer_icons.map((d: any) => ({
+    disclaimerIcons: disclaimerIcons 
+      ? disclaimerIcons.map((d: any) => ({
           iconName: d.icon_name
         })) 
       : [],

@@ -21,15 +21,10 @@ export async function GET(
       return new NextResponse("Wine id is required", { status: 400 });
     }
 
+    // Avoid using nested relationships, use separate queries instead
     const { data: wine, error } = await supabase
       .from('wines')
-      .select(`
-        *,
-        ingredients (*),
-        production_variants (*),
-        certifications (*),
-        disclaimer_icons (*)
-      `)
+      .select('*')
       .eq('id', id)
       .eq('user_id', session.user.id)
       .single();
@@ -37,6 +32,46 @@ export async function GET(
     if (error || !wine) {
       console.error("[WINE_GET] Error:", error);
       return new NextResponse("Not found", { status: 404 });
+    }
+
+    // Get ingredients separately
+    const { data: ingredients, error: ingredientsError } = await supabase
+      .from('ingredients')
+      .select('*')
+      .eq('wine_id', id);
+
+    if (ingredientsError) {
+      console.error("[WINE_GET_INGREDIENTS] Error:", ingredientsError);
+    }
+
+    // Get production variants separately
+    const { data: productionVariants, error: variantsError } = await supabase
+      .from('production_variants')
+      .select('*')
+      .eq('wine_id', id);
+
+    if (variantsError) {
+      console.error("[WINE_GET_VARIANTS] Error:", variantsError);
+    }
+
+    // Get certifications separately
+    const { data: certifications, error: certsError } = await supabase
+      .from('certifications')
+      .select('*')
+      .eq('wine_id', id);
+
+    if (certsError) {
+      console.error("[WINE_GET_CERTIFICATIONS] Error:", certsError);
+    }
+
+    // Get disclaimer icons separately
+    const { data: disclaimerIcons, error: iconsError } = await supabase
+      .from('disclaimer_icons')
+      .select('*')
+      .eq('wine_id', id);
+
+    if (iconsError) {
+      console.error("[WINE_GET_DISCLAIMER_ICONS] Error:", iconsError);
     }
 
     // Transform the relations to the expected format but keep original properties
@@ -61,12 +96,16 @@ export async function GET(
       instructionsForUse: wine.instructions_for_use,
       conservationConditions: wine.conservation_conditions,
       
-      // Transformed arrays will be added later to avoid duplication
+      // Add related data
+      ingredients: ingredients || [],
+      production_variants: productionVariants || [],
+      certifications: certifications || [],
+      disclaimer_icons: disclaimerIcons || []
     };
 
     // Add ingredient transformations that preserve both formats
-    if (wine.ingredients && wine.ingredients.length > 0) {
-      transformedWine.ingredients = wine.ingredients.map((i: any) => ({
+    if (ingredients && ingredients.length > 0) {
+      transformedWine.ingredients = ingredients.map((i: any) => ({
         ...i,
         name: i.ingredient_name,
         isAllergen: i.is_allergen
@@ -76,8 +115,8 @@ export async function GET(
     }
 
     // Transform production variants
-    if (wine.production_variants && wine.production_variants.length > 0) {
-      transformedWine.productionVariants = wine.production_variants.map((v: any) => ({
+    if (productionVariants && productionVariants.length > 0) {
+      transformedWine.productionVariants = productionVariants.map((v: any) => ({
         ...v,
         variantName: v.variant_name
       }));
@@ -86,8 +125,8 @@ export async function GET(
     }
 
     // Transform certifications
-    if (wine.certifications && wine.certifications.length > 0) {
-      transformedWine.certifications = wine.certifications.map((c: any) => ({
+    if (certifications && certifications.length > 0) {
+      transformedWine.certifications = certifications.map((c: any) => ({
         ...c,
         certificationName: c.certification_name
       }));
