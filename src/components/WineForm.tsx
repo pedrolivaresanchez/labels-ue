@@ -66,7 +66,7 @@ interface FormData {
   registrationNumber: string;
   imageUrl: string | null;
   ingredients: Array<{
-    ingredientName: string;
+    name: string;
     isAllergen: boolean;
   }>;
   certifications: Array<{
@@ -90,11 +90,11 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
   const router = useRouter()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
-  const [ingredients, setIngredients] = useState<Array<{ingredientName: string; isAllergen: boolean}>>([]);
-  const [newIngredient, setNewIngredient] = useState<string>("");
-  const [isAllergen, setIsAllergen] = useState<boolean>(false);
-  const [certifications, setCertifications] = useState<Array<{certificationName: string}>>([]);
-  const [newCertification, setNewCertification] = useState<string>("");
+  const [ingredients, setIngredients] = useState<Array<{ name: string; isAllergen: boolean }>>([]);
+  const [certifications, setCertifications] = useState<Array<{ certificationName: string }>>([]);
+  const [newIngredient, setNewIngredient] = useState("");
+  const [isAllergen, setIsAllergen] = useState(false);
+  const [newCertification, setNewCertification] = useState("");
   const [formData, setFormData] = useState<FormData>({
     name: '',
     eanCode: '',
@@ -145,7 +145,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
     if (initialData && isEditing) {
       // Set ingredients from initialData
       const mappedIngredients = initialData.ingredients?.map(i => ({
-        ingredientName: i.ingredientName,
+        name: i.name,
         isAllergen: i.isAllergen
       })) || [];
       setIngredients(mappedIngredients);
@@ -207,26 +207,28 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
   // Update preview data when ingredients change
   useEffect(() => {
-    // Actualizar formData siempre que cambie ingredients, incluso si está vacío
-    setFormData(prev => ({
-      ...prev,
-      ingredients
-    }));
+    if (ingredients.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        ingredients
+      }));
+    }
   }, [ingredients]);
 
   // Update preview data when certifications change
   useEffect(() => {
-    // Actualizar formData siempre que cambie certifications, incluso si está vacío
-    setFormData(prev => ({
-      ...prev,
-      certifications
-    }));
+    if (certifications.length > 0) {
+      setFormData(prev => ({
+        ...prev,
+        certifications
+      }));
+    }
   }, [certifications]);
 
   const addIngredient = () => {
     if (newIngredient.trim()) {
       const newIngredients = [...ingredients, { 
-        ingredientName: newIngredient.trim(), 
+        name: newIngredient.trim(), 
         isAllergen 
       }];
       setIngredients(newIngredients);
@@ -373,7 +375,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         registration_number: formData.registrationNumber || '',
         image_url: imageFile ? null : initialData?.image_url,
         ingredients: formData.ingredients.map(i => ({
-          ingredientName: i.ingredientName,
+          ingredientName: i.name,
           isAllergen: i.isAllergen
         })) || [],
         certifications: formData.certifications.map(c => ({
@@ -395,8 +397,6 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
       console.log('Form Data:', formData);
       console.log('API Data being sent:', apiData);
-      console.log('Ingredientes antes de enviar:', apiData.ingredients);
-      console.log('Formato de ingredientes:', apiData.ingredients.map(i => typeof i.ingredientName === 'string' && typeof i.isAllergen === 'boolean'));
 
       const response = await fetch(endpoint, {
         method,
@@ -1343,7 +1343,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
                     {ingredients.map((ingredient, index) => (
                       <div key={index} className="flex items-center justify-between p-2 border rounded">
                         <div className="flex items-center gap-2">
-                          <span>{ingredient.ingredientName}</span>
+                          <span>{ingredient.name}</span>
                           {ingredient.isAllergen && (
                             <span className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded">Alérgeno</span>
                           )}
@@ -1417,7 +1417,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || ingredients.length === 0}>
               {loading ? "Guardando..." : (isEditing ? "Actualizar" : "Guardar")}
             </Button>
           </div>

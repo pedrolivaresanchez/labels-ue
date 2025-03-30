@@ -312,7 +312,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       {wine.ingredients.map((ingredient, index) => (
                         <span key={index}>
                           <span className={ingredient.isAllergen ? "font-bold" : ""}>
-                            {ingredient.ingredientName}
+                            {ingredient.name}
                           </span>
                           {index < wine.ingredients.length - 1 ? ', ' : ''}
                         </span>
@@ -362,7 +362,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       {wine.ingredients.map((ingredient, index) => (
                         <span key={index}>
                           <span className={ingredient.isAllergen ? "font-bold" : ""}>
-                            {ingredient.ingredientName}
+                            {ingredient.name}
                           </span>
                           {index < wine.ingredients.length - 1 ? ', ' : ''}
                         </span>

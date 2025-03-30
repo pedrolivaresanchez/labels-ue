@@ -56,7 +56,7 @@ export interface Wine {
   registration_number: string;
   image_url: string | null;
   ingredients: Array<{
-    ingredientName: string;
+    name: string;
     isAllergen: boolean;
   }>;
   productionVariants: Array<{
@@ -111,7 +111,7 @@ export interface WineFormData {
   registrationNumber: string;
   imageUrl: string | null;
   ingredients: Array<{
-    ingredientName: string;
+    name: string;
     isAllergen: boolean;
   }>;
   productionVariants: Array<{

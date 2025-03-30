@@ -138,8 +138,6 @@ export async function PUT(
 
     // Handle ingredients
     if (body.ingredients?.length > 0) {
-      console.log('Ingredientes recibidos en API (PUT):', body.ingredients);
-      
       const ingredients = body.ingredients
         .filter((i: { ingredientName?: string; isAllergen?: boolean }) => 
           i && i.ingredientName && typeof i.ingredientName === 'string' && typeof i.isAllergen === 'boolean'
@@ -150,8 +148,6 @@ export async function PUT(
           is_allergen: i.isAllergen
         }));
 
-      console.log('Ingredientes después de filtrar (PUT):', ingredients);
-      
       if (ingredients.length > 0) {
         const { error: ingredientsError } = await supabase
           .from('ingredients')
@@ -161,8 +157,6 @@ export async function PUT(
           console.error("[INGREDIENTS_UPDATE]", ingredientsError);
         }
       }
-    } else {
-      console.log('No se recibieron ingredientes o el array está vacío (PUT)');
     }
 
     // Handle production variants
