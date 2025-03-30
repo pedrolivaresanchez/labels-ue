@@ -3,9 +3,11 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
 type Ingredient = {
-  id: string;
-  name: string;
-  is_allergen: boolean;
+  id?: string;
+  name?: string;
+  isAllergen?: boolean;
+  ingredientName?: string;
+  is_allergen?: boolean;
 };
 
 type ProductionVariant = {
@@ -93,7 +95,7 @@ type WineFormData = {
   has_cardboard_box: boolean;
   has_plastic_wrapper: boolean;
   image_url: string | null;
-  ingredients: { ingredientName: string; isAllergen: boolean }[];
+  ingredients: Ingredient[];
   productionVariants: { variantName: string }[];
   certifications: { certificationName: string }[];
 };
@@ -170,11 +172,12 @@ export async function POST(req: Request) {
     // Handle ingredients
     if (body.ingredients?.length > 0) {
       const ingredients = body.ingredients
-        .filter(i => i && i.ingredientName && typeof i.ingredientName === 'string' && typeof i.isAllergen === 'boolean')
+        .filter(i => i && (i.ingredientName || i.name) && typeof (i.ingredientName || i.name) === 'string' &&
+          (typeof i.isAllergen === 'boolean' || typeof i.is_allergen === 'boolean'))
         .map(i => ({
           wine_id: wine.id,
-          ingredient_name: i.ingredientName,
-          is_allergen: i.isAllergen
+          ingredient_name: i.ingredientName || i.name,
+          is_allergen: i.isAllergen !== undefined ? i.isAllergen : (i.is_allergen || false)
         }));
 
       if (ingredients.length > 0) {

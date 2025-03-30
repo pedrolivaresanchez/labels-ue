@@ -145,8 +145,8 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
     if (initialData && isEditing) {
       // Set ingredients from initialData
       const mappedIngredients = initialData.ingredients?.map(i => ({
-        name: i.name,
-        isAllergen: i.isAllergen
+        name: i.name || i.ingredient_name || "",
+        isAllergen: i.isAllergen !== undefined ? i.isAllergen : (i.is_allergen || false)
       })) || [];
       setIngredients(mappedIngredients);
       

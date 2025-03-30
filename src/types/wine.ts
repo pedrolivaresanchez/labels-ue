@@ -1,9 +1,10 @@
 export interface Ingredient {
-  isAllergen: any;
   id?: string;
   wine_id?: string;
-  ingredient_name: string;
-  is_allergen: boolean;
+  name?: string;
+  isAllergen?: boolean;
+  ingredient_name?: string;
+  is_allergen?: boolean;
 }
 
 export interface ProductionVariant {
@@ -55,10 +56,7 @@ export interface Wine {
   operator_address: string;
   registration_number: string;
   image_url: string | null;
-  ingredients: Array<{
-    name: string;
-    isAllergen: boolean;
-  }>;
+  ingredients: Ingredient[];
   productionVariants: Array<{
     variantName: string;
   }>;

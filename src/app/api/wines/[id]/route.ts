@@ -139,13 +139,15 @@ export async function PUT(
     // Handle ingredients
     if (body.ingredients?.length > 0) {
       const ingredients = body.ingredients
-        .filter((i: { ingredientName?: string; isAllergen?: boolean }) => 
-          i && i.ingredientName && typeof i.ingredientName === 'string' && typeof i.isAllergen === 'boolean'
+        .filter((i: any) => 
+          i && (i.ingredientName || i.name) && 
+          typeof (i.ingredientName || i.name) === 'string' && 
+          (typeof i.isAllergen === 'boolean' || typeof i.is_allergen === 'boolean')
         )
-        .map((i: { ingredientName: string; isAllergen: boolean }) => ({
+        .map((i: any) => ({
           wine_id: wine.id,
-          ingredient_name: i.ingredientName,
-          is_allergen: i.isAllergen
+          ingredient_name: i.ingredientName || i.name,
+          is_allergen: i.isAllergen !== undefined ? i.isAllergen : (i.is_allergen || false)
         }));
 
       if (ingredients.length > 0) {
