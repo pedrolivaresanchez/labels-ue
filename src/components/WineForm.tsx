@@ -207,22 +207,20 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
   // Update preview data when ingredients change
   useEffect(() => {
-    if (ingredients.length > 0) {
-      setFormData(prev => ({
-        ...prev,
-        ingredients
-      }));
-    }
+    // Actualizar formData siempre que cambie ingredients, incluso si está vacío
+    setFormData(prev => ({
+      ...prev,
+      ingredients
+    }));
   }, [ingredients]);
 
   // Update preview data when certifications change
   useEffect(() => {
-    if (certifications.length > 0) {
-      setFormData(prev => ({
-        ...prev,
-        certifications
-      }));
-    }
+    // Actualizar formData siempre que cambie certifications, incluso si está vacío
+    setFormData(prev => ({
+      ...prev,
+      certifications
+    }));
   }, [certifications]);
 
   const addIngredient = () => {
@@ -397,6 +395,8 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
       console.log('Form Data:', formData);
       console.log('API Data being sent:', apiData);
+      console.log('Ingredientes antes de enviar:', apiData.ingredients);
+      console.log('Formato de ingredientes:', apiData.ingredients.map(i => typeof i.ingredientName === 'string' && typeof i.isAllergen === 'boolean'));
 
       const response = await fetch(endpoint, {
         method,
@@ -1417,7 +1417,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading || ingredients.length === 0}>
+            <Button type="submit" disabled={loading}>
               {loading ? "Guardando..." : (isEditing ? "Actualizar" : "Guardar")}
             </Button>
           </div>

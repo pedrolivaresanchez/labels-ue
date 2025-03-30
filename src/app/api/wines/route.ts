@@ -169,6 +169,8 @@ export async function POST(req: Request) {
 
     // Handle ingredients
     if (body.ingredients?.length > 0) {
+      console.log('Ingredientes recibidos en API:', body.ingredients);
+      
       const ingredients = body.ingredients
         .filter(i => i && i.ingredientName && typeof i.ingredientName === 'string' && typeof i.isAllergen === 'boolean')
         .map(i => ({
@@ -177,6 +179,8 @@ export async function POST(req: Request) {
           is_allergen: i.isAllergen
         }));
 
+      console.log('Ingredientes después de filtrar:', ingredients);
+      
       if (ingredients.length > 0) {
         const { error: ingredientsError } = await supabase
           .from('ingredients')
@@ -186,6 +190,8 @@ export async function POST(req: Request) {
           console.error("[INGREDIENTS_CREATE]", ingredientsError);
         }
       }
+    } else {
+      console.log('No se recibieron ingredientes o el array está vacío');
     }
 
     // Handle production variants
