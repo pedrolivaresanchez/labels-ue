@@ -21,7 +21,8 @@ export async function GET(
       return new NextResponse("Wine id is required", { status: 400 });
     }
 
-    // Avoid using nested relationships, use separate queries instead
+    // Solo necesitamos una consulta porque los ingredientes, variantes y certificaciones
+    // son campos JSONB en la tabla wines
     const { data: wine, error } = await supabase
       .from('wines')
       .select('*')
@@ -32,46 +33,6 @@ export async function GET(
     if (error || !wine) {
       console.error("[WINE_GET] Error:", error);
       return new NextResponse("Not found", { status: 404 });
-    }
-
-    // Get ingredients separately
-    const { data: ingredients, error: ingredientsError } = await supabase
-      .from('ingredients')
-      .select('*')
-      .eq('wine_id', id);
-
-    if (ingredientsError) {
-      console.error("[WINE_GET_INGREDIENTS] Error:", ingredientsError);
-    }
-
-    // Get production variants separately
-    const { data: productionVariants, error: variantsError } = await supabase
-      .from('production_variants')
-      .select('*')
-      .eq('wine_id', id);
-
-    if (variantsError) {
-      console.error("[WINE_GET_VARIANTS] Error:", variantsError);
-    }
-
-    // Get certifications separately
-    const { data: certifications, error: certsError } = await supabase
-      .from('certifications')
-      .select('*')
-      .eq('wine_id', id);
-
-    if (certsError) {
-      console.error("[WINE_GET_CERTIFICATIONS] Error:", certsError);
-    }
-
-    // Get disclaimer icons separately
-    const { data: disclaimerIcons, error: iconsError } = await supabase
-      .from('disclaimer_icons')
-      .select('*')
-      .eq('wine_id', id);
-
-    if (iconsError) {
-      console.error("[WINE_GET_DISCLAIMER_ICONS] Error:", iconsError);
     }
 
     // Transform the relations to the expected format but keep original properties
@@ -95,44 +56,41 @@ export async function GET(
       drainedWeightGrams: wine.drained_weight_grams,
       instructionsForUse: wine.instructions_for_use,
       conservationConditions: wine.conservation_conditions,
-      
-      // Add related data
-      ingredients: ingredients || [],
-      production_variants: productionVariants || [],
-      certifications: certifications || [],
-      disclaimer_icons: disclaimerIcons || []
     };
 
-    // Add ingredient transformations that preserve both formats
-    if (ingredients && ingredients.length > 0) {
-      transformedWine.ingredients = ingredients.map((i: any) => ({
+    // Transformar el campo JSONB ingredients
+    if (wine.ingredients && Array.isArray(wine.ingredients)) {
+      transformedWine.ingredients = wine.ingredients.map((i: any) => ({
         ...i,
-        name: i.ingredient_name,
-        isAllergen: i.is_allergen
+        name: i.ingredient_name || i.name,
+        isAllergen: i.is_allergen !== undefined ? i.is_allergen : i.isAllergen
       }));
     } else {
       transformedWine.ingredients = [];
     }
 
-    // Transform production variants
-    if (productionVariants && productionVariants.length > 0) {
-      transformedWine.productionVariants = productionVariants.map((v: any) => ({
+    // Transformar el campo JSONB production_variants
+    if (wine.production_variants && Array.isArray(wine.production_variants)) {
+      transformedWine.productionVariants = wine.production_variants.map((v: any) => ({
         ...v,
-        variantName: v.variant_name
+        variantName: v.variant_name || v.variantName
       }));
     } else {
       transformedWine.productionVariants = [];
     }
 
-    // Transform certifications
-    if (certifications && certifications.length > 0) {
-      transformedWine.certifications = certifications.map((c: any) => ({
+    // Transformar el campo JSONB certifications
+    if (wine.certifications && Array.isArray(wine.certifications)) {
+      transformedWine.certifications = wine.certifications.map((c: any) => ({
         ...c,
-        certificationName: c.certification_name
+        certificationName: c.certification_name || c.certificationName
       }));
     } else {
       transformedWine.certifications = [];
     }
+
+    // No hay tabla disclaimer_icons
+    transformedWine.disclaimerIcons = [];
 
     return NextResponse.json(transformedWine);
   } catch (error) {
@@ -174,6 +132,9 @@ export async function PUT(
 
     const body = await req.json();
 
+    // No necesitamos eliminar registros de tablas relacionadas porque son campos JSONB
+    
+    // Actualizar el wine con los campos JSONB
     const wineData = {
       name: body.name,
       ean_code: body.ean_code,
@@ -211,7 +172,18 @@ export async function PUT(
       has_plastic_cork: body.has_plastic_cork,
       has_cardboard_box: body.has_cardboard_box,
       has_plastic_wrapper: body.has_plastic_wrapper,
-      image_url: body.image_url
+      image_url: body.image_url,
+      // Agregar campos JSONB
+      ingredients: body.ingredients ? body.ingredients.map((i: any) => ({
+        ingredient_name: i.ingredientName || i.name,
+        is_allergen: i.isAllergen !== undefined ? i.isAllergen : (i.is_allergen || false)
+      })) : [],
+      production_variants: body.productionVariants ? body.productionVariants.map((v: any) => ({
+        variant_name: v.variantName
+      })) : [],
+      certifications: body.certifications ? body.certifications.map((c: any) => ({
+        certification_name: c.certificationName
+      })) : []
     };
 
     // Update the wine
@@ -228,105 +200,37 @@ export async function PUT(
       return new NextResponse("Error updating wine", { status: 400 });
     }
 
-    // Delete existing relationships
-    const deletePromises = [
-      supabase.from('ingredients').delete().eq('wine_id', id),
-      supabase.from('production_variants').delete().eq('wine_id', id),
-      supabase.from('certifications').delete().eq('wine_id', id)
-    ];
+    // No necesitamos hacer consultas adicionales para obtener relaciones
+    // porque ya están en los campos JSONB
 
-    await Promise.all(deletePromises);
-
-    // Handle ingredients
-    if (body.ingredients?.length > 0) {
-      const ingredients = body.ingredients
-        .filter((i: any) => 
-          i && (i.ingredientName || i.name) && 
-          typeof (i.ingredientName || i.name) === 'string' && 
-          (typeof i.isAllergen === 'boolean' || typeof i.is_allergen === 'boolean')
-        )
-        .map((i: any) => ({
-          wine_id: wine.id,
-          ingredient_name: i.ingredientName || i.name,
-          is_allergen: i.isAllergen !== undefined ? i.isAllergen : (i.is_allergen || false)
-        }));
-
-      if (ingredients.length > 0) {
-        const { error: ingredientsError } = await supabase
-          .from('ingredients')
-          .insert(ingredients);
-
-        if (ingredientsError) {
-          console.error("[INGREDIENTS_UPDATE]", ingredientsError);
-        }
-      }
-    }
-
-    // Handle production variants
-    if (body.productionVariants?.length > 0) {
-      const variants = body.productionVariants
-        .filter((v: { variantName?: string }) => 
-          v?.variantName && typeof v.variantName === 'string'
-        )
-        .map((v: { variantName: string }) => ({
-          wine_id: wine.id,
-          variant_name: v.variantName
-        }));
-
-      if (variants.length > 0) {
-        const { error: variantsError } = await supabase
-          .from('production_variants')
-          .insert(variants);
-
-        if (variantsError) {
-          console.error("[VARIANTS_UPDATE]", variantsError);
-        }
-      }
-    }
-
-    // Handle certifications
-    if (body.certifications?.length > 0) {
-      const certifications = body.certifications
-        .filter((c: { certificationName?: string }) => 
-          c?.certificationName && typeof c.certificationName === 'string'
-        )
-        .map((c: { certificationName: string }) => ({
-          wine_id: wine.id,
-          certification_name: c.certificationName
-        }));
-
-      if (certifications.length > 0) {
-        const { error: certificationsError } = await supabase
-          .from('certifications')
-          .insert(certifications);
-
-        if (certificationsError) {
-          console.error("[CERTIFICATIONS_UPDATE]", certificationsError);
-        }
-      }
-    }
-
-    // Get the final wine with all relationships
-    const { data: ingredients } = await supabase
-      .from('ingredients')
-      .select('*')
-      .eq('wine_id', id);
-
-    const { data: variants } = await supabase
-      .from('production_variants')
-      .select('*')
-      .eq('wine_id', id);
-
-    const { data: certifications } = await supabase
-      .from('certifications')
-      .select('*')
-      .eq('wine_id', id);
-
+    // Transformar datos para la respuesta
     const finalWine = {
       ...wine,
-      ingredients: ingredients || [],
-      production_variants: variants || [],
-      certifications: certifications || []
+      ingredients: wine.ingredients || [],
+      production_variants: wine.production_variants || [],
+      certifications: wine.certifications || [],
+      // Agregar alias camelCase
+      eanCode: wine.ean_code,
+      foodName: wine.food_name,
+      energyKj: wine.energy_kj,
+      energyKcal: wine.energy_kcal,
+      saturatedFat: wine.saturated_fat,
+      netQuantityCl: wine.net_quantity_cl,
+      alcoholPercentage: wine.alcohol_percentage,
+      optionalLabelling: wine.optional_labelling,
+      countryOfOrigin: wine.country_of_origin,
+      placeOfOrigin: wine.place_of_origin,
+      operatorName: wine.operator_name,
+      operatorAddress: wine.operator_address,
+      registrationNumber: wine.registration_number,
+      hasEstimationSign: wine.has_estimation_sign,
+      drainedWeightGrams: wine.drained_weight_grams,
+      instructionsForUse: wine.instructions_for_use,
+      conservationConditions: wine.conservation_conditions,
+      // Transformaciones para mantener compatibilidad
+      productionVariants: wine.production_variants ? wine.production_variants.map((v: any) => ({
+        variantName: v.variant_name
+      })) : []
     };
 
     return NextResponse.json(finalWine);

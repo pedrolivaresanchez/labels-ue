@@ -172,46 +172,6 @@ async function getWine(id: string): Promise<Wine | null> {
     return null;
   }
 
-  // Get ingredients separately
-  const { data: ingredients, error: ingredientsError } = await supabase
-    .from('ingredients')
-    .select('*')
-    .eq('wine_id', id);
-
-  if (ingredientsError) {
-    console.error("[PUBLIC_WINE_GET_INGREDIENTS]", ingredientsError);
-  }
-
-  // Get production variants separately
-  const { data: productionVariants, error: variantsError } = await supabase
-    .from('production_variants')
-    .select('*')
-    .eq('wine_id', id);
-
-  if (variantsError) {
-    console.error("[PUBLIC_WINE_GET_VARIANTS]", variantsError);
-  }
-
-  // Get certifications separately
-  const { data: certifications, error: certsError } = await supabase
-    .from('certifications')
-    .select('*')
-    .eq('wine_id', id);
-
-  if (certsError) {
-    console.error("[PUBLIC_WINE_GET_CERTIFICATIONS]", certsError);
-  }
-
-  // Get disclaimer icons separately
-  const { data: disclaimerIcons, error: iconsError } = await supabase
-    .from('disclaimer_icons')
-    .select('*')
-    .eq('wine_id', id);
-
-  if (iconsError) {
-    console.error("[PUBLIC_WINE_GET_DISCLAIMER_ICONS]", iconsError);
-  }
-
   return {
     id: wine.id,
     name: wine.name,
@@ -228,27 +188,23 @@ async function getWine(id: string): Promise<Wine | null> {
     netQuantityCl: wine.net_quantity_cl,
     alcoholPercentage: wine.alcohol_percentage,
     hasEstimationSign: wine.has_estimation_sign,
-    ingredients: ingredients 
-      ? ingredients.map((i: any) => ({
-          name: i.ingredient_name,
-          isAllergen: i.is_allergen
+    ingredients: Array.isArray(wine.ingredients) 
+      ? wine.ingredients.map((i: any) => ({
+          name: i.ingredient_name || i.name,
+          isAllergen: i.is_allergen !== undefined ? i.is_allergen : i.isAllergen
         })) 
       : [],
-    productionVariants: productionVariants 
-      ? productionVariants.map((v: any) => ({
-          variantName: v.variant_name
+    productionVariants: Array.isArray(wine.production_variants) 
+      ? wine.production_variants.map((v: any) => ({
+          variantName: v.variant_name || v.variantName
         })) 
       : [],
-    certifications: certifications 
-      ? certifications.map((c: any) => ({
-          certificationName: c.certification_name
+    certifications: Array.isArray(wine.certifications) 
+      ? wine.certifications.map((c: any) => ({
+          certificationName: c.certification_name || c.certificationName
         })) 
       : [],
-    disclaimerIcons: disclaimerIcons 
-      ? disclaimerIcons.map((d: any) => ({
-          iconName: d.icon_name
-        })) 
-      : [],
+    disclaimerIcons: [], // No hay tabla disclaimer_icons
     image_url: wine.image_url,
     countryOfOrigin: wine.country_of_origin,
     placeOfOrigin: wine.place_of_origin,
