@@ -66,7 +66,7 @@ interface FormData {
   registrationNumber: string;
   imageUrl: string | null;
   ingredients: Array<{
-    name: string;
+    ingredientName: string;
     isAllergen: boolean;
   }>;
   certifications: Array<{
@@ -90,11 +90,11 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
   const router = useRouter()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
-  const [ingredients, setIngredients] = useState<Array<{ name: string; isAllergen: boolean }>>([]);
-  const [certifications, setCertifications] = useState<Array<{ certificationName: string }>>([]);
-  const [newIngredient, setNewIngredient] = useState("");
-  const [isAllergen, setIsAllergen] = useState(false);
-  const [newCertification, setNewCertification] = useState("");
+  const [ingredients, setIngredients] = useState<Array<{ingredientName: string; isAllergen: boolean}>>([]);
+  const [newIngredient, setNewIngredient] = useState<string>("");
+  const [isAllergen, setIsAllergen] = useState<boolean>(false);
+  const [certifications, setCertifications] = useState<Array<{certificationName: string}>>([]);
+  const [newCertification, setNewCertification] = useState<string>("");
   const [formData, setFormData] = useState<FormData>({
     name: '',
     eanCode: '',
@@ -145,7 +145,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
     if (initialData && isEditing) {
       // Set ingredients from initialData
       const mappedIngredients = initialData.ingredients?.map(i => ({
-        name: i.name,
+        ingredientName: i.ingredientName,
         isAllergen: i.isAllergen
       })) || [];
       setIngredients(mappedIngredients);
@@ -226,7 +226,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
   const addIngredient = () => {
     if (newIngredient.trim()) {
       const newIngredients = [...ingredients, { 
-        name: newIngredient.trim(), 
+        ingredientName: newIngredient.trim(), 
         isAllergen 
       }];
       setIngredients(newIngredients);
@@ -373,7 +373,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         registration_number: formData.registrationNumber || '',
         image_url: imageFile ? null : initialData?.image_url,
         ingredients: formData.ingredients.map(i => ({
-          ingredientName: i.name,
+          ingredientName: i.ingredientName,
           isAllergen: i.isAllergen
         })) || [],
         certifications: formData.certifications.map(c => ({
@@ -1343,7 +1343,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
                     {ingredients.map((ingredient, index) => (
                       <div key={index} className="flex items-center justify-between p-2 border rounded">
                         <div className="flex items-center gap-2">
-                          <span>{ingredient.name}</span>
+                          <span>{ingredient.ingredientName}</span>
                           {ingredient.isAllergen && (
                             <span className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded">Alérgeno</span>
                           )}

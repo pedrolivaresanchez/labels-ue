@@ -53,7 +53,7 @@ export type Wine = {
   alcoholPercentage: number;
   hasEstimationSign: boolean;
   ingredients: { 
-    name: string;
+    ingredientName: string;
     isAllergen: boolean;
   }[];
   productionVariants: { variantName: string }[];
@@ -132,7 +132,7 @@ async function translateWine(wine: Wine, targetLanguage: string) {
     translatedWine.ingredients = await Promise.all(
       wine.ingredients.map(async (ingredient) => ({
         ...ingredient,
-        name: await translateText(ingredient.name, targetLanguage),
+        ingredientName: await translateText(ingredient.ingredientName, targetLanguage),
       }))
     );
   }
@@ -172,6 +172,40 @@ async function getWine(id: string): Promise<Wine | null> {
     return null;
   }
 
+  // Obtenemos los ingredientes
+  const { data: ingredients } = await supabase
+    .from('ingredients')
+    .select('*')
+    .eq('wine_id', id);
+
+  // Mapeamos los ingredientes con el formato correcto
+  const mappedIngredients = ingredients?.map(ing => ({
+    ingredientName: ing.ingredient_name,
+    isAllergen: ing.is_allergen
+  })) || [];
+
+  // Obtenemos las variantes de producción
+  const { data: variants } = await supabase
+    .from('production_variants')
+    .select('*')
+    .eq('wine_id', id);
+
+  // Mapeamos las variantes con el formato correcto
+  const mappedVariants = variants?.map(v => ({
+    variantName: v.variant_name
+  })) || [];
+
+  // Obtenemos las certificaciones
+  const { data: certs } = await supabase
+    .from('certifications')
+    .select('*')
+    .eq('wine_id', id);
+
+  // Mapeamos las certificaciones con el formato correcto
+  const mappedCertifications = certs?.map(c => ({
+    certificationName: c.certification_name
+  })) || [];
+
   return {
     id: wine.id,
     name: wine.name,
@@ -188,10 +222,10 @@ async function getWine(id: string): Promise<Wine | null> {
     netQuantityCl: wine.net_quantity_cl,
     alcoholPercentage: wine.alcohol_percentage,
     hasEstimationSign: wine.has_estimation_sign,
-    ingredients: wine.ingredients || [],
-    productionVariants: wine.production_variants || [],
+    ingredients: mappedIngredients,
+    productionVariants: mappedVariants,
     disclaimerIcons: wine.disclaimer_icons || [],
-    certifications: wine.certifications || [],
+    certifications: mappedCertifications,
     image_url: wine.image_url,
     countryOfOrigin: wine.country_of_origin,
     placeOfOrigin: wine.place_of_origin,

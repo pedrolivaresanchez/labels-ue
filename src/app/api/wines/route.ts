@@ -4,7 +4,8 @@ import { cookies } from 'next/headers';
 
 type Ingredient = {
   id: string;
-  name: string;
+  wine_id?: string;
+  ingredient_name: string;
   is_allergen: boolean;
 };
 
@@ -261,7 +262,7 @@ export async function GET() {
         *,
         ingredients (
           id,
-          name,
+          ingredient_name,
           is_allergen
         ),
         production_variants (
@@ -313,7 +314,7 @@ export async function GET() {
       imageUrl: wine.image_url,
       ingredients: wine.ingredients?.map((ingredient: Ingredient) => ({
         id: ingredient.id,
-        ingredientName: ingredient.name,
+        ingredientName: ingredient.ingredient_name,
         isAllergen: ingredient.is_allergen
       })) || [],
       productionVariants: wine.production_variants?.map((variant: ProductionVariant) => ({

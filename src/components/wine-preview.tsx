@@ -164,7 +164,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
               {formData.ingredients.map((ingredient, index) => (
                 <span key={index}>
                   <span className={ingredient.isAllergen ? "font-bold" : ""}>
-                    {ingredient.name}
+                    {ingredient.ingredientName}
                   </span>
                   {index < formData.ingredients.length - 1 ? ', ' : ''}
                 </span>
@@ -324,7 +324,7 @@ export function WinePreview({ formData }: WinePreviewProps) {
                       {formData.ingredients.map((ingredient, index) => (
                         <span key={index}>
                           <span className={ingredient.isAllergen ? "font-bold" : ""}>
-                            {ingredient.name}
+                            {ingredient.ingredientName}
                           </span>
                           {index < formData.ingredients.length - 1 ? ', ' : ''}
                         </span>
