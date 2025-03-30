@@ -23,7 +23,13 @@ export async function GET(
 
     const { data: wine, error } = await supabase
       .from('wines')
-      .select('*')
+      .select(`
+        *,
+        ingredients (*),
+        production_variants (*),
+        certifications (*),
+        disclaimer_icons (*)
+      `)
       .eq('id', id)
       .eq('user_id', session.user.id)
       .single();
@@ -33,7 +39,28 @@ export async function GET(
       return new NextResponse("Not found", { status: 404 });
     }
 
-    return NextResponse.json(wine);
+    // Transform the relations to the expected format
+    const transformedWine = {
+      ...wine,
+      ingredients: wine.ingredients 
+        ? wine.ingredients.map((i: any) => ({
+            name: i.ingredient_name,
+            isAllergen: i.is_allergen
+          })) 
+        : [],
+      production_variants: wine.production_variants 
+        ? wine.production_variants.map((v: any) => ({
+            variantName: v.variant_name
+          })) 
+        : [],
+      certifications: wine.certifications 
+        ? wine.certifications.map((c: any) => ({
+            certificationName: c.certification_name
+          })) 
+        : []
+    };
+
+    return NextResponse.json(transformedWine);
   } catch (error) {
     console.error("[WINE_GET]", error);
     return new NextResponse("Internal error", { status: 500 });

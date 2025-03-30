@@ -79,7 +79,13 @@ async function getWine(id: string): Promise<Wine> {
 
   const { data: wine, error } = await supabase
     .from('wines')
-    .select('*')
+    .select(`
+      *,
+      ingredients (*),
+      production_variants (*),
+      certifications (*),
+      disclaimer_icons (*)
+    `)
     .eq('id', id)
     .eq('user_id', session.user.id)
     .single();
@@ -116,9 +122,22 @@ async function getWine(id: string): Promise<Wine> {
     operatorName: wine.operator_name,
     operatorAddress: wine.operator_address,
     registrationNumber: wine.registration_number,
-    ingredients: wine.ingredients || [],
-    certifications: wine.certifications || [],
-    productionVariants: wine.production_variants || [],
+    ingredients: wine.ingredients 
+      ? wine.ingredients.map((i: any) => ({
+          name: i.ingredient_name,
+          isAllergen: i.is_allergen
+        })) 
+      : [],
+    certifications: wine.certifications 
+      ? wine.certifications.map((c: any) => ({
+          certificationName: c.certification_name
+        })) 
+      : [],
+    productionVariants: wine.production_variants 
+      ? wine.production_variants.map((v: any) => ({
+          variantName: v.variant_name
+        })) 
+      : [],
     disclaimerIcons: wine.disclaimer_icons || [],
     image_url: wine.image_url
   };

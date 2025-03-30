@@ -163,7 +163,13 @@ async function translateWine(wine: Wine, targetLanguage: string) {
 async function getWine(id: string): Promise<Wine | null> {
   const { data: wine, error } = await supabase
     .from('wines')
-    .select('*')
+    .select(`
+      *,
+      ingredients (*),
+      production_variants (*),
+      certifications (*),
+      disclaimer_icons (*)
+    `)
     .eq('id', id)
     .single();
 
@@ -188,10 +194,27 @@ async function getWine(id: string): Promise<Wine | null> {
     netQuantityCl: wine.net_quantity_cl,
     alcoholPercentage: wine.alcohol_percentage,
     hasEstimationSign: wine.has_estimation_sign,
-    ingredients: wine.ingredients || [],
-    productionVariants: wine.production_variants || [],
-    disclaimerIcons: wine.disclaimer_icons || [],
-    certifications: wine.certifications || [],
+    ingredients: wine.ingredients 
+      ? wine.ingredients.map((i: any) => ({
+          name: i.ingredient_name,
+          isAllergen: i.is_allergen
+        })) 
+      : [],
+    productionVariants: wine.production_variants 
+      ? wine.production_variants.map((v: any) => ({
+          variantName: v.variant_name
+        })) 
+      : [],
+    certifications: wine.certifications 
+      ? wine.certifications.map((c: any) => ({
+          certificationName: c.certification_name
+        })) 
+      : [],
+    disclaimerIcons: wine.disclaimer_icons 
+      ? wine.disclaimer_icons.map((d: any) => ({
+          iconName: d.icon_name
+        })) 
+      : [],
     image_url: wine.image_url,
     countryOfOrigin: wine.country_of_origin,
     placeOfOrigin: wine.place_of_origin,
