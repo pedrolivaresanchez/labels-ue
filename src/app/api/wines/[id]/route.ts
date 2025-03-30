@@ -39,26 +39,61 @@ export async function GET(
       return new NextResponse("Not found", { status: 404 });
     }
 
-    // Transform the relations to the expected format
+    // Transform the relations to the expected format but keep original properties
     const transformedWine = {
       ...wine,
-      ingredients: wine.ingredients 
-        ? wine.ingredients.map((i: any) => ({
-            name: i.ingredient_name,
-            isAllergen: i.is_allergen
-          })) 
-        : [],
-      production_variants: wine.production_variants 
-        ? wine.production_variants.map((v: any) => ({
-            variantName: v.variant_name
-          })) 
-        : [],
-      certifications: wine.certifications 
-        ? wine.certifications.map((c: any) => ({
-            certificationName: c.certification_name
-          })) 
-        : []
+      // Add camelCase aliases
+      eanCode: wine.ean_code,
+      foodName: wine.food_name,
+      energyKj: wine.energy_kj,
+      energyKcal: wine.energy_kcal,
+      saturatedFat: wine.saturated_fat,
+      netQuantityCl: wine.net_quantity_cl,
+      alcoholPercentage: wine.alcohol_percentage,
+      optionalLabelling: wine.optional_labelling,
+      countryOfOrigin: wine.country_of_origin, 
+      placeOfOrigin: wine.place_of_origin,
+      operatorName: wine.operator_name,
+      operatorAddress: wine.operator_address,
+      registrationNumber: wine.registration_number,
+      hasEstimationSign: wine.has_estimation_sign,
+      drainedWeightGrams: wine.drained_weight_grams,
+      instructionsForUse: wine.instructions_for_use,
+      conservationConditions: wine.conservation_conditions,
+      
+      // Transformed arrays will be added later to avoid duplication
     };
+
+    // Add ingredient transformations that preserve both formats
+    if (wine.ingredients && wine.ingredients.length > 0) {
+      transformedWine.ingredients = wine.ingredients.map((i: any) => ({
+        ...i,
+        name: i.ingredient_name,
+        isAllergen: i.is_allergen
+      }));
+    } else {
+      transformedWine.ingredients = [];
+    }
+
+    // Transform production variants
+    if (wine.production_variants && wine.production_variants.length > 0) {
+      transformedWine.productionVariants = wine.production_variants.map((v: any) => ({
+        ...v,
+        variantName: v.variant_name
+      }));
+    } else {
+      transformedWine.productionVariants = [];
+    }
+
+    // Transform certifications
+    if (wine.certifications && wine.certifications.length > 0) {
+      transformedWine.certifications = wine.certifications.map((c: any) => ({
+        ...c,
+        certificationName: c.certification_name
+      }));
+    } else {
+      transformedWine.certifications = [];
+    }
 
     return NextResponse.json(transformedWine);
   } catch (error) {
