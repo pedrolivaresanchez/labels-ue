@@ -375,8 +375,8 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
         registration_number: formData.registrationNumber || '',
         image_url: imageFile ? null : initialData?.image_url,
         ingredients: formData.ingredients.map(i => ({
-          ingredient_name: i.name,
-          is_allergen: i.isAllergen
+          ingredientName: i.name,
+          isAllergen: i.isAllergen
         })) || [],
         certifications: formData.certifications.map(c => ({
           certification_name: c.certificationName
