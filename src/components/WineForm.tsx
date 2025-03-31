@@ -252,6 +252,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
   const addCertification = () => {
     if (newCertification.trim()) {
+      console.log("Adding certification:", newCertification.trim());
       const newCertifications = [...certifications, { certificationName: newCertification.trim() }];
       setCertifications(newCertifications);
       setFormData(prev => ({
@@ -378,9 +379,11 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
           ingredientName: i.name,
           isAllergen: i.isAllergen
         })) || [],
-        certifications: formData.certifications.map(c => ({
-          certification_name: c.certificationName
-        })) || [],
+        certifications: formData.certifications
+          .filter(c => c && c.certificationName && c.certificationName.trim() !== '')
+          .map(c => ({
+            certification_name: c.certificationName.trim()
+          })) || [],
         has_glass_bottle: formData.hasGlassBottle || false,
         has_brown_glass_bottle: formData.hasBrownGlassBottle || false,
         has_green_glass_bottle: formData.hasGreenGlassBottle || false,
@@ -397,6 +400,7 @@ export function WineForm({ initialData, isEditing = false, defaultOpen = false }
 
       console.log('Form Data:', formData);
       console.log('API Data being sent:', apiData);
+      console.log('Certifications being sent:', apiData.certifications);
 
       const response = await fetch(endpoint, {
         method,

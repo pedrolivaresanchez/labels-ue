@@ -123,9 +123,11 @@ async function getWine(id: string): Promise<Wine> {
         })) 
       : [],
     certifications: Array.isArray(wine.certifications) 
-      ? wine.certifications.map((c: any) => ({
-          certificationName: c.certification_name || c.certificationName
-        })) 
+      ? wine.certifications
+          .filter((c: any) => c && (c.certification_name || c.certificationName))
+          .map((c: any) => ({
+            certificationName: c.certification_name || c.certificationName
+          })) 
       : [],
     productionVariants: Array.isArray(wine.production_variants) 
       ? wine.production_variants.map((v: any) => ({

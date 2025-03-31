@@ -81,10 +81,12 @@ export async function GET(
 
     // Transformar el campo JSONB certifications
     if (wine.certifications && Array.isArray(wine.certifications)) {
-      transformedWine.certifications = wine.certifications.map((c: any) => ({
-        ...c,
-        certificationName: c.certification_name || c.certificationName
-      }));
+      transformedWine.certifications = wine.certifications
+        .filter((c: any) => c && (c.certification_name || c.certificationName))
+        .map((c: any) => ({
+          ...c,
+          certificationName: c.certification_name || c.certificationName
+        }));
     } else {
       transformedWine.certifications = [];
     }
@@ -181,10 +183,14 @@ export async function PUT(
       production_variants: body.productionVariants ? body.productionVariants.map((v: any) => ({
         variant_name: v.variantName
       })) : [],
-      certifications: body.certifications ? body.certifications.map((c: any) => ({
-        certification_name: c.certificationName
-      })) : []
+      certifications: body.certifications && Array.isArray(body.certifications) ? body.certifications
+        .filter((c: any) => c && (c.certificationName || c.certification_name))
+        .map((c: any) => ({
+          certification_name: c.certificationName || c.certification_name
+        })) : []
     };
+
+    console.log("Certifications to save:", wineData.certifications);
 
     // Update the wine
     const { data: wine, error: wineError } = await supabase

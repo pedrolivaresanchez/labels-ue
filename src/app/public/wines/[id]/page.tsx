@@ -200,9 +200,11 @@ async function getWine(id: string): Promise<Wine | null> {
         })) 
       : [],
     certifications: Array.isArray(wine.certifications) 
-      ? wine.certifications.map((c: any) => ({
-          certificationName: c.certification_name || c.certificationName
-        })) 
+      ? wine.certifications
+          .filter((c: any) => c && (c.certification_name || c.certificationName))
+          .map((c: any) => ({
+            certificationName: c.certification_name || c.certificationName
+          })) 
       : [],
     disclaimerIcons: [], // No hay tabla disclaimer_icons
     image_url: wine.image_url,
