@@ -48,6 +48,14 @@ type Labels = {
   corkStopper: string;
   brownContainer: string;
   recyclingNote: string;
+  containsSulfites: string;
+  bottle: string;
+  greenContainerText: string;
+  corkAndCap: string;
+  yellowContainerText: string;
+  box: string;
+  blueContainerText: string;
+  plasticFilmAndLabels: string;
 }
 
 function NutritionalInfoSkeleton() {
@@ -320,7 +328,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                     </div>
                     {wine.ingredients.some(ingredient => ingredient.isAllergen) && (
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Contiene sulfitos
+                        {labels.containsSulfites}
                       </p>
                     )}
                   </div>
@@ -370,7 +378,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                     </div>
                     {wine.ingredients.some(ingredient => ingredient.isAllergen) && (
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Contiene sulfitos
+                        {labels.containsSulfites}
                       </p>
                     )}
                   </div>
@@ -475,7 +483,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       {/* Botella */}
                       {(wine.has_glass_bottle || wine.has_brown_glass_bottle || wine.has_green_glass_bottle) && (
                         <div className="border rounded-md p-3">
-                          <h4 className="text-base font-medium mb-3">Botella</h4>
+                          <h4 className="text-base font-medium mb-3">{labels.bottle}</h4>
                           <div className="flex items-center gap-3">
                             <Image
                               src="/icons/reciclado/Verde.webp"
@@ -484,7 +492,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                               height={50}
                             />
                             <div>
-                              <p className="text-sm text-muted-foreground">Contenedor verde</p>
+                              <p className="text-sm text-muted-foreground">{labels.greenContainerText}</p>
                             </div>
                           </div>
                         </div>
@@ -494,7 +502,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       {(wine.has_aluminum_cap || wine.has_pvc_cap || wine.has_polystyrene_cap || 
                         wine.has_cork_stopper || wine.has_plastic_cork) && (
                         <div className="border rounded-md p-3">
-                          <h4 className="text-base font-medium mb-3">Corcho y cápsula</h4>
+                          <h4 className="text-base font-medium mb-3">{labels.corkAndCap}</h4>
                           <div className="flex items-center gap-3">
                             <Image
                               src="/icons/reciclado/Amarillo.webp"
@@ -503,7 +511,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                               height={50}
                             />
                             <div>
-                              <p className="text-sm text-muted-foreground">Contenedor amarillo</p>
+                              <p className="text-sm text-muted-foreground">{labels.yellowContainerText}</p>
                             </div>
                           </div>
                         </div>
@@ -512,7 +520,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       {/* Caja */}
                       {(wine.has_cardboard_box || wine.has_paper_label) && (
                         <div className="border rounded-md p-3">
-                          <h4 className="text-base font-medium mb-3">Caja</h4>
+                          <h4 className="text-base font-medium mb-3">{labels.box}</h4>
                           <div className="flex items-center gap-3">
                             <Image
                               src="/icons/reciclado/Azul.webp"
@@ -521,7 +529,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                               height={50}
                             />
                             <div>
-                              <p className="text-sm text-muted-foreground">Contenedor azul</p>
+                              <p className="text-sm text-muted-foreground">{labels.blueContainerText}</p>
                             </div>
                           </div>
                         </div>
@@ -530,7 +538,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                       {/* Film plástico y etiquetas de plástico */}
                       {(wine.has_plastic_wrapper || wine.has_plastic_label) && (
                         <div className="border rounded-md p-3">
-                          <h4 className="text-base font-medium mb-3">Film y etiquetas plásticas</h4>
+                          <h4 className="text-base font-medium mb-3">{labels.plasticFilmAndLabels}</h4>
                           <div className="flex items-center gap-3">
                             <Image
                               src="/icons/reciclado/Amarillo.webp"
@@ -539,7 +547,7 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                               height={50}
                             />
                             <div>
-                              <p className="text-sm text-muted-foreground">Contenedor amarillo</p>
+                              <p className="text-sm text-muted-foreground">{labels.yellowContainerText}</p>
                             </div>
                           </div>
                         </div>
