@@ -36,6 +36,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
+    "jspdf": "^3.0.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.472.0",
     "mini-svg-data-uri": "^1.4.4",

@@ -6,11 +6,12 @@ import { WinesTableSkeleton } from "@/components/WinesTableSkeleton";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { generateQRCode } from "@/utils/qr";
+import { generateQRCode, QRFormat } from "@/utils/qr";
 import type { Wine } from "@/types/wine";
 import Link from "next/link";
-import { PlusCircle, Loader2, Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { QRFormatDialog } from "@/components/QRFormatDialog";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +27,7 @@ export default function WinesPage() {
   const [loading, setLoading] = useState(true);
   const [deleteDialog, setDeleteDialog] = useState<{ isOpen: boolean; wineId: string | null }>({ isOpen: false, wineId: null });
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [qrDialog, setQrDialog] = useState<{ isOpen: boolean; wine: Wine | null }>({ isOpen: false, wine: null });
   const router = useRouter();
   const supabase = createClientComponentClient();
   const { toast } = useToast();
@@ -90,13 +92,42 @@ export default function WinesPage() {
     }
   };
 
-  const handleQRDownload = async (wine: Wine) => {
-    if (!wine.id) return { dataUrl: '', fileName: '' };
-    const qrData = await generateQRCode(wine.id);
-    return {
-      dataUrl: qrData,
-      fileName: `qr-${wine.name.toLowerCase().replace(/\s+/g, '-')}.png`
-    };
+  const handleQRClick = (wine: Wine) => {
+    setQrDialog({ isOpen: true, wine });
+  };
+
+  const handleQRDownload = async (format: QRFormat) => {
+    if (!qrDialog.wine?.id) return;
+    
+    try {
+      // Generar el QR en el formato seleccionado
+      const dataUrl = await generateQRCode(qrDialog.wine.id, format);
+      
+      // Crear el nombre de archivo basado en el nombre del vino y el formato
+      const fileExtension = format === 'png' ? 'png' : format === 'svg' ? 'svg' : 'pdf';
+      const fileName = `qr-${qrDialog.wine.name.toLowerCase().replace(/\s+/g, '-')}.${fileExtension}`;
+      
+      // Crear un enlace temporal y simular clic para descargar
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        variant: "default",
+        title: "¡Éxito!",
+        description: `El código QR se ha descargado en formato ${format.toUpperCase()}`,
+      });
+    } catch (error) {
+      console.error('Error descargando QR:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Error al descargar el código QR",
+      });
+    }
   };
 
   const handleDuplicate = async (wine: Wine) => {
@@ -155,7 +186,7 @@ export default function WinesPage() {
       <WinesTable
         data={wines}
         onDelete={handleDeleteClick}
-        onQRDownload={handleQRDownload}
+        onQRDownload={handleQRClick}
         onDuplicate={handleDuplicate}
       />
 
@@ -193,6 +224,12 @@ export default function WinesPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <QRFormatDialog 
+        open={qrDialog.isOpen}
+        onOpenChange={(open) => setQrDialog({ isOpen: open, wine: open ? qrDialog.wine : null })}
+        onDownload={handleQRDownload}
+      />
     </>
   );
 }

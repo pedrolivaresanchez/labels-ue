@@ -57,7 +57,7 @@ const columnLabels: Record<string, string> = {
 export interface WinesTableProps {
   data: Wine[]
   onDelete: (id: string) => void
-  onQRDownload: (wine: Wine) => Promise<{ dataUrl: string; fileName: string }>
+  onQRDownload: (wine: Wine) => void
   onDuplicate: (wine: Wine) => void
   duplicatingId?: string | null
 }
@@ -194,7 +194,7 @@ export const columns: ColumnDef<Wine>[] = [
     cell: ({ row, table }) => {
       const wine = row.original;
       const { onQRDownload } = table.options.meta as { 
-        onQRDownload?: (wine: Wine) => Promise<{ dataUrl: string; fileName: string }> 
+        onQRDownload?: (wine: Wine) => void 
       };
 
       if (!onQRDownload) return null;
@@ -207,15 +207,9 @@ export const columns: ColumnDef<Wine>[] = [
                 variant="ghost" 
                 size="icon"
                 className="h-8 w-8"
-                onClick={async (e) => {
+                onClick={(e) => {
                   e.stopPropagation();
-                  const { dataUrl, fileName } = await onQRDownload(wine);
-                  const link = document.createElement('a');
-                  link.href = dataUrl;
-                  link.download = fileName;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
+                  onQRDownload(wine);
                 }}
               >
                 <QrCode className="h-4 w-4" />
@@ -238,7 +232,7 @@ export const columns: ColumnDef<Wine>[] = [
       const wine = row.original;
       const { onDelete, onQRDownload, onDuplicate, duplicatingId } = table.options.meta as { 
         onDelete: (id: string) => void, 
-        onQRDownload?: (wine: Wine) => Promise<{ dataUrl: string; fileName: string }>,
+        onQRDownload?: (wine: Wine) => void,
         onDuplicate?: (wine: Wine) => void,
         duplicatingId?: string | null
       };
@@ -267,15 +261,7 @@ export const columns: ColumnDef<Wine>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             {onQRDownload && (
-              <DropdownMenuItem onClick={async () => {
-                const { dataUrl, fileName } = await onQRDownload(wine);
-                const link = document.createElement('a');
-                link.href = dataUrl;
-                link.download = fileName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }}>
+              <DropdownMenuItem onClick={() => onQRDownload(wine)}>
                 Descargar QR
               </DropdownMenuItem>
             )}
