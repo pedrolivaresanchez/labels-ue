@@ -23,36 +23,19 @@ export const generateQRCode = async (wineId: string, format: QRFormat = 'png'): 
       return await QRCode.toDataURL(wineUrl, qrOptions);
     } 
     else if (format === 'svg') {
-      // Generar el QR como SVG
-      const svgString = await QRCode.toString(wineUrl, {
-        type: 'svg',
-        errorCorrectionLevel: 'H',
-        margin: 1,
-      });
+      // Para SVG usamos un método más directo generando un PNG y envolviéndolo en un SVG
+      const dataUrl = await QRCode.toDataURL(wineUrl, qrOptions);
       
-      // Extraer el viewBox del SVG original para obtener dimensiones correctas
-      const viewBoxMatch = svgString.match(/viewBox=['"]([^'"]*)['"]/);
-      let viewBox = "0 0 29 29";
-      if (viewBoxMatch && viewBoxMatch[1]) {
-        viewBox = viewBoxMatch[1];
-      }
-      
-      // Eliminar las etiquetas svg de apertura y cierre
-      const contentOnly = svgString
-        .replace(/<\?xml[^>]*\?>/g, '')
-        .replace(/<svg[^>]*>/g, '')
-        .replace(/<\/svg>/g, '');
-      
-      // Crear un nuevo SVG con dimensiones fijas y correctas
+      // Crear un SVG que simplemente incluya el PNG como una imagen
       const enhancedSvg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg 
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    width="1000"
    height="1000"
-   viewBox="${viewBox}"
+   viewBox="0 0 1000 1000"
    version="1.1">
-   <rect width="100%" height="100%" fill="white"/>
-   ${contentOnly}
+   <image width="1000" height="1000" xlink:href="${dataUrl}"/>
 </svg>`;
       
       return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(enhancedSvg)}`;
