@@ -24,8 +24,11 @@ export const generateQRCode = async (wineId: string, format: QRFormat = 'png'): 
       return await QRCode.toDataURL(wineUrl, qrOptions);
     } 
     else if (format === 'svg') {
-      // Crear un código QR editable con elementos vectoriales
-      const qr = qrcode(0, 'H'); // 0 = la versión mínima, H = corrección de errores alta
+      // Usar la misma versión para todos los formatos
+      // QRCode v1 para tipos 1-40 (21x21 a 177x177 módulos)
+      // Nivel H = alta corrección de errores (30%)
+      const typeNumber = 4; // Normalmente suficiente para URLs
+      const qr = qrcode(typeNumber, 'H');
       qr.addData(wineUrl);
       qr.make();
       
