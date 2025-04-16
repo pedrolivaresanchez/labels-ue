@@ -134,8 +134,6 @@ export async function PUT(
 
     const body = await req.json();
 
-    // No necesitamos eliminar registros de tablas relacionadas porque son campos JSONB
-    
     // Actualizar el wine con los campos JSONB
     const wineData = {
       name: body.name,
@@ -176,20 +174,22 @@ export async function PUT(
       has_plastic_wrapper: body.has_plastic_wrapper,
       image_url: body.image_url,
       // Agregar campos JSONB
-      ingredients: body.ingredients ? body.ingredients.map((i: any) => ({
-        ingredient_name: i.ingredientName || i.name,
-        is_allergen: i.isAllergen !== undefined ? i.isAllergen : (i.is_allergen || false)
-      })) : [],
-      production_variants: body.productionVariants ? body.productionVariants.map((v: any) => ({
-        variant_name: v.variantName
-      })) : [],
-      certifications: body.certifications && Array.isArray(body.certifications) ? body.certifications
-        .filter((c: any) => c && (c.certificationName || c.certification_name))
-        .map((c: any) => ({
+      ingredients: body.ingredients && Array.isArray(body.ingredients) ? 
+        body.ingredients.map((i: any) => ({
+          ingredient_name: i.ingredientName || i.name,
+          is_allergen: i.isAllergen !== undefined ? i.isAllergen : (i.is_allergen || false)
+        })) : [],
+      production_variants: body.productionVariants && Array.isArray(body.productionVariants) ? 
+        body.productionVariants.map((v: any) => ({
+          variant_name: v.variantName
+        })) : [],
+      certifications: body.certifications && Array.isArray(body.certifications) ? 
+        body.certifications.map((c: any) => ({
           certification_name: c.certificationName || c.certification_name
         })) : []
     };
 
+    console.log("Ingredients to save:", wineData.ingredients);
     console.log("Certifications to save:", wineData.certifications);
 
     // Update the wine

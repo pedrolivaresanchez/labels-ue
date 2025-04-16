@@ -154,8 +154,25 @@ export async function POST(req: Request) {
       has_plastic_cork: body.has_plastic_cork,
       has_cardboard_box: body.has_cardboard_box,
       has_plastic_wrapper: body.has_plastic_wrapper,
-      image_url: body.image_url
+      image_url: body.image_url,
+      // Add JSONB fields
+      ingredients: body.ingredients && Array.isArray(body.ingredients) ? 
+        body.ingredients.map(i => ({
+          ingredient_name: i.ingredientName || i.name,
+          is_allergen: i.isAllergen !== undefined ? i.isAllergen : (i.is_allergen || false)
+        })) : [],
+      production_variants: body.productionVariants && Array.isArray(body.productionVariants) ?
+        body.productionVariants.map(v => ({
+          variant_name: v.variantName
+        })) : [],
+      certifications: body.certifications && Array.isArray(body.certifications) ?
+        body.certifications.map(c => ({
+          certification_name: c.certificationName
+        })) : []
     };
+
+    console.log("Ingredients to save:", wineData.ingredients);
+    console.log("Certifications to save:", wineData.certifications);
 
     // Insert the wine
     const { data: wine, error: wineError } = await supabase
@@ -167,68 +184,6 @@ export async function POST(req: Request) {
     if (wineError) {
       console.error("[WINE_CREATE]", wineError);
       return new NextResponse("Error creating wine", { status: 400 });
-    }
-
-    // Handle ingredients
-    if (body.ingredients?.length > 0) {
-      const ingredients = body.ingredients
-        .filter(i => i && (i.ingredientName || i.name) && typeof (i.ingredientName || i.name) === 'string' &&
-          (typeof i.isAllergen === 'boolean' || typeof i.is_allergen === 'boolean'))
-        .map(i => ({
-          wine_id: wine.id,
-          ingredient_name: i.ingredientName || i.name,
-          is_allergen: i.isAllergen !== undefined ? i.isAllergen : (i.is_allergen || false)
-        }));
-
-      if (ingredients.length > 0) {
-        const { error: ingredientsError } = await supabase
-          .from('ingredients')
-          .insert(ingredients);
-
-        if (ingredientsError) {
-          console.error("[INGREDIENTS_CREATE]", ingredientsError);
-        }
-      }
-    }
-
-    // Handle production variants
-    if (body.productionVariants?.length > 0) {
-      const variants = body.productionVariants
-        .filter(v => v?.variantName && typeof v.variantName === 'string')
-        .map(v => ({
-          wine_id: wine.id,
-          variant_name: v.variantName
-        }));
-
-      if (variants.length > 0) {
-        const { error: variantsError } = await supabase
-          .from('production_variants')
-          .insert(variants);
-
-        if (variantsError) {
-          console.error("[VARIANTS_CREATE]", variantsError);
-        }
-      }
-    }
-
-    // Handle certifications
-    if (body.certifications?.length > 0) {
-      const certifications = body.certifications
-        .filter(c => c?.certificationName && typeof c.certificationName === 'string')
-        .map(c => ({
-          wine_id: wine.id,
-          certification_name: c.certificationName
-        }));
-
-      if (certifications.length > 0) {
-        const { error: certificationsError } = await supabase
-          .from('certifications')
-          .insert(certifications);
-
-        if (certificationsError) {
-          console.error("[CERTIFICATIONS_CREATE]", certificationsError);
-        }
-      }
     }
 
     return NextResponse.json(wine);
