@@ -1,5 +1,6 @@
 import QRCode from 'qrcode';
 import { jsPDF } from 'jspdf';
+import qrcode from 'qrcode-generator';
 
 export type QRFormat = 'png' | 'svg' | 'pdf';
 
@@ -23,22 +24,38 @@ export const generateQRCode = async (wineId: string, format: QRFormat = 'png'): 
       return await QRCode.toDataURL(wineUrl, qrOptions);
     } 
     else if (format === 'svg') {
-      // Para SVG usamos un método más directo generando un PNG y envolviéndolo en un SVG
-      const dataUrl = await QRCode.toDataURL(wineUrl, qrOptions);
+      // Crear un código QR editable con elementos vectoriales
+      const qr = qrcode(0, 'H'); // 0 = la versión mínima, H = corrección de errores alta
+      qr.addData(wineUrl);
+      qr.make();
       
-      // Crear un SVG que simplemente incluya el PNG como una imagen
-      const enhancedSvg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg 
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   width="1000"
-   height="1000"
-   viewBox="0 0 1000 1000"
-   version="1.1">
-   <image width="1000" height="1000" xlink:href="${dataUrl}"/>
+      // Obtener la matriz de módulos QR
+      const moduleCount = qr.getModuleCount();
+      const cellSize = Math.floor(1000 / moduleCount);
+      const totalSize = cellSize * moduleCount;
+      
+      // Generar rectángulos para cada celda oscura
+      let paths = '';
+      for (let row = 0; row < moduleCount; row++) {
+        for (let col = 0; col < moduleCount; col++) {
+          if (qr.isDark(row, col)) {
+            const x = col * cellSize;
+            const y = row * cellSize;
+            paths += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}"/>`;
+          }
+        }
+      }
+      
+      // Crear un SVG con elementos vectoriales editables
+      const svgContent = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1000" height="1000" viewBox="0 0 ${totalSize} ${totalSize}">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g fill="#000000">
+    ${paths}
+  </g>
 </svg>`;
       
-      return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(enhancedSvg)}`;
+      return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgContent)}`;
     }
     else if (format === 'pdf') {
       const dataUrl = await QRCode.toDataURL(wineUrl, qrOptions);
