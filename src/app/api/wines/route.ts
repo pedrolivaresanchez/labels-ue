@@ -167,7 +167,7 @@ export async function POST(req: Request) {
         })) : [],
       certifications: body.certifications && Array.isArray(body.certifications) ?
         body.certifications.map(c => ({
-          certification_name: c.certificationName
+          certificationName: c.certificationName
         })) : []
     };
 

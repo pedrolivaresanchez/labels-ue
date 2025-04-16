@@ -185,7 +185,7 @@ export async function PUT(
         })) : [],
       certifications: body.certifications && Array.isArray(body.certifications) ? 
         body.certifications.map((c: any) => ({
-          certification_name: c.certificationName || c.certification_name
+          certificationName: c.certificationName || c.certification_name
         })) : []
     };
 
