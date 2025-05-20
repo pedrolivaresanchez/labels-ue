@@ -417,31 +417,31 @@ export function WinePublicView({ wine, labels }: { wine: Wine; labels: Labels })
                 <CardContent className="space-y-4 p-6">
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">{labels.countryOfOrigin}</h3>
-                    <p className="text-base sm:text-lg">{wine.countryOfOrigin}</p>
+                    <p className="text-base sm:text-lg">{wine.countryOfOrigin || ''}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-muted-foreground">{labels.placeOfOrigin}</h3>
-                    <p className="text-base sm:text-lg">{wine.placeOfOrigin}</p>
+                    <p className="text-base sm:text-lg">{typeof wine.placeOfOrigin === 'string' ? wine.placeOfOrigin : ''}</p>
                   </div>
-                  {wine.optional_labelling && (
+                  {typeof wine.optional_labelling === 'string' && wine.optional_labelling && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">{labels.optionalLabelling}</h3>
                       <p className="text-base sm:text-lg">{wine.optional_labelling}</p>
                     </div>
                   )}
-                  {wine.instructionsForUse && (
+                  {typeof wine.instructionsForUse === 'string' && wine.instructionsForUse && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">{labels.instructionsForUse}</h3>
                       <p className="text-base sm:text-lg">{wine.instructionsForUse}</p>
                     </div>
                   )}
-                  {wine.conservationConditions && (
+                  {typeof wine.conservationConditions === 'string' && wine.conservationConditions && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">{labels.conservationConditions}</h3>
                       <p className="text-base sm:text-lg">{wine.conservationConditions}</p>
                     </div>
                   )}
-                  {wine.drainedWeightGrams && (
+                  {typeof wine.drainedWeightGrams === 'number' && wine.drainedWeightGrams > 0 && (
                     <div>
                       <h3 className="text-sm font-medium text-muted-foreground">{labels.drainedWeight}</h3>
                       <p className="text-base sm:text-lg">{wine.drainedWeightGrams} {labels.grams}</p>

@@ -208,8 +208,8 @@ async function getWine(id: string): Promise<Wine | null> {
       : [],
     disclaimerIcons: [], // No hay tabla disclaimer_icons
     image_url: wine.image_url,
-    countryOfOrigin: wine.country_of_origin,
-    placeOfOrigin: wine.place_of_origin,
+    countryOfOrigin: wine.country_of_origin || '',
+    placeOfOrigin: wine.place_of_origin || '',
     winery_information: wine.winery_information,
     instructionsForUse: wine.instructions_for_use,
     conservationConditions: wine.conservation_conditions,
